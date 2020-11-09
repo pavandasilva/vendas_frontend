@@ -5,15 +5,13 @@ import { Router } from 'react-router-dom'
 import { history } from './routes/history'
 import { Providers } from './context/providers'
 
-import 'react-toastify/dist/ReactToastify.css'
-
 import './styles/style.scss'
 
 const App: React.FC = () => (
   <>
     <Router history={history}>
       <Providers>
-        <Routes/>
+        <Routes />
       </Providers>
     </Router>
     <ToastContainer autoClose={5000} />

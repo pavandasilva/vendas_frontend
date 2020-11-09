@@ -49,25 +49,25 @@ export const Login: React.FC = () => {
         </div>
 
         <Form.Group controlId="email" bsPrefix="form-label-group" >
-          <Form.Control type="email" value={email} onChange={handleInputChange}/>
+          <Form.Control type="email" value={email} onChange={handleInputChange} />
           <Form.Label>E-mail</Form.Label>
         </Form.Group>
 
         <Form.Group controlId="password" bsPrefix="form-label-group">
-          <Form.Control type="password" value={password} onChange={handleInputChange}/>
+          <Form.Control type="password" value={password} onChange={handleInputChange} />
           <Form.Label>Senha</Form.Label>
         </Form.Group>
 
         <Form.Group>
-          <Form.Check type="checkbox" checked={rememberPassword} className="mr-1" label="Manter conectado" id="lembrar" onChange={handleCheckOnChange}/>
+          <Form.Check type="checkbox" checked={rememberPassword} className="mr-1" label="Manter conectado" id="lembrar" onChange={handleCheckOnChange} />
         </Form.Group>
         <Button size="lg" variant="primary" disabled={loading || (!email || !password)} type="submit" block>
-          { loading ? <Spinner
+          {loading ? <Spinner
             as="span"
             animation="border"
             size="sm"
             role="status"
-            aria-hidden="true"/> : 'Acessar'}
+            aria-hidden="true" /> : 'Acessar'}
         </Button>
         <p className="mt-5 mb-3 text-muted text-center">© 2020</p>
       </Form>
