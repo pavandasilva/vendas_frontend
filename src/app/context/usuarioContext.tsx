@@ -8,7 +8,7 @@ import { AppError } from '../../helpers/appError'
 interface UsuarioContextState {
   error?: Error
   usuario?: Usuario
-  login(email: string, password: string): Promise<void>
+  login(email: string, password: string, rememberPassword: boolean): Promise<void>
   logout(): void
   loading: boolean
 }
@@ -27,7 +27,7 @@ export const UsuarioProvider: React.FC = ({ children }) => {
     return {}
   })
 
-  const login = async (email: string, password: string) => {
+  const login = async (email: string, password: string, rememberPassword: boolean) => {
     const logar = makeLogar()
 
     try {
@@ -42,7 +42,9 @@ export const UsuarioProvider: React.FC = ({ children }) => {
       }
       setLoading(false)
 
-      localStorage.setItem(`@${process.env.REACT_APP_NAME}:usuario`, JSON.stringify(response))
+      if (rememberPassword) {
+        localStorage.setItem(`@${process.env.REACT_APP_NAME}:usuario`, JSON.stringify(response))
+      }
     } catch (error) {
       setLoading(false)
 

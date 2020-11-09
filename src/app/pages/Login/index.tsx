@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FormEvent, useContext, useState } from 'react'
+import React, { ChangeEvent, FormEvent, useContext, useEffect, useState } from 'react'
 import { Button, Image, Spinner } from 'react-bootstrap'
 import Form from 'react-bootstrap/Form'
 import { UsuarioContext } from '../../context'
@@ -8,6 +8,17 @@ export const Login: React.FC = () => {
   const { login, loading } = useContext(UsuarioContext)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [rememberPassword, setRememberPassword] = useState(false)
+
+  useEffect(() => {
+    const remember = localStorage.getItem(`@${process.env.REACT_APP_NAME}:remember`) as string
+
+    if (remember === 'true') {
+      setRememberPassword(true)
+    } else {
+      setRememberPassword(false)
+    }
+  }, [])
 
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.id === 'email') {
@@ -19,7 +30,12 @@ export const Login: React.FC = () => {
 
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault()
-    login(email, password)
+    login(email, password, rememberPassword)
+  }
+
+  const handleCheckOnChange = (event: ChangeEvent<HTMLInputElement>) => {
+    localStorage.setItem(`@${process.env.REACT_APP_NAME}:remember`, JSON.stringify(event.target.checked))
+    setRememberPassword(event.target.checked)
   }
 
   return (
@@ -43,7 +59,7 @@ export const Login: React.FC = () => {
         </Form.Group>
 
         <Form.Group>
-          <Form.Check type="checkbox" className="mr-1" label="Manter conectados" id="lembrar" />
+          <Form.Check type="checkbox" checked={rememberPassword} className="mr-1" label="Manter conectado" id="lembrar" onChange={handleCheckOnChange}/>
         </Form.Group>
         <Button size="lg" variant="primary" disabled={loading || (!email || !password)} type="submit" block>
           { loading ? <Spinner
