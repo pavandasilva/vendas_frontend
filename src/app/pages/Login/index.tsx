@@ -2,6 +2,7 @@ import React, { ChangeEvent, FormEvent, useContext, useEffect, useState } from '
 import { Button, Image, Spinner } from 'react-bootstrap'
 import Form from 'react-bootstrap/Form'
 import { UsuarioContext } from '../../context'
+import Brasao from '../../assets/imgs/brasao.png'
 import './styles.scss'
 
 export const Login: React.FC = () => {
@@ -42,7 +43,7 @@ export const Login: React.FC = () => {
     <div id="login" className="container h-100">
       <Form className="form-signin" onSubmit={handleSubmit}>
         <div className="text-center mb-4">
-          <Image src="https://intranet.route66.com.br/img/brasao.png" />
+          <Image src={Brasao} />
           <h1 className="h3 mb-3 font-weight-normal">
             DISTRIBUIDORA ROUTE 66
           </h1>
