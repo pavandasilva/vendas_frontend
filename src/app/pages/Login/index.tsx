@@ -1,5 +1,5 @@
 import React, { ChangeEvent, FormEvent, useContext, useState } from 'react'
-import { Button, Image } from 'react-bootstrap'
+import { Button, Image, Spinner } from 'react-bootstrap'
 import Form from 'react-bootstrap/Form'
 import { UsuarioContext } from '../../context'
 import './styles.scss'
@@ -19,12 +19,7 @@ export const Login: React.FC = () => {
 
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault()
-
-    try {
-      login(email, password)
-    } catch (error) {
-      console.log(error)
-    }
+    login(email, password)
   }
 
   return (
@@ -50,7 +45,14 @@ export const Login: React.FC = () => {
         <Form.Group>
           <Form.Check type="checkbox" className="mr-1" label="Manter conectados" id="lembrar" />
         </Form.Group>
-        <Button size="lg" variant="primary" type="submit" block>Acessar</Button>
+        <Button size="lg" variant="primary" disabled={loading || (!email || !password)} type="submit" block>
+          { loading ? <Spinner
+            as="span"
+            animation="border"
+            size="sm"
+            role="status"
+            aria-hidden="true"/> : 'Acessar'}
+        </Button>
         <p className="mt-5 mb-3 text-muted text-center">© 2020</p>
       </Form>
     </div>

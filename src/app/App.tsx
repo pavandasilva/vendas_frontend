@@ -1,10 +1,11 @@
 import React from 'react'
 import { ToastContainer } from 'react-toastify'
-// import GlobalStyle from './styles/global'
 import { Routes } from './routes'
 import { Router } from 'react-router-dom'
 import { history } from './routes/history'
 import { Providers } from './context/providers'
+
+import 'react-toastify/dist/ReactToastify.css'
 
 import './styles/style.scss'
 
@@ -15,7 +16,6 @@ const App: React.FC = () => (
         <Routes/>
       </Providers>
     </Router>
-    {/* <GlobalStyle /> */}
     <ToastContainer autoClose={5000} />
   </>
 )
