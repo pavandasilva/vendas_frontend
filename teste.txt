@@ -1,0 +1,2 @@
+resolvi o bug
+acabei a feature
