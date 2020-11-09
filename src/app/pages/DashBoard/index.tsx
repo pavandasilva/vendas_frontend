@@ -1,46 +1,129 @@
 import React from 'react'
 import { Container } from 'react-bootstrap'
 
+import Logo from '../../assets/imgs/logo_brasao.png'
+
+import { FaUser } from 'react-icons/fa'
+import { Footer } from '../../components/Footer'
+
 export const DashBoard: React.FC = () => {
   return (
-    <Container>
+    <Container fluid>
 
-      <div className="navigation">
-        <div className="navigation-menu-tab">
+      <div className="" id="main">
 
-          <div className="text-center">
-            <div className="navigation-menu-tab-header" data-toggle="tooltip" title="" data-placement="right">
-              <a href="">
-                <img src="" width="60px" className="p-2" />
-              </a>
+        <div className="navigation">
+
+          <div className="navigation-menu-tab">
+            <div className="text-center">
+              <div className="navigation-menu-tab-header" >
+                <img src={Logo} width="60px" className="p-2" />
+              </div>
+            </div>
+            <div className="flex-grow-1">
+
+              <ul className="menu">
+                <li className="nav-item">
+                  <FaUser></FaUser>
+                </li>
+                <li className="nav-item">
+                  <FaUser></FaUser>
+                </li>
+                <li className="nav-item">
+                  <FaUser></FaUser>
+                </li>
+              </ul>
+
+            </div>
+            <div>
+              <ul>
+
+                <li>
+                  <a href="https://intranet.route66.com.br/logout" ></a>
+                  <form id="logout-form" action="https://intranet.route66.com.br/logout" method="POST">
+                  </form>
+                </li>
+              </ul>
             </div>
           </div>
 
-          <div className="flex-grow-1">
-            <ul>
-              <li className="nav-item @if(request()->segment(1) == 'clientes') active @endif">
-                <a href="{{ url('clientes') }}" data-toggle="tooltip" data-placement="right" title="Clientes">
-                  <i className="fas fa-user"></i>
-                  <span className="text d-none">Clientes</span>
-                </a>
-              </li>
-
-            </ul>
-          </div>
-
-          {/* <div>
-                  <ul>
-                      <li>
-                          <a href="{{url('logout')}}" data-toggle="tooltip" data-placement="right" title="" data-original-title="Logout" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" className="feather feather-log-out"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
-                          </a>
-                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">@csrf</form>
-                      </li>
-                  </ul>
-              </div> */}
         </div>
 
+
+        <div className="main-content">
+
+          <div>
+            <div className="header">
+              <div className="container d-flex">
+
+                <div className="mr-auto">
+                  <ul className="float-right list-unstyled list-group list-group-horizontal">
+
+
+                  </ul>
+                </div>
+
+                <div className="float-right">
+                  <div className="float-right">
+                    <i className="fas fa-search icon"></i>
+                    <i className="fas fa-cog icon"></i>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+
+            <div className="page-header">
+
+              <div className="container-fluid d-sm-flex justify-content-between">
+                <h1>
+                  Dashboard
+
+
+                </h1>
+                <nav aria-label="breadcrumb">
+                  <ol className="breadcrumb">
+                    <li className="breadcrumb-item">
+                      <a href="https://intranet.route66.com.br">Dashboard</a>
+                    </li>
+                    <li className="breadcrumb-item active" aria-current="page">Dashboard</li>
+                  </ol>
+                </nav>
+              </div>
+            </div>
+
+            <div id="main" className="col ml-sm-auto px-4">
+
+              <div className="container-fluid">
+
+
+                <div className="card">
+                  <div className="card-body">
+
+                    <h4> Olá, Leandro </h4>
+	  <p>11:47:19</p>
+
+                  </div>
+                </div>
+
+
+
+
+              </div>
+
+            </div>
+
+
+          </div>
+
+        <Footer />
+
+
+
+        </div>
       </div>
+
     </Container>
   )
 }
