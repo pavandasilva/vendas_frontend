@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FormEvent, useContext, useEffect, useState } from 'react'
+import React, { ChangeEvent, FormEvent, useContext, useEffect, useState, useCallback } from 'react'
 import { Button, Image, Spinner } from 'react-bootstrap'
 import Form from 'react-bootstrap/Form'
 import { UsuarioContext } from '../../context'
@@ -21,23 +21,23 @@ export const Login: React.FC = () => {
     }
   }, [])
 
-  const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.id === 'email') {
       setEmail(event.target.value)
     } else if (event.target.id === 'password') {
       setPassword(event.target.value)
     }
-  }
+  }, [])
 
-  const handleSubmit = (event: FormEvent) => {
+  const handleSubmit = useCallback((event: FormEvent) => {
     event.preventDefault()
     login(email, password, rememberPassword)
-  }
+  }, [email, login, password, rememberPassword])
 
-  const handleCheckOnChange = (event: ChangeEvent<HTMLInputElement>) => {
+  const handleCheckOnChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
     localStorage.setItem(`@${process.env.REACT_APP_NAME}:remember`, JSON.stringify(event.target.checked))
     setRememberPassword(event.target.checked)
-  }
+  }, [])
 
   return (
     <div id="login" className="container h-100">
