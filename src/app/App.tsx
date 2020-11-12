@@ -1,6 +1,5 @@
 import React from 'react'
 import { ToastContainer } from 'react-toastify'
-// import GlobalStyle from './styles/global'
 import { Routes } from './routes'
 import { Router } from 'react-router-dom'
 import { history } from './routes/history'
@@ -12,10 +11,9 @@ const App: React.FC = () => (
   <>
     <Router history={history}>
       <Providers>
-        <Routes/>
+        <Routes />
       </Providers>
     </Router>
-    {/* <GlobalStyle /> */}
     <ToastContainer autoClose={5000} />
   </>
 )
