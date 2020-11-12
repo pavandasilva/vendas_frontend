@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
-import { Nav, Tab, Tabs } from 'react-bootstrap'
-import { Route } from 'react-router-dom'
+import { Nav, Tab } from 'react-bootstrap'
 import './styles.scss'
 
 interface TabProps {
