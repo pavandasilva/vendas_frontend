@@ -13,7 +13,9 @@ export function Route ({
   ...rest
 }: PrivateRouteProps) {
   const { usuario } = useContext(UsuarioContext)
-  const signed = !!usuario?.token
+  // const signed = !!usuario?.token
+
+  const signed = true
 
   return (
     <ReactRoute {...rest}
