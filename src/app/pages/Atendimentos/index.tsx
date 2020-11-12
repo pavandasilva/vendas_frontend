@@ -2,13 +2,13 @@ import React from 'react'
 
 import { Layout } from '../Layout'
 
-export const DashBoard: React.FC = () => {
+export const Atendimentos: React.FC = () => {
   return (
-    <Layout title="Dashboard">
+    <Layout title="Atendimentos">
       <div id="container" className="container-fluid">
         <div className="card">
           <div className="card-body">
-              Dashboard
+                  conteudo
           </div>
         </div>
       </div>

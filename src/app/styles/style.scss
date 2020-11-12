@@ -1,8 +1,9 @@
 @import '~bootstrap/scss/bootstrap';
 
-@import 'scss/navigation';
-@import 'scss/toastify';
+@import 'scss/aside-menu';
+@import 'scss/nav-tabs';
 @import 'scss/form-control';
+@import 'scss/toastify';
 
 body,
 html {
@@ -23,38 +24,14 @@ header {
   }
 }
 
+#container {
+  border-left: 1px solid $gray-300;
+  border-right: 1px solid $gray-300;
+  border-bottom: 1px solid $gray-300;
+}
+
 .container-fluid {
   padding: 0px;
-}
-
-.header {
-  height: 50px;
-  background-color: #fff;
-  top: 0;
-  right: 0;
-  left: 0;
-  z-index: 3;
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border-bottom: 1px solid #ebebeb;
-  padding: 1.3rem;
-}
-
-.header .icon {
-  padding: 0.5rem;
-  font-size: 1rem;
-  color: #828282;
-  opacity: 0.7;
-}
-
-.header .icon:hover {
-  opacity: 1;
-}
-
-.header .sidebar {
-  cursor: pointer;
 }
 
 .card ::-webkit-scrollbar {
@@ -428,14 +405,16 @@ h6 {
 }
 
 #main {
+  padding: 0;
   display: flex;
+  flex: 1;
+  min-height: calc(100vh);
+  // padding-left: 85px;
+  // width: calc(100% - 300px);
 }
 
-#main .main-content {
-  padding: 0;
-  padding-left: 85px;
+#wrapper {
   flex: 1;
-  width: calc(100% - 300px);
 }
 
 .navbar-brand {
@@ -479,23 +458,26 @@ h6 {
 }
 
 .page-header {
-  padding: 1.2rem 1.8rem;
-  margin-bottom: 30px;
-  background-color: #fff;
+  border-left: 1px solid $gray-300;
+  border-right: 1px solid $gray-300;
+  padding: 1.2rem 1.2rem;
+  // margin-bottom: 30px;
+  background-color: $gray-400;
   z-index: 3;
-  box-shadow: 0 3px 10px rgba(62, 85, 120, 0.07);
-  align-items: center;
-}
+  // box-shadow: 0 3px 10px rgba(62, 85, 120, 0.07);
+  // align-items: center;
 
-.page-header h1 {
-  font-size: 1.3rem;
-  margin: 0;
-}
+  h1 {
+    font-size: 1.2rem;
+    margin: 0;
+  }
 
-.page-header .breadcrumb {
-  background: 0 0;
-  padding: 0;
-  margin: 0;
+  .breadcrumb {
+    font-size: 0.9em;
+    background: 0 0;
+    padding: 0;
+    margin: 0;
+  }
 }
 
 .btn {

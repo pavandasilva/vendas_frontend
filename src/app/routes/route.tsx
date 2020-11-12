@@ -14,7 +14,6 @@ export function Route ({
 }: PrivateRouteProps) {
   const { usuario } = useContext(UsuarioContext)
   // const signed = !!usuario?.token
-
   const signed = true
 
   return (
