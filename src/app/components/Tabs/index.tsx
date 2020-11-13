@@ -1,9 +1,8 @@
-import React, { useState, useEffect, useContext, useCallback } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { TabsContext } from '../../context'
 import capitalize from 'capitalize-pt-br'
 import { useLocation } from 'react-router-dom'
 import { Nav, Tab } from 'react-bootstrap'
-import { FaPlusCircle } from 'react-icons/fa'
 
 interface TabsProps {
   fixedContent?: React.ReactNode

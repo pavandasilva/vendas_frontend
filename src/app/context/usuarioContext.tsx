@@ -22,13 +22,15 @@ export const UsuarioProvider: React.FC = ({ children }) => {
     const token = localStorage.getItem(`@${process.env.REACT_APP_NAME}:token`)
 
     if (token) {
-      return jwt_decode(token) as Usuario
+      const dataUsuario = jwt_decode(token) as Usuario
+      dataUsuario.token = token
+      return dataUsuario
     }
 
     return {} as Usuario
   })
 
-  const login = async (email: string, password: string, rememberPassword: boolean) => {
+  const login = async (email: string, password: string, rememberPassword = false) => {
     const logar = makeLogar()
 
     try {
@@ -36,21 +38,16 @@ export const UsuarioProvider: React.FC = ({ children }) => {
       const token = await logar.execute({ email, password })
 
       if (token) {
-        if (token) {
-          setUsuario(jwt_decode(token) as Usuario)
-          history.push('/')
-        } else {
-          setUsuario({} as Usuario)
-        }
-
-        console.log(usuario)
-
-        setLoading(false)
-
-        if (rememberPassword) {
-          localStorage.setItem(`@${process.env.REACT_APP_NAME}:token`, JSON.stringify(token))
-        }
+        const nUsuario = jwt_decode(token) as Usuario
+        nUsuario.token = token
+        setUsuario(nUsuario)
+        history.push('/')
+        localStorage.setItem(`@${process.env.REACT_APP_NAME}:rememberPassword`, rememberPassword.toString())
+      } else {
+        setUsuario({} as Usuario)
       }
+
+      setLoading(false)
     } catch (error) {
       setLoading(false)
 
@@ -64,7 +61,7 @@ export const UsuarioProvider: React.FC = ({ children }) => {
 
   const logout = async () => {
     setUsuario({} as Usuario)
-    localStorage.removeItem('@vendas:usuario')
+    localStorage.removeItem(`@${process.env.REACT_APP_NAME}:token`)
     setUsuario({} as Usuario)
   }
 

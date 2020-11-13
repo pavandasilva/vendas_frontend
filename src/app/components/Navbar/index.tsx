@@ -1,36 +1,31 @@
 import React, { useContext, useState } from 'react'
-
-import './styles.scss'
 import { FaSearch, FaCog, FaThLarge, FaBars } from 'react-icons/fa'
-import { SideBarContext } from '../../context'
 import { Button, Dropdown, Image, Modal } from 'react-bootstrap'
+import { SideBarContext, UsuarioContext } from '../../context'
+import './styles.scss'
 
-export const Navbar: React.FC = () => {
+export const Navbar = () => {
   const [show, setShow] = useState(false)
-
   const { toogle } = useContext(SideBarContext)
-
+  const { usuario } = useContext(UsuarioContext)
   const handleClose = () => setShow(false)
   const handleShow = () => setShow(true)
 
   return (
     <div className="navbar">
       <div className="d-flex w-100">
-
         <div className="mr-auto">
           <ul className="float-right list-unstyled list-group list-group-horizontal">
             <FaBars className="icon" onClick={toogle} />
-
           </ul>
         </div>
 
         <div className="float-right">
-
           <div className="float-right pl-3">
             <Dropdown>
               <Dropdown.Toggle as="div" bsPrefix="avatar">
                 <Image src="https://www.w3schools.com/howto/img_avatar.png" roundedCircle />
-                <span>Leandro</span>
+                <span>{usuario?.email}</span>
               </Dropdown.Toggle>
 
               <Dropdown.Menu>
@@ -53,16 +48,12 @@ export const Navbar: React.FC = () => {
               <Dropdown.Toggle as="div" bsPrefix="avatar">
                 <FaThLarge className="icon" />
               </Dropdown.Toggle>
-
               <Dropdown.Menu>
                 <Dropdown.Header>Sistemas</Dropdown.Header>
-
               </Dropdown.Menu>
             </Dropdown>
           </div>
-
         </div>
-
       </div>
 
       <Modal show={show} onHide={handleClose}>
@@ -79,8 +70,6 @@ export const Navbar: React.FC = () => {
           </Button>
         </Modal.Footer>
       </Modal>
-
     </div>
-
   )
 }
