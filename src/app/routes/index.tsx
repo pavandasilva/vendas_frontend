@@ -1,9 +1,8 @@
 import React from 'react'
 import { Switch } from 'react-router-dom'
-import { Atendimentos, DashBoard, Login, Demo } from '../pages'
 import { Desempenho } from '../pages/Desempenho'
-import { DashBoard, Login, Demo } from '../pages'
-import { TabsTeste } from '../pages/TabsTeste'
+import { DashBoard, Login, Demo, TabsTeste, Atendimentos } from '../pages'
+
 import { Route } from './route'
 
 export const Routes: React.FC = () => (
