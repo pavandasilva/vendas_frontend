@@ -10,8 +10,12 @@ interface TabsProps {
 
 export const Tabs = ({ fixedContent }: TabsProps) => {
   const [tabFixedTitle, setTabFixedTitle] = useState('')
-  const { activeTab, setActiveTab, tabs } = useContext(TabsContext)
+  const { activeTab, setActiveTab, tabs, removeTab } = useContext(TabsContext)
   const { pathname } = useLocation()
+
+  const handleCloseTabOnClick = (index: number) => {
+    removeTab(index)
+  }
 
   useEffect(() => {
     if (pathname === '/') {
@@ -23,19 +27,20 @@ export const Tabs = ({ fixedContent }: TabsProps) => {
 
   return (
     <div className="m-3">
-      <Tab.Container defaultActiveKey={0} activeKey={activeTab}>
+      <Tab.Container activeKey={activeTab} defaultActiveKey={-1}>
         <Nav variant="tabs">
           {/*   tab fixa */}
-          <Nav.Item key={0} onClick={() => setActiveTab(0)}>
-            <Nav.Link eventKey={0}>
-              { tabFixedTitle}
+          <Nav.Item key={-1} onClick={() => setActiveTab(-1)}>
+            <Nav.Link eventKey={-1}>
+              { tabFixedTitle }
             </Nav.Link>
           </Nav.Item>
           {/* tab fixa */}
 
-          { tabs?.map(tab => (
-            <Nav.Item key={tab.index} onClick={() => setActiveTab(tab.index)}>
-              <Nav.Link eventKey={tab.index}>
+          { tabs?.map((tab, index) => (
+            <Nav.Item key={`tab${index + 1}`.toString()} onClick={() => setActiveTab(index)}>
+              <Nav.Link eventKey={index}>
+                <span onClick={() => handleCloseTabOnClick(index)}>x</span>
                 { tab.title }
               </Nav.Link>
             </Nav.Item>
@@ -43,15 +48,14 @@ export const Tabs = ({ fixedContent }: TabsProps) => {
         </Nav>
         <Tab.Content>
           {/*  conteudo da aba fixa */}
-          <Tab.Pane key={0} eventKey={0}>
+          <Tab.Pane key={-1} eventKey={-1}>
             { fixedContent }
           </Tab.Pane>
           {/*  conteudo da aba fixa */}
-
           <Tab.Content>
-            { tabs?.map(tab => (
-              <Tab.Pane key={tab.index} eventKey={tab.index}>
-                {tab.index}
+            { tabs?.map((tab, index) => (
+              <Tab.Pane key={`contentTab${index}`} eventKey={index} >
+                { tab.content }
               </Tab.Pane>
             ))}
           </Tab.Content>

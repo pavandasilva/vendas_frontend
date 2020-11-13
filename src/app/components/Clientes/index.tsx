@@ -4,6 +4,7 @@ import { Table } from 'react-bootstrap'
 import { makeTrazerClientesFidelizados } from '../../../domain/clientes/factories/makeTrazerClientesFidelizados'
 import { Cliente } from '../../../domain/clientes/models/cliente'
 import { UsuarioContext, TabsContext } from '../../context'
+import { Atendimento } from '../Atendimento'
 
 const trazerClientesFidelizados = makeTrazerClientesFidelizados()
 
@@ -35,7 +36,8 @@ export const Clientes = () => {
 
     addTab({
       index: cliente.id as number,
-      title: `${cliente.id} - ${cliente.nome_fantasia}`
+      title: `${cliente.id} - ${cliente.nome_fantasia}`,
+      content: <Atendimento cliente={cliente}/>
     })
   }
 

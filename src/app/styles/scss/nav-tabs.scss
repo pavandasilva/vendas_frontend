@@ -1,4 +1,6 @@
 .nav-tabs {
+  padding-right: 20px;
+
   .nav-link {
     background-color: #fff;
   }
@@ -17,4 +19,14 @@
 
 .tab-content {
   padding: 0px !important;
+}
+
+.nav-item {
+  position: relative;
+
+  span {
+    position: absolute;
+    top: 2px;
+    right: 5px;
+  }
 }
