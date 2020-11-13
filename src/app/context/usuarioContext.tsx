@@ -1,4 +1,5 @@
 import React, { createContext, useState } from 'react'
+import jwt_decode from 'jwt-decode'
 import { history } from '../routes/history'
 import { toast } from 'react-toastify'
 import { makeLogar } from '../../domain/usuarios/factories/makeLogar'
@@ -18,13 +19,13 @@ export const UsuarioContext = createContext<UsuarioContextState>({} as UsuarioCo
 export const UsuarioProvider: React.FC = ({ children }) => {
   const [loading, setLoading] = useState(false)
   const [usuario, setUsuario] = useState<Usuario>(() => {
-    const usuario = localStorage.getItem(`@${process.env.REACT_APP_NAME}:usuario`)
+    const token = localStorage.getItem(`@${process.env.REACT_APP_NAME}:token`)
 
-    if (usuario) {
-      return JSON.parse(usuario)
+    if (token) {
+      return jwt_decode(token) as Usuario
     }
 
-    return {}
+    return {} as Usuario
   })
 
   const login = async (email: string, password: string, rememberPassword: boolean) => {
@@ -32,18 +33,23 @@ export const UsuarioProvider: React.FC = ({ children }) => {
 
     try {
       setLoading(true)
-      const response = await logar.execute({ email, password })
+      const token = await logar.execute({ email, password })
 
-      if (response) {
-        setUsuario(response)
-        history.push('/')
-      } else {
-        setUsuario({} as Usuario)
-      }
-      setLoading(false)
+      if (token) {
+        if (token) {
+          setUsuario(jwt_decode(token) as Usuario)
+          history.push('/')
+        } else {
+          setUsuario({} as Usuario)
+        }
 
-      if (rememberPassword) {
-        localStorage.setItem(`@${process.env.REACT_APP_NAME}:usuario`, JSON.stringify(response))
+        console.log(usuario)
+
+        setLoading(false)
+
+        if (rememberPassword) {
+          localStorage.setItem(`@${process.env.REACT_APP_NAME}:token`, JSON.stringify(token))
+        }
       }
     } catch (error) {
       setLoading(false)

@@ -1,6 +1,9 @@
 import { PostParams } from '../../_interfaces/postParams'
-import { Usuario } from '../models/usuario'
+
+interface LoginResponse {
+  token: string
+}
 
 export interface AuthService {
-  login: (params: PostParams) => Promise<Usuario | undefined>
+  login: (params: PostParams) => Promise<LoginResponse | undefined>
 }

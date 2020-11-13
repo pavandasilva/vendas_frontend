@@ -13,8 +13,7 @@ export function Route ({
   ...rest
 }: PrivateRouteProps) {
   const { usuario } = useContext(UsuarioContext)
-  // const signed = !!usuario?.token
-  const signed = true
+  const signed = !!usuario?.id
 
   return (
     <ReactRoute {...rest}

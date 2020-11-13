@@ -2,7 +2,10 @@ import { AppError } from '../../../helpers/appError'
 import { PostParams, Validator } from '../../_interfaces'
 import { HttpRequest } from '../../_interfaces/httpRequest'
 import { AuthService } from '../interfaces'
-import { Usuario } from '../models/usuario'
+
+interface LoginResponse {
+  token: string
+}
 
 export class AuthServiceImpl implements AuthService {
   private readonly validator: Validator
@@ -13,7 +16,7 @@ export class AuthServiceImpl implements AuthService {
     this.httpRequest = httpRequest
   }
 
-  async login (params: PostParams): Promise<Usuario | undefined> {
+  async login (params: PostParams): Promise<LoginResponse | undefined> {
     try {
       await this.validator.validate(params.body)
     } catch (error) {
@@ -24,7 +27,7 @@ export class AuthServiceImpl implements AuthService {
     }
 
     try {
-      return await this.httpRequest.post<Usuario>({
+      return await this.httpRequest.post<LoginResponse>({
         body: params.body,
         path: 'auth'
       })

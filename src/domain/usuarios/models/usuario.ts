@@ -1,8 +1,6 @@
 export interface Usuario {
-  id?: number
-  nome?: string
-  email?: string
-  avatar?: string
+  id: number,
+  email?: string,
+  funcionario_id?: string,
   token?: string
-  funcionario_id?: number
 }

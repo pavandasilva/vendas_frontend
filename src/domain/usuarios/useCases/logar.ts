@@ -1,6 +1,5 @@
 import { PostParams } from '../../_interfaces'
 import { AuthService } from '../interfaces'
-import { Usuario } from '../models/usuario'
 
 interface LogarUseCaseParams {
   email: string
@@ -14,11 +13,12 @@ export class Logar {
     this.authService = authService
   }
 
-  async execute (logarUseCaseParams: LogarUseCaseParams): Promise< Usuario| undefined> {
+  async execute (logarUseCaseParams: LogarUseCaseParams): Promise< string| undefined> {
     const params: PostParams = {
       body: logarUseCaseParams
     }
 
-    return await this.authService.login(params)
+    const login = await this.authService.login(params)
+    return login?.token
   }
 }
