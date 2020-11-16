@@ -100,7 +100,12 @@ export const Clientes = () => {
                   <Pagination.Prev onClick={() => handlePaginationOnClick(currentPage - 1)}/>
 
                   { Array.apply(0, Array(Math.ceil(numberRows / perPage))).map((_, i) =>
-                    <Pagination.Item active={currentPage === i + 1} onClick={() => handlePaginationOnClick(i + 1)} key={i.toString()}>{i + 1}</Pagination.Item>
+                    <Pagination.Item
+                      active={currentPage === i + 1}
+                      onClick={() => handlePaginationOnClick(i + 1)}
+                      key={i.toString()}>
+                      {i + 1}
+                    </Pagination.Item>
                   )}
                   <Pagination.Next onClick={() => handlePaginationOnClick(currentPage + 1)}/>
                   <Pagination.Last onClick={() => handlePaginationOnClick(Math.ceil(numberRows / perPage))}/>
