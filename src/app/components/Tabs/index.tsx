@@ -36,14 +36,20 @@ export const Tabs = ({ fixedContent }: TabsProps) => {
             </Nav.Link>
           </Nav.Item>
           {/* tab fixa */}
-
           { tabs?.map((tab, index) => (
-            <Nav.Item key={`tab${index + 1}`.toString()} onClick={() => setActiveTab(index)}>
-              <Nav.Link eventKey={index}>
-                <span onClick={() => handleCloseTabOnClick(index)}>x</span>
-                { tab.title }
-              </Nav.Link>
-            </Nav.Item>
+            <>
+
+              <Nav.Item key={`tab${index + 1}`.toString()} onClick={() => setActiveTab(index)}>
+                <Nav.Link eventKey={index}>
+
+                  {/*   <span onClick={() => handleCloseTabOnClick(index)}>x</span> */}
+                  { tab.title }
+                </Nav.Link>
+              </Nav.Item>
+
+              <span onClick={() => handleCloseTabOnClick(index)}>x</span>
+
+            </>
           ))}
         </Nav>
         <Tab.Content>

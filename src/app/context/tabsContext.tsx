@@ -25,16 +25,12 @@ export const TabsProvider: React.FC = ({ children }) => {
       return [...tabs, tab]
     })
 
-    console.log(tabs.length)
-
     setActiveTab(tabs.length)
   }
 
   const removeTab = useCallback((index: number) => {
-    alert('remove func')
-    setActiveTab(1)
-
-    /*  setTabs(tabs => tabs.filter((tab, i) => i !== index)) */
+    setTabs(tabs => tabs.filter((tab, i) => i !== index))
+    setActiveTab(index - 1)
   }, [])
 
   return (
