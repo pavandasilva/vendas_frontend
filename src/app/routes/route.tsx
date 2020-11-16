@@ -1,6 +1,6 @@
-import React, { ComponentType, useContext } from 'react'
+import React, { ComponentType } from 'react'
 import { Route as ReactRoute, Redirect, RouteProps } from 'react-router-dom'
-import { UsuarioContext } from '../context'
+import { useUsuario } from '../hooks'
 
 interface PrivateRouteProps extends RouteProps{
   component: ComponentType,
@@ -12,8 +12,8 @@ export function Route ({
   isPrivate = false,
   ...rest
 }: PrivateRouteProps) {
-  const { usuario } = useContext(UsuarioContext)
-  const signed = !!usuario?.id
+  const { data } = useUsuario()
+  const signed = !!data?.id
 
   return (
     <ReactRoute {...rest}

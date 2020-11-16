@@ -1,13 +1,13 @@
-import React, { useContext, useState } from 'react'
+import React, { useState } from 'react'
 import { FaSearch, FaCog, FaThLarge, FaBars } from 'react-icons/fa'
 import { Button, Dropdown, Image, Modal } from 'react-bootstrap'
-import { SideBarContext, UsuarioContext } from '../../context'
+import { useSideBar, useUsuario } from '../../hooks'
 import './styles.scss'
 
 export const Navbar = () => {
   const [show, setShow] = useState(false)
-  const { toogle } = useContext(SideBarContext)
-  const { usuario } = useContext(UsuarioContext)
+  const { toogle } = useSideBar()
+  const { data } = useUsuario()
   const handleClose = () => setShow(false)
   const handleShow = () => setShow(true)
 
@@ -25,7 +25,7 @@ export const Navbar = () => {
             <Dropdown>
               <Dropdown.Toggle as="div" bsPrefix="avatar">
                 <Image src="https://www.w3schools.com/howto/img_avatar.png" roundedCircle />
-                <span>{usuario?.email}</span>
+                <span>{data?.email}</span>
               </Dropdown.Toggle>
 
               <Dropdown.Menu>

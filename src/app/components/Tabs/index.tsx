@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useContext } from 'react'
-import { TabsContext } from '../../context'
+import React, { useState, useEffect } from 'react'
+import { useTabs } from '../../hooks'
 import capitalize from 'capitalize-pt-br'
 import { useLocation } from 'react-router-dom'
 import { Nav, Tab } from 'react-bootstrap'
@@ -10,7 +10,7 @@ interface TabsProps {
 
 export const Tabs = ({ fixedContent }: TabsProps) => {
   const [tabFixedTitle, setTabFixedTitle] = useState('')
-  const { activeTab, setActiveTab, tabs, removeTab } = useContext(TabsContext)
+  const { activeTab, setActiveTab, tabs, removeTab } = useTabs()
   const { pathname } = useLocation()
 
   const handleCloseTabOnClick = (index: number) => {

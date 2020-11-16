@@ -1,23 +1,23 @@
 import capitalize from 'capitalize-pt-br'
-import React, { useEffect, useState, useContext } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Table } from 'react-bootstrap'
 import { makeTrazerClientesFidelizados } from '../../../domain/clientes/factories/makeTrazerClientesFidelizados'
 import { Cliente } from '../../../domain/clientes/models/cliente'
-import { UsuarioContext, TabsContext } from '../../context'
+import { useUsuario, useTabs } from '../../hooks'
 import { Atendimento } from '../Atendimento'
 
 const trazerClientesFidelizados = makeTrazerClientesFidelizados()
 
 export const Clientes = () => {
   const [clientesFidelizados, setClientesFidelizados] = useState([] as Cliente[])
-  const { usuario } = useContext(UsuarioContext)
-  const { addTab } = useContext(TabsContext)
+  const { data } = useUsuario()
+  const { addTab } = useTabs()
 
   useEffect(() => {
     async function fetch () {
       const response = await trazerClientesFidelizados.execute(
-        usuario?.funcionario_id as unknown as number,
-        usuario?.token as string,
+        data?.funcionario_id as unknown as number,
+        data?.token as string,
         50,
         0,
         ''
@@ -27,7 +27,7 @@ export const Clientes = () => {
     }
 
     fetch()
-  }, [usuario])
+  }, [data])
 
   const handleAtenderOnClick = (cliente: Cliente) => {
     if (!cliente?.id) {

@@ -1,12 +1,12 @@
-import React, { ChangeEvent, FormEvent, useContext, useEffect, useState, useCallback } from 'react'
+import React, { ChangeEvent, FormEvent, useEffect, useState, useCallback } from 'react'
 import { Button, Image, Spinner } from 'react-bootstrap'
 import Form from 'react-bootstrap/Form'
-import { UsuarioContext } from '../../context'
+import { useUsuario } from '../../hooks'
 import Brasao from '../../assets/imgs/brasao.png'
 import './styles.scss'
 
 export const Login: React.FC = () => {
-  const { login, loading } = useContext(UsuarioContext)
+  const { login, loading } = useUsuario()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [rememberPassword, setRememberPassword] = useState(false)

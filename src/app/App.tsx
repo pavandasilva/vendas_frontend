@@ -3,7 +3,7 @@ import { ToastContainer } from 'react-toastify'
 import { Routes } from './routes'
 import { Router } from 'react-router-dom'
 import { history } from './routes/history'
-import { Providers } from './context/providers'
+import { Providers } from './hooks/contextProviders'
 
 import './styles/style.scss'
 

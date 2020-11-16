@@ -1,4 +1,4 @@
-import React, { createContext, useState } from 'react'
+import React, { createContext, useState, useContext } from 'react'
 import jwt_decode from 'jwt-decode'
 import { history } from '../routes/history'
 import { toast } from 'react-toastify'
@@ -8,13 +8,23 @@ import { AppError } from '../../helpers/appError'
 
 interface UsuarioContextState {
   error?: Error
-  usuario?: Usuario
+  data?: Usuario
   login(email: string, password: string, rememberPassword: boolean): Promise<void>
   logout(): void
   loading: boolean
 }
 
-export const UsuarioContext = createContext<UsuarioContextState>({} as UsuarioContextState)
+const UsuarioContext = createContext<UsuarioContextState>({} as UsuarioContextState)
+
+export const useUsuario = (): UsuarioContextState => {
+  const context = useContext(UsuarioContext)
+
+  if (!context) {
+    throw new Error('useUsuario deve ser usado com UsuarioProvider')
+  }
+
+  return context
+}
 
 export const UsuarioProvider: React.FC = ({ children }) => {
   const [loading, setLoading] = useState(false)
@@ -66,7 +76,7 @@ export const UsuarioProvider: React.FC = ({ children }) => {
   }
 
   return (
-    <UsuarioContext.Provider value={{ usuario, login, logout, loading }} >
+    <UsuarioContext.Provider value={{ data: usuario, login, logout, loading }} >
       {children}
     </UsuarioContext.Provider>
   )

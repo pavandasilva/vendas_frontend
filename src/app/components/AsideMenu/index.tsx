@@ -1,12 +1,11 @@
-import React, { useContext } from 'react'
+import React from 'react'
 import { FaChartBar, FaQuestion, FaClipboardList, FaUser, FaFolderOpen } from 'react-icons/fa'
 import { NavLink } from 'react-router-dom'
+import { useSideBar } from '../../hooks'
 import Logo from '../../assets/imgs/logo_brasao.png'
 
-import { SideBarContext } from '../../context'
-
 export const AsideMenu: React.FC = () => {
-  const { isVisible } = useContext(SideBarContext)
+  const { isVisible } = useSideBar()
 
   return (
     <aside className={`navigation ${isVisible ? '' : 'toogle'}`}>
