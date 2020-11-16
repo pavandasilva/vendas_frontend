@@ -53,6 +53,7 @@ export const UsuarioProvider: React.FC = ({ children }) => {
         setUsuario(nUsuario)
         history.push('/')
         localStorage.setItem(`@${process.env.REACT_APP_NAME}:rememberPassword`, rememberPassword.toString())
+        localStorage.setItem(`@${process.env.REACT_APP_NAME}:token`, token)
       } else {
         setUsuario({} as Usuario)
       }

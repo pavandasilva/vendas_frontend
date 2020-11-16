@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import { FaSearch, FaCog, FaThLarge, FaBars } from 'react-icons/fa'
 import { Button, Dropdown, Image, Modal } from 'react-bootstrap'
 import { useSideBar, useUsuario } from '../../hooks'
@@ -7,9 +7,13 @@ import './styles.scss'
 export const Navbar = () => {
   const [show, setShow] = useState(false)
   const { toogle } = useSideBar()
-  const { data } = useUsuario()
-  const handleClose = () => setShow(false)
-  const handleShow = () => setShow(true)
+  const { data, logout } = useUsuario()
+  const handleClose = useCallback(() => setShow(false), [])
+  const handleShow = useCallback(() => setShow(true), [])
+
+  const handleLogoutClick = useCallback(() => {
+    logout()
+  }, [logout])
 
   return (
     <div className="navbar">
@@ -33,7 +37,7 @@ export const Navbar = () => {
                 <Dropdown.Item href="#/action-2">Notificações</Dropdown.Item>
                 <Dropdown.Item href="#/action-3">Configurações</Dropdown.Item>
                 <Dropdown.Divider />
-                <Dropdown.Item href="#/action-3">Sair</Dropdown.Item>
+                <Dropdown.Item onClick={handleLogoutClick}>Sair</Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
           </div>

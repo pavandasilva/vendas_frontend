@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { Nav, Tab } from 'react-bootstrap'
+import { FaTimes } from 'react-icons/fa'
 import './styles.scss'
 
 interface TabProps {
@@ -63,7 +64,7 @@ export const TabsTeste: React.FC = () => {
               <Nav.Link className={tab.selected ? 'teste' : ''} eventKey={tab.id} onSelect={() => handleTabOnSelect(tab.id)}>
                 {tab.title}
               </Nav.Link>
-              {tab.excludable && <span>x</span>}
+              {tab.excludable && <span><FaTimes/></span>}
             </Nav.Item>
           ))}
         </Nav>

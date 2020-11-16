@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react'
-import { useTabs } from '../../hooks'
+import { Nav, Tab } from 'react-bootstrap'
 import capitalize from 'capitalize-pt-br'
 import { useLocation } from 'react-router-dom'
-import { Nav, Tab } from 'react-bootstrap'
+import { FaTimes } from 'react-icons/fa'
+import { useTabs } from '../../hooks'
 
 interface TabsProps {
   fixedContent?: React.ReactNode
@@ -47,8 +48,7 @@ export const Tabs = ({ fixedContent }: TabsProps) => {
                 </Nav.Link>
               </Nav.Item>
 
-              <span onClick={() => handleCloseTabOnClick(index)}>x</span>
-
+              <span className='close' onClick={() => handleCloseTabOnClick(index)}><FaTimes /></span>
             </>
           ))}
         </Nav>
