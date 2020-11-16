@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { Nav, Tab } from 'react-bootstrap'
 import capitalize from 'capitalize-pt-br'
 import { useLocation } from 'react-router-dom'
@@ -14,9 +14,9 @@ export const Tabs = ({ fixedContent }: TabsProps) => {
   const { activeTab, setActiveTab, tabs, removeTab } = useTabs()
   const { pathname } = useLocation()
 
-  const handleCloseTabOnClick = (index: number) => {
+  const handleCloseTabOnClick = useCallback((index: number) => {
     removeTab(index)
-  }
+  }, [removeTab])
 
   useEffect(() => {
     if (pathname === '/') {
@@ -37,13 +37,11 @@ export const Tabs = ({ fixedContent }: TabsProps) => {
             </Nav.Link>
           </Nav.Item>
           {/* tab fixa */}
+
           { tabs?.map((tab, index) => (
             <>
-
               <Nav.Item key={`tab${index + 1}`.toString()} onClick={() => setActiveTab(index)}>
                 <Nav.Link eventKey={index}>
-
-                  {/*   <span onClick={() => handleCloseTabOnClick(index)}>x</span> */}
                   { tab.title }
                 </Nav.Link>
               </Nav.Item>
@@ -58,6 +56,7 @@ export const Tabs = ({ fixedContent }: TabsProps) => {
             { fixedContent }
           </Tab.Pane>
           {/*  conteudo da aba fixa */}
+
           <Tab.Content>
             { tabs?.map((tab, index) => (
               <Tab.Pane key={`contentTab${index}`} eventKey={index} >
