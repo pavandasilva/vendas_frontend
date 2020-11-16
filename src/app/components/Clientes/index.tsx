@@ -5,6 +5,7 @@ import { makeTrazerClientesFidelizados } from '../../../domain/clientes/factorie
 import { Cliente } from '../../../domain/clientes/models/cliente'
 import { useUsuario, useTabs } from '../../hooks'
 import { Atendimento } from '../Atendimento'
+import { InputSuggestions } from '../InputSuggestions'
 
 const trazerClientesFidelizados = makeTrazerClientesFidelizados()
 
@@ -63,11 +64,19 @@ export const Clientes = () => {
     setCurrentPage(page)
   }, [numberRows, perPage])
 
+  const getSuggestions = (value: string): string[] => {
+    return [
+      'kacel',
+      'Guilherme'
+    ]
+  }
+
   return (
     <div className="card">
       <div className="card-body">
         <h2>Clientes</h2>
-        <input onChange={searchOnChange}></input>
+        <InputSuggestions onChange={searchOnChange} getSuggestions={getSuggestions} placeHolder='Filtrar clientes' />
+
         { loading ? <h1>loading...</h1> : (
           <>
             <Table striped bordered hover size="sm">
