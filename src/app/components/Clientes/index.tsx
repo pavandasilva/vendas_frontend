@@ -1,13 +1,22 @@
 import capitalize from 'capitalize-pt-br'
-import React, { ChangeEvent, useEffect, useState, useMemo, useCallback } from 'react'
+import React, { useEffect, useState, useMemo, useCallback } from 'react'
 import { Table, Pagination } from 'react-bootstrap'
+import Autosuggest from 'react-autosuggest'
 import { makeTrazerClientesFidelizados } from '../../../domain/clientes/factories/makeTrazerClientesFidelizados'
 import { Cliente } from '../../../domain/clientes/models/cliente'
 import { useUsuario, useTabs } from '../../hooks'
 import { Atendimento } from '../Atendimento'
-import { InputSuggestions } from '../InputSuggestions'
+
+interface SuggestionsFetchRequestedParams {
+  value: string
+}
 
 const trazerClientesFidelizados = makeTrazerClientesFidelizados()
+
+const languages = [
+  'elme',
+  'teste'
+]
 
 export const Clientes = () => {
   const [clientesFidelizados, setClientesFidelizados] = useState([] as Cliente[])
@@ -15,6 +24,8 @@ export const Clientes = () => {
   const [currentPage, setCurrentPage] = useState(1)
   const [numberRows, setNumberRows] = useState(0)
   const [loading, setLoading] = useState(false)
+  const [suggestions, setSuggestions] = useState(languages)
+  const [value, setValue] = useState('')
   const perPage = useMemo(() => 10, [])
   const { data } = useUsuario()
   const { addTab } = useTabs()
@@ -39,6 +50,34 @@ export const Clientes = () => {
     fetch()
   }, [currentPage, data, perPage, search])
 
+  const getSuggestionValue = useCallback((suggestion: string) => { return suggestion }, [])
+
+  const renderSuggestion = useCallback((suggestion: string) => (
+    <div>
+      {suggestion }
+    </div>
+  ), [])
+
+  const onSuggestionsFetchRequested = useCallback(({ value }: SuggestionsFetchRequestedParams) => {
+    setSuggestions(languages)
+  }, [])
+
+  const onSuggestionsClearRequested = useCallback(() => {
+    setSuggestions([])
+  }, [])
+
+  const onChange = useCallback((event: React.ChangeEvent<HTMLInputElement>, { newValue }) => {
+    setValue(newValue)
+    setSearch(newValue)
+    setCurrentPage(1)
+  }, [])
+
+  const inputProps = useMemo(() => ({
+    placeholder: 'Filtrar clientes',
+    value,
+    onChange
+  }), [onChange, value])
+
   const handleAtenderOnClick = useCallback((cliente: Cliente) => {
     if (!cliente?.id) {
       return
@@ -51,11 +90,6 @@ export const Clientes = () => {
     })
   }, [addTab])
 
-  const searchOnChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
-    setSearch(event.target.value)
-    setCurrentPage(1)
-  }, [])
-
   const handlePaginationOnClick = useCallback((page: number) => {
     if (page < 1 || page > Math.ceil(numberRows / perPage)) {
       return
@@ -64,18 +98,18 @@ export const Clientes = () => {
     setCurrentPage(page)
   }, [numberRows, perPage])
 
-  const getSuggestions = (value: string): string[] => {
-    return [
-      'kacel',
-      'Guilherme'
-    ]
-  }
-
   return (
     <div className="card">
       <div className="card-body">
         <h2>Clientes</h2>
-        <InputSuggestions onChange={searchOnChange} getSuggestions={getSuggestions} placeHolder='Filtrar clientes' />
+        <Autosuggest
+          suggestions={suggestions}
+          onSuggestionsFetchRequested={onSuggestionsFetchRequested}
+          onSuggestionsClearRequested={onSuggestionsClearRequested}
+          getSuggestionValue={getSuggestionValue}
+          renderSuggestion={renderSuggestion}
+          inputProps={inputProps}
+        />
 
         { loading ? <h1>loading...</h1> : (
           <>
