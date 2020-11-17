@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react'
-import { useHistory, useLocation } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
 import { Nav, Tab } from 'react-bootstrap'
 import capitalize from 'capitalize-pt-br'
 
@@ -14,13 +14,6 @@ export const Tabs = ({ fixedContent }: TabsProps) => {
   const [tabFixedTitle, setTabFixedTitle] = useState('')
   const { activeTab, setActiveTab, tabs, removeTab } = useTabs()
   const { pathname } = useLocation()
-  const { listen } = useHistory()
-
-  useEffect(() => {
-    listen(({ pathname }) => {
-      console.log(pathname)
-    })
-  }, [listen])
 
   const handleCloseTabOnClick = useCallback((index: number) => {
     removeTab(index)
