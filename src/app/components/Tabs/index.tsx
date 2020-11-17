@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react'
+import { useHistory, useLocation } from 'react-router-dom'
 import { Nav, Tab } from 'react-bootstrap'
 import capitalize from 'capitalize-pt-br'
-import { useLocation } from 'react-router-dom'
+
 import { FaTimes } from 'react-icons/fa'
 import { useTabs } from '../../hooks'
 
@@ -13,6 +14,13 @@ export const Tabs = ({ fixedContent }: TabsProps) => {
   const [tabFixedTitle, setTabFixedTitle] = useState('')
   const { activeTab, setActiveTab, tabs, removeTab } = useTabs()
   const { pathname } = useLocation()
+  const { listen } = useHistory()
+
+  useEffect(() => {
+    listen(({ pathname }) => {
+      console.log(pathname)
+    })
+  }, [listen])
 
   const handleCloseTabOnClick = useCallback((index: number) => {
     removeTab(index)
@@ -24,7 +32,9 @@ export const Tabs = ({ fixedContent }: TabsProps) => {
     } else {
       setTabFixedTitle(capitalize(pathname.split('/')[1]))
     }
-  }, [pathname])
+
+    setActiveTab(-1)
+  }, [pathname, setActiveTab])
 
   return (
     <div className="m-3">

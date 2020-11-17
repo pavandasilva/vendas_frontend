@@ -24,7 +24,7 @@ export const Clientes = () => {
   const [currentPage, setCurrentPage] = useState(1)
   const [numberRows, setNumberRows] = useState(0)
   const [loading, setLoading] = useState(false)
-  const [suggestions, setSuggestions] = useState(languages)
+  const [suggestions, setSuggestions] = useState([] as string[])
   const [value, setValue] = useState('')
   const perPage = useMemo(() => 10, [])
   const { data } = useUsuario()
