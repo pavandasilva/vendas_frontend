@@ -8,6 +8,7 @@ import { Cliente } from '../../../domain/clientes/models/cliente'
 import { useUsuario, useTabs } from '../../hooks'
 import { Atendimento } from '../Atendimento'
 import { makeTrazerSugestoesClientesFidelizados } from '../../../domain/funcionarios/factories/makeTrazerSugestoesClientesFidelizados'
+import { getLastWord } from '../../../helpers'
 
 const trazerClientesFidelizados = makeTrazerClientesFidelizados()
 const trazerSuggestoesClientesFidelizados = makeTrazerSugestoesClientesFidelizados()
@@ -53,7 +54,10 @@ export const Clientes = () => {
     fetch()
   }, [currentPage, data, logout, perPage, search])
 
-  const getSuggestionValue = useCallback((suggestion: string) => { return suggestion }, [])
+  const getSuggestionValue = useCallback((suggestion: string) => {
+    const newValue = value.replace(getLastWord(value) as string, suggestion)
+    return newValue
+  }, [value])
 
   const renderSuggestion = useCallback((suggestion: string) => (
     <div>
@@ -62,8 +66,10 @@ export const Clientes = () => {
   ), [])
 
   const onSuggestionsFetchRequested = useCallback(async ({ value }: SuggestionsFetchRequestedParams) => {
+    console.log(getLastWord(value))
+
     const suggestions = await trazerSuggestoesClientesFidelizados.execute({
-      filter: value,
+      filter: getLastWord(value),
       token: data?.token
     })
 
@@ -173,9 +179,7 @@ export const Clientes = () => {
               )
             }
           </>
-
         )}
-
       </div>
     </div>
   )

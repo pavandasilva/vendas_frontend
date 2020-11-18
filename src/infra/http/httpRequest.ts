@@ -25,8 +25,6 @@ export class HttpRequestImpl implements HttpRequest {
         }
       }
 
-      console.log(`${url || ''}${path}${query || ''}`)
-
       const response = await this.httpRequest.get(`${url || ''}${path}${query || ''}`, config)
 
       const result = {
