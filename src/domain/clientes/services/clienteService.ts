@@ -20,10 +20,6 @@ export class ClienteServiceImpl implements ClienteService {
       query
     })
 
-    if (response.status > 400) {
-      console.log('erro')
-    }
-
     return response.data as GetListClienteResponse
   }
 
@@ -34,10 +30,6 @@ export class ClienteServiceImpl implements ClienteService {
       path: `clientes/${id}`,
       token
     })
-
-    if (response.status > 400) {
-      console.log('erro')
-    }
 
     return response.data as GetOneClienteResponse
   }

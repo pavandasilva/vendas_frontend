@@ -14,7 +14,7 @@ interface UsuarioContextState {
   loading: boolean
 }
 
-const UsuarioContext = createContext<UsuarioContextState>({} as UsuarioContextState)
+export const UsuarioContext = createContext<UsuarioContextState>({} as UsuarioContextState)
 
 export const useUsuario = (): UsuarioContextState => {
   const context = useContext(UsuarioContext)

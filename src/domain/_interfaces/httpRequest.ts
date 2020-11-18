@@ -12,11 +12,16 @@ export interface GetHttpRequest {
   token?: string
 }
 
+export interface HttpRequestError {
+  status?: number
+  message?: string
+}
+
 export interface HttpRequest {
   get: <T> (getHttpRequest: GetHttpRequest) => Promise<{
     data?: T
-    status: number
-    error?: string
+    status?: number
+    error?: HttpRequestError
   }>
   post: <T> (postHttpRequest: PostHttpRequest) => Promise <T | undefined>
 }

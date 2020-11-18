@@ -18,9 +18,13 @@ export function Route ({
   return (
     <ReactRoute {...rest}
       render={() => {
-        return isPrivate === signed ? (
-          <Component/>
-        ) : <Redirect to={{ pathname: isPrivate ? '/login' : '/' }}/>
+        if (isPrivate && !signed) {
+          return <Redirect to={{ pathname: '/login' }}/>
+        } else if (isPrivate && signed) {
+          return <Component/>
+        } else {
+          return <Component/>
+        }
       }}
     />)
 }

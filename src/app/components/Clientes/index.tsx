@@ -1,4 +1,5 @@
 import capitalize from 'capitalize-pt-br'
+import { history } from '../../routes/history'
 import React, { useEffect, useState, useMemo, useCallback } from 'react'
 import { Table, Pagination } from 'react-bootstrap'
 import Autosuggest from 'react-autosuggest'
@@ -6,7 +7,6 @@ import { makeTrazerClientesFidelizados } from '../../../domain/clientes/factorie
 import { Cliente } from '../../../domain/clientes/models/cliente'
 import { useUsuario, useTabs } from '../../hooks'
 import { Atendimento } from '../Atendimento'
-
 interface SuggestionsFetchRequestedParams {
   value: string
 }
@@ -27,28 +27,34 @@ export const Clientes = () => {
   const [suggestions, setSuggestions] = useState([] as string[])
   const [value, setValue] = useState('')
   const perPage = useMemo(() => 10, [])
-  const { data } = useUsuario()
+  const { data, logout } = useUsuario()
   const { addTab } = useTabs()
 
   useEffect(() => {
     async function fetch () {
       setLoading(true)
 
-      const response = await trazerClientesFidelizados.execute(
-        data?.funcionario_id as unknown as number,
-        data?.token as string,
-        perPage,
-        (currentPage - 1) * perPage,
-        search
-      )
+      try {
+        const response = await trazerClientesFidelizados.execute(
+          data?.funcionario_id as unknown as number,
+          data?.token as string,
+          perPage,
+          (currentPage - 1) * perPage,
+          search
+        )
 
-      setNumberRows(response.metadata.count)
-      setClientesFidelizados(response?.data as Cliente[])
-      setLoading(false)
+        setNumberRows(response?.metadata?.count)
+        setClientesFidelizados(response?.data as Cliente[])
+        setLoading(false)
+      } catch (error) {
+        if (error.type === 'auth') {
+          history.push('/login')
+        }
+      }
     }
 
     fetch()
-  }, [currentPage, data, perPage, search])
+  }, [currentPage, data, logout, perPage, search])
 
   const getSuggestionValue = useCallback((suggestion: string) => { return suggestion }, [])
 
@@ -67,16 +73,25 @@ export const Clientes = () => {
   }, [])
 
   const onChange = useCallback((event: React.ChangeEvent<HTMLInputElement>, { newValue }) => {
+    if (!event.target.value) {
+      setSearch(newValue)
+    }
+
     setValue(newValue)
-    setSearch(newValue)
-    setCurrentPage(1)
   }, [])
+
+  const onKeyPress = useCallback((event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      setSearch(value)
+    }
+  }, [value])
 
   const inputProps = useMemo(() => ({
     placeholder: 'Filtrar clientes',
     value,
-    onChange
-  }), [onChange, value])
+    onChange,
+    onKeyPress
+  }), [onChange, onKeyPress, value])
 
   const handleAtenderOnClick = useCallback((cliente: Cliente) => {
     if (!cliente?.id) {
@@ -101,7 +116,7 @@ export const Clientes = () => {
   return (
     <div className="card">
       <div className="card-body">
-        <h2>Clientes</h2>
+
         <Autosuggest
           suggestions={suggestions}
           onSuggestionsFetchRequested={onSuggestionsFetchRequested}

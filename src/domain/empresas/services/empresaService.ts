@@ -20,10 +20,6 @@ export class EmpresaServiceImpl implements EmpresaService {
       query
     })
 
-    if (response.status > 400) {
-      console.log('erro')
-    }
-
     return response.data as GetListEmpresaResponse
   }
 
@@ -34,10 +30,6 @@ export class EmpresaServiceImpl implements EmpresaService {
       path: `empresas/${id}`,
       token
     })
-
-    if (response.status > 400) {
-      console.log('erro')
-    }
 
     return response.data as GetOneEmpresaResponse
   }

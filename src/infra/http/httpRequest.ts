@@ -1,5 +1,5 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios'
-import { GetHttpRequest, HttpRequest, PostHttpRequest } from '../../domain/_interfaces/httpRequest'
+import { GetHttpRequest, HttpRequest, HttpRequestError, PostHttpRequest } from '../../domain/_interfaces/httpRequest'
 
 export class HttpRequestImpl implements HttpRequest {
   private readonly httpRequest: AxiosInstance
@@ -12,12 +12,11 @@ export class HttpRequestImpl implements HttpRequest {
 
   async get<T> (getHttpRequest: GetHttpRequest): Promise<{
     data?: T
-    status: number
-    error?: string
+    status?: number
+    error?: HttpRequestError
   }> {
     try {
       const { path, token, url, query } = getHttpRequest
-
       let config: AxiosRequestConfig = {} as AxiosRequestConfig
 
       if (token) {
@@ -36,11 +35,11 @@ export class HttpRequestImpl implements HttpRequest {
       return result
     } catch (error) {
       const result = {
-        data: error.data as T,
-        status: error.status,
-        error
+        error: {
+          message: error.message,
+          status: error.response?.status
+        }
       }
-
       return result
     }
   }
