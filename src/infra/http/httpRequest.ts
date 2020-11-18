@@ -36,7 +36,7 @@ export class HttpRequestImpl implements HttpRequest {
     } catch (error) {
       const result = {
         error: {
-          message: error.message,
+          message: error.response.data.message || error.message,
           status: error.response?.status
         }
       }
@@ -70,7 +70,7 @@ export class HttpRequestImpl implements HttpRequest {
     } catch (error) {
       const result = {
         error: {
-          message: error.message,
+          message: error.response.data.message || error.message,
           status: error.response?.status
         }
       }
