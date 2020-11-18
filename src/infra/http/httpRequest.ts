@@ -44,7 +44,11 @@ export class HttpRequestImpl implements HttpRequest {
     }
   }
 
-  async post<T> (postHttpRequest:PostHttpRequest): Promise <T | undefined> {
+  async post<T> (postHttpRequest:PostHttpRequest): Promise<{
+    data?: T
+    status?: number
+    error?: HttpRequestError
+  }> {
     try {
       const { url, path, body, token } = postHttpRequest
       let config: AxiosRequestConfig = {} as AxiosRequestConfig
@@ -56,9 +60,21 @@ export class HttpRequestImpl implements HttpRequest {
       }
 
       const response = await this.httpRequest.post(`${url || ''}${path}`, body, config)
-      return response.data as T
-    } catch ({ response }) {
-      throw new Error(response.data.message)
+
+      const result = {
+        data: response.data as T,
+        status: response.status
+      }
+
+      return result
+    } catch (error) {
+      const result = {
+        error: {
+          message: error.message,
+          status: error.response?.status
+        }
+      }
+      return result
     }
   }
 }

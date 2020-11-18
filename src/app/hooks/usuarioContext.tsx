@@ -7,7 +7,6 @@ import { Usuario } from '../../domain/usuarios/models/usuario'
 import { AppError } from '../../helpers/appError'
 
 interface UsuarioContextState {
-  error?: Error
   data?: Usuario
   login(email: string, password: string, rememberPassword: boolean): Promise<void>
   logout(): void

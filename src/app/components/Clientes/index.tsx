@@ -32,23 +32,17 @@ export const Clientes = () => {
     async function fetch () {
       setLoading(true)
 
-      try {
-        const response = await trazerClientesFidelizados.execute(
+      const response = await trazerClientesFidelizados.execute(
           data?.funcionario_id as unknown as number,
           data?.token as string,
           perPage,
           (currentPage - 1) * perPage,
           search
-        )
+      )
 
-        setNumberRows(response?.metadata?.count)
-        setClientesFidelizados(response?.data as Cliente[])
-        setLoading(false)
-      } catch (error) {
-        if (error.type === 'auth') {
-          history.push('/login')
-        }
-      }
+      setNumberRows(response?.metadata?.count)
+      setClientesFidelizados(response?.data as Cliente[])
+      setLoading(false)
     }
 
     fetch()
@@ -66,8 +60,6 @@ export const Clientes = () => {
   ), [])
 
   const onSuggestionsFetchRequested = useCallback(async ({ value }: SuggestionsFetchRequestedParams) => {
-    console.log(getLastWord(value))
-
     const suggestions = await trazerSuggestoesClientesFidelizados.execute({
       filter: getLastWord(value),
       token: data?.token

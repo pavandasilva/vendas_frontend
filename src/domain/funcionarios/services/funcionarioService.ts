@@ -1,15 +1,18 @@
-import { AppError } from '../../../helpers'
-import { getTypeErrorByStatusHttp } from '../../../helpers/getTypeErrorByStatusHttp'
-import { GetParams } from '../../_interfaces'
+import { handleErrors } from '../../../helpers/handleErrors'
+import { GetParams, RouteController, AlertController } from '../../_interfaces'
 import { HttpRequest } from '../../_interfaces/httpRequest'
 import { FuncionarioService, GetClientesFuncionarioResponse, GetFuncionarioResponse } from '../interfaces'
 import { GetClientesSuggestionResponse } from '../interfaces/getClientesSuggestionResponse'
 
 export class FuncionarioServiceImpl implements FuncionarioService {
   private readonly httpRequest: HttpRequest
+  private readonly routeController: RouteController
+  private readonly alertController: AlertController
 
-  constructor (httpRequest: HttpRequest) {
+  constructor (httpRequest: HttpRequest, routeController: RouteController, alertController: AlertController) {
     this.httpRequest = httpRequest
+    this.routeController = routeController
+    this.alertController = alertController
   }
 
   async getlist (params: GetParams): Promise<GetFuncionarioResponse> {
@@ -35,13 +38,7 @@ export class FuncionarioServiceImpl implements FuncionarioService {
       token
     })
 
-    if (response?.error) {
-      throw new AppError({
-        message: response?.error?.message as string,
-        type: getTypeErrorByStatusHttp(response?.error?.status as number)
-      })
-    }
-
+    handleErrors(this.routeController, this.alertController, response.error)
     return response?.data as GetClientesFuncionarioResponse
   }
 
@@ -52,13 +49,7 @@ export class FuncionarioServiceImpl implements FuncionarioService {
       token: params.token
     })
 
-    if (response?.error) {
-      throw new AppError({
-        message: response?.error?.message as string,
-        type: getTypeErrorByStatusHttp(response?.error?.status as number)
-      })
-    }
-
+    handleErrors(this.routeController, this.alertController, response.error)
     return response as GetClientesSuggestionResponse
   }
 }

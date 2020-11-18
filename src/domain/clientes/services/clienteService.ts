@@ -1,13 +1,18 @@
 import { generateSearchQuery } from '../../../helpers'
-import { GetParams } from '../../_interfaces'
+import { handleErrors } from '../../../helpers/handleErrors'
+import { AlertController, GetParams, RouteController } from '../../_interfaces'
 import { HttpRequest } from '../../_interfaces/httpRequest'
 import { ClienteService, GetListClienteResponse, GetOneClienteResponse } from '../interfaces'
 
 export class ClienteServiceImpl implements ClienteService {
   private readonly httpRequest: HttpRequest
+  private readonly routeController: RouteController
+  private readonly alertController: AlertController
 
-  constructor (httpRequest: HttpRequest) {
+  constructor (httpRequest: HttpRequest, routeController: RouteController, alertController: AlertController) {
     this.httpRequest = httpRequest
+    this.routeController = routeController
+    this.alertController = alertController
   }
 
   async getlist (params: GetParams): Promise<GetListClienteResponse> {
@@ -20,6 +25,7 @@ export class ClienteServiceImpl implements ClienteService {
       query
     })
 
+    handleErrors(this.routeController, this.alertController, response.error)
     return response.data as GetListClienteResponse
   }
 
@@ -31,6 +37,7 @@ export class ClienteServiceImpl implements ClienteService {
       token
     })
 
+    handleErrors(this.routeController, this.alertController, response.error)
     return response.data as GetOneClienteResponse
   }
 }

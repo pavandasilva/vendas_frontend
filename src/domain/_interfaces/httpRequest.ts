@@ -23,5 +23,9 @@ export interface HttpRequest {
     status?: number
     error?: HttpRequestError
   }>
-  post: <T> (postHttpRequest: PostHttpRequest) => Promise <T | undefined>
+  post: <T> (getHttpRequest: PostHttpRequest) => Promise<{
+    data?: T
+    status?: number
+    error?: HttpRequestError
+  }>
 }
