@@ -3,6 +3,7 @@ import { getTypeErrorByStatusHttp } from '../../../helpers/getTypeErrorByStatusH
 import { GetParams } from '../../_interfaces'
 import { HttpRequest } from '../../_interfaces/httpRequest'
 import { FuncionarioService, GetClientesFuncionarioResponse, GetFuncionarioResponse } from '../interfaces'
+import { GetClientesSuggestionResponse } from '../interfaces/getClientesSuggestionResponse'
 
 export class FuncionarioServiceImpl implements FuncionarioService {
   private readonly httpRequest: HttpRequest
@@ -42,5 +43,22 @@ export class FuncionarioServiceImpl implements FuncionarioService {
     }
 
     return response?.data as GetClientesFuncionarioResponse
+  }
+
+  async getClientesSuggestions (params: GetParams): Promise<GetClientesSuggestionResponse> {
+    const response = await this.httpRequest.get({
+      path: 'clientes/sugestao_palavras',
+      query: `?q=${params.filter}`,
+      token: params.token
+    })
+
+    if (response?.error) {
+      throw new AppError({
+        message: response?.error?.message as string,
+        type: getTypeErrorByStatusHttp(response?.error?.status as number)
+      })
+    }
+
+    return response as GetClientesSuggestionResponse
   }
 }

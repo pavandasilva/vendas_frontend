@@ -7,16 +7,13 @@ import { makeTrazerClientesFidelizados } from '../../../domain/clientes/factorie
 import { Cliente } from '../../../domain/clientes/models/cliente'
 import { useUsuario, useTabs } from '../../hooks'
 import { Atendimento } from '../Atendimento'
+import { makeTrazerSugestoesClientesFidelizados } from '../../../domain/funcionarios/factories/makeTrazerSugestoesClientesFidelizados'
+
+const trazerClientesFidelizados = makeTrazerClientesFidelizados()
+const trazerSuggestoesClientesFidelizados = makeTrazerSugestoesClientesFidelizados()
 interface SuggestionsFetchRequestedParams {
   value: string
 }
-
-const trazerClientesFidelizados = makeTrazerClientesFidelizados()
-
-const languages = [
-  'elme',
-  'teste'
-]
 
 export const Clientes = () => {
   const [clientesFidelizados, setClientesFidelizados] = useState([] as Cliente[])
@@ -64,9 +61,14 @@ export const Clientes = () => {
     </div>
   ), [])
 
-  const onSuggestionsFetchRequested = useCallback(({ value }: SuggestionsFetchRequestedParams) => {
-    setSuggestions(languages)
-  }, [])
+  const onSuggestionsFetchRequested = useCallback(async ({ value }: SuggestionsFetchRequestedParams) => {
+    const suggestions = await trazerSuggestoesClientesFidelizados.execute({
+      filter: value,
+      token: data?.token
+    })
+
+    setSuggestions(suggestions)
+  }, [data])
 
   const onSuggestionsClearRequested = useCallback(() => {
     setSuggestions([])
