@@ -3,6 +3,7 @@ import jwt_decode from 'jwt-decode'
 import { makeLogar } from '../../domain/usuarios/factories/makeLogar'
 import { Usuario } from '../../domain/usuarios/models/usuario'
 import { useUsuario } from './contexts/usuarioContext'
+import { toast } from 'react-toastify'
 
 const logar = makeLogar()
 
@@ -18,7 +19,7 @@ interface UseLogar {
 }
 
 export default function useLogar () {
-  const [token, setToken] = useState({
+  const [response, setResponse] = useState({
     data: '',
     loading: false,
     error: null
@@ -33,7 +34,7 @@ export default function useLogar () {
         password
       })
 
-      setToken({ data: response as string, loading: false, error: null })
+      setResponse({ data: response as string, loading: false, error: null })
 
       if (response) {
         localStorage.setItem(`@${process.env.REACT_APP_NAME}:token`, response)
@@ -42,9 +43,10 @@ export default function useLogar () {
         setData(dataUsuario)
       }
     } catch (error) {
-      setToken({ data: '', loading: false, error })
+      setResponse({ data: '', loading: false, error })
+      toast.error(error.message)
     }
   }, [setData])
 
-  return [token, execLogar] as const
+  return { response, execLogar }
 }

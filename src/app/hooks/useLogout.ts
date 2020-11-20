@@ -16,7 +16,7 @@ export default function useLogout () {
     } catch (error) {
       setResponse({ error })
     }
-  }, [])
+  }, [push])
 
-  return [response, execLogout] as const
+  return { response, execLogout }
 }

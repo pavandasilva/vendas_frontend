@@ -9,13 +9,13 @@ export const Navbar = () => {
   const [show, setShow] = useState(false)
   const { toogle } = useSideBar()
   const { data } = useUsuario()
-  const [, logout] = useLogout()
+  const { execLogout } = useLogout()
   const handleClose = useCallback(() => setShow(false), [])
   const handleShow = useCallback(() => setShow(true), [])
 
   const handleLogoutClick = useCallback(() => {
-    logout()
-  }, [logout])
+    execLogout()
+  }, [execLogout])
 
   return (
     <div className="navbar">

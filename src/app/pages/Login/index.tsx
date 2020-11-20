@@ -6,7 +6,7 @@ import useLogar from '../../hooks/useLogar'
 import './styles.scss'
 
 export const Login: React.FC = () => {
-  const [response, execLogar] = useLogar()
+  const { response, execLogar } = useLogar()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [rememberPassword, setRememberPassword] = useState(false)
