@@ -1,8 +1,8 @@
 import React from 'react'
 import { FaChartBar, FaQuestion, FaClipboardList, FaUser, FaFolderOpen } from 'react-icons/fa'
 import { NavLink } from 'react-router-dom'
-import { useSideBar } from '../../hooks'
 import Logo from '../../assets/imgs/logo_brasao.png'
+import { useSideBar } from '../../hooks/contexts'
 
 export const AsideMenu: React.FC = () => {
   const { isVisible } = useSideBar()

@@ -1,13 +1,15 @@
 import React, { useCallback, useState } from 'react'
 import { FaSearch, FaCog, FaThLarge, FaBars } from 'react-icons/fa'
 import { Button, Dropdown, Image, Modal } from 'react-bootstrap'
-import { useSideBar, useUsuario } from '../../hooks'
 import './styles.scss'
+import { useSideBar, useUsuario } from '../../hooks/contexts'
+import useLogout from '../../hooks/useLogout'
 
 export const Navbar = () => {
   const [show, setShow] = useState(false)
   const { toogle } = useSideBar()
-  const { data, logout } = useUsuario()
+  const { data } = useUsuario()
+  const [, logout] = useLogout()
   const handleClose = useCallback(() => setShow(false), [])
   const handleShow = useCallback(() => setShow(true), [])
 

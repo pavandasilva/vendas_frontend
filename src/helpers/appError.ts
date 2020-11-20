@@ -1,5 +1,5 @@
 export interface AppErrorData {
-  type?: string
+  type?: 'auth' | 'api' | 'validate'
   message: string
 }
 

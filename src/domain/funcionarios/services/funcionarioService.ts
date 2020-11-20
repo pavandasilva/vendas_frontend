@@ -38,7 +38,7 @@ export class FuncionarioServiceImpl implements FuncionarioService {
       token
     })
 
-    handleErrors(this.routeController, this.alertController, response.error)
+    handleErrors(response?.error)
     return response?.data as GetClientesFuncionarioResponse
   }
 
@@ -49,7 +49,7 @@ export class FuncionarioServiceImpl implements FuncionarioService {
       token: params.token
     })
 
-    handleErrors(this.routeController, this.alertController, response.error)
+    handleErrors(response?.error)
     return response as GetClientesSuggestionResponse
   }
 }

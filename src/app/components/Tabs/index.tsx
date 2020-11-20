@@ -2,9 +2,8 @@ import React, { useState, useEffect, useCallback } from 'react'
 import { useLocation } from 'react-router-dom'
 import { Nav, Tab } from 'react-bootstrap'
 import capitalize from 'capitalize-pt-br'
-
 import { FaTimes } from 'react-icons/fa'
-import { useTabs } from '../../hooks'
+import { useTabs } from '../../hooks/contexts'
 
 interface TabsProps {
   fixedContent?: React.ReactNode

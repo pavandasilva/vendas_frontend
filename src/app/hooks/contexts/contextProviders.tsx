@@ -1,5 +1,5 @@
 import React from 'react'
-import { UsuarioProvider, OrcamentoProvider, SideBarProvider, TabsProvider } from '.'
+import { SideBarProvider, UsuarioProvider, OrcamentoProvider, TabsProvider } from '.'
 
 export const Providers: React.FC = ({ children }) => {
   return (

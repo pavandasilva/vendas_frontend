@@ -1,16 +1,10 @@
 import React, { createContext, useState, useContext } from 'react'
 import jwt_decode from 'jwt-decode'
-import { history } from '../routes/history'
-import { toast } from 'react-toastify'
-import { makeLogar } from '../../domain/usuarios/factories/makeLogar'
-import { Usuario } from '../../domain/usuarios/models/usuario'
-import { AppError } from '../../helpers/appError'
+import { Usuario } from '../../../domain/usuarios/models/usuario'
 
 interface UsuarioContextState {
   data?: Usuario
-  login(email: string, password: string, rememberPassword: boolean): Promise<void>
-  logout(): void
-  loading: boolean
+  setData(usuario: Usuario): void
 }
 
 export const UsuarioContext = createContext<UsuarioContextState>({} as UsuarioContextState)
@@ -26,7 +20,6 @@ export const useUsuario = (): UsuarioContextState => {
 }
 
 export const UsuarioProvider: React.FC = ({ children }) => {
-  const [loading, setLoading] = useState(false)
   const [usuario, setUsuario] = useState<Usuario>(() => {
     const token = localStorage.getItem(`@${process.env.REACT_APP_NAME}:token`)
 
@@ -39,11 +32,10 @@ export const UsuarioProvider: React.FC = ({ children }) => {
     return {} as Usuario
   })
 
-  const login = async (email: string, password: string, rememberPassword = false) => {
+  /* const login = async (email: string, password: string, rememberPassword = false) => {
     const logar = makeLogar()
 
     try {
-      setLoading(true)
       const token = await logar.execute({ email, password })
 
       if (token) {
@@ -56,27 +48,23 @@ export const UsuarioProvider: React.FC = ({ children }) => {
       } else {
         setUsuario({} as Usuario)
       }
-
-      setLoading(false)
     } catch (error) {
-      setLoading(false)
-
       if (error.type === 'validate') {
         throw new AppError(error)
       }
 
       toast.error('Falha no login, verifique seus dados')
     }
-  }
+  } */
 
-  const logout = async () => {
+  /* const logout = async () => {
     setUsuario({} as Usuario)
     localStorage.removeItem(`@${process.env.REACT_APP_NAME}:token`)
     setUsuario({} as Usuario)
-  }
+  } */
 
   return (
-    <UsuarioContext.Provider value={{ data: usuario, login, logout, loading }} >
+    <UsuarioContext.Provider value={{ data: usuario, setData: setUsuario }} >
       {children}
     </UsuarioContext.Provider>
   )

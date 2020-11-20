@@ -1,6 +1,6 @@
 import React, { ComponentType } from 'react'
 import { Route as ReactRoute, Redirect, RouteProps } from 'react-router-dom'
-import { useUsuario } from '../hooks'
+import { useUsuario } from '../hooks/contexts'
 
 interface PrivateRouteProps extends RouteProps{
   component: ComponentType,

@@ -1,52 +1,37 @@
 import capitalize from 'capitalize-pt-br'
-import { history } from '../../routes/history'
 import React, { useEffect, useState, useMemo, useCallback } from 'react'
 import { Table, Pagination } from 'react-bootstrap'
 import Autosuggest from 'react-autosuggest'
-import { makeTrazerClientesFidelizados } from '../../../domain/clientes/factories/makeTrazerClientesFidelizados'
 import { Cliente } from '../../../domain/clientes/models/cliente'
-import { useUsuario, useTabs } from '../../hooks'
 import { Atendimento } from '../Atendimento'
 import { makeTrazerSugestoesClientesFidelizados } from '../../../domain/funcionarios/factories/makeTrazerSugestoesClientesFidelizados'
 import { getLastWord } from '../../../helpers'
+import useClientesFidelizados from '../../hooks/useClientesFidelizados'
+import { useTabs, useUsuario } from '../../hooks/contexts'
 
-const trazerClientesFidelizados = makeTrazerClientesFidelizados()
-const trazerSuggestoesClientesFidelizados = makeTrazerSugestoesClientesFidelizados()
+const perPage = 10
 interface SuggestionsFetchRequestedParams {
   value: string
 }
 
 export const Clientes = () => {
-  const [clientesFidelizados, setClientesFidelizados] = useState([] as Cliente[])
   const [search, setSearch] = useState('')
   const [currentPage, setCurrentPage] = useState(1)
-  const [numberRows, setNumberRows] = useState(0)
-  const [loading, setLoading] = useState(false)
   const [suggestions, setSuggestions] = useState([] as string[])
   const [value, setValue] = useState('')
-  const perPage = useMemo(() => 10, [])
-  const { data, logout } = useUsuario()
+  const { data: userData } = useUsuario()
   const { addTab } = useTabs()
 
+  const trazerSuggestoesClientesFidelizados = useMemo(() => makeTrazerSugestoesClientesFidelizados(), [])
+  const [clientesFidelizados, execTrazerClientesFidelizados] = useClientesFidelizados()
+
   useEffect(() => {
-    async function fetch () {
-      setLoading(true)
-
-      const response = await trazerClientesFidelizados.execute(
-          data?.funcionario_id as unknown as number,
-          data?.token as string,
-          perPage,
-          (currentPage - 1) * perPage,
-          search
-      )
-
-      setNumberRows(response?.metadata?.count)
-      setClientesFidelizados(response?.data as Cliente[])
-      setLoading(false)
-    }
-
-    fetch()
-  }, [currentPage, data, logout, perPage, search])
+    execTrazerClientesFidelizados({
+      perPage,
+      search,
+      currentPage
+    })
+  }, [currentPage, execTrazerClientesFidelizados, search])
 
   const getSuggestionValue = useCallback((suggestion: string) => {
     const newValue = value.replace(getLastWord(value) as string, suggestion)
@@ -55,18 +40,18 @@ export const Clientes = () => {
 
   const renderSuggestion = useCallback((suggestion: string) => (
     <div>
-      {suggestion }
+      { suggestion }
     </div>
   ), [])
 
   const onSuggestionsFetchRequested = useCallback(async ({ value }: SuggestionsFetchRequestedParams) => {
     const suggestions = await trazerSuggestoesClientesFidelizados.execute({
       filter: getLastWord(value),
-      token: data?.token
+      token: userData?.token
     })
 
     setSuggestions(suggestions)
-  }, [data])
+  }, [trazerSuggestoesClientesFidelizados, userData])
 
   const onSuggestionsClearRequested = useCallback(() => {
     setSuggestions([])
@@ -106,12 +91,12 @@ export const Clientes = () => {
   }, [addTab])
 
   const handlePaginationOnClick = useCallback((page: number) => {
-    if (page < 1 || page > Math.ceil(numberRows / perPage)) {
+    if (page < 1 || page > Math.ceil(clientesFidelizados.count / perPage)) {
       return
     }
 
     setCurrentPage(page)
-  }, [numberRows, perPage])
+  }, [clientesFidelizados.count])
 
   return (
     <div className="card">
@@ -126,7 +111,7 @@ export const Clientes = () => {
           inputProps={inputProps}
         />
 
-        { loading ? <h1>loading...</h1> : (
+        { clientesFidelizados.loading ? <h1>loading...</h1> : (
           <>
             <Table striped bordered hover size="sm">
               <thead>
@@ -139,7 +124,7 @@ export const Clientes = () => {
                 </tr>
               </thead>
               <tbody>
-                { clientesFidelizados?.map(cliente => (
+                { clientesFidelizados?.data?.map(cliente => (
                   <tr key={cliente?.id?.toString()}>
                     <td>{cliente?.id}</td>
                     <td>{capitalize(cliente?.razao_social as string)}</td>
@@ -152,12 +137,12 @@ export const Clientes = () => {
             </Table>
 
             {
-              numberRows > perPage && (
+              clientesFidelizados.count > perPage && (
                 <Pagination>
                   <Pagination.First onClick={() => handlePaginationOnClick(1)}/>
                   <Pagination.Prev onClick={() => handlePaginationOnClick(currentPage - 1)}/>
 
-                  { Array.apply(0, Array(Math.ceil(numberRows / perPage))).map((_, i) =>
+                  { Array.apply(0, Array(Math.ceil(clientesFidelizados.count / perPage))).map((_, i) =>
                     <Pagination.Item
                       active={currentPage === i + 1}
                       onClick={() => handlePaginationOnClick(i + 1)}
@@ -166,7 +151,7 @@ export const Clientes = () => {
                     </Pagination.Item>
                   )}
                   <Pagination.Next onClick={() => handlePaginationOnClick(currentPage + 1)}/>
-                  <Pagination.Last onClick={() => handlePaginationOnClick(Math.ceil(numberRows / perPage))}/>
+                  <Pagination.Last onClick={() => handlePaginationOnClick(Math.ceil(clientesFidelizados.count / perPage))}/>
                 </Pagination>
               )
             }

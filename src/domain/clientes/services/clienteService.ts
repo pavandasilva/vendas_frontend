@@ -3,7 +3,6 @@ import { handleErrors } from '../../../helpers/handleErrors'
 import { AlertController, GetParams, RouteController } from '../../_interfaces'
 import { HttpRequest } from '../../_interfaces/httpRequest'
 import { ClienteService, GetListClienteResponse, GetOneClienteResponse } from '../interfaces'
-
 export class ClienteServiceImpl implements ClienteService {
   private readonly httpRequest: HttpRequest
   private readonly routeController: RouteController
@@ -19,14 +18,14 @@ export class ClienteServiceImpl implements ClienteService {
     let { filter, filterOptions, token } = params
     const query = generateSearchQuery(filter, filterOptions)
 
-    const response = await this.httpRequest.get({
+    const response = await this.httpRequest.get<GetListClienteResponse>({
       path: 'clientes',
       token,
       query
     })
 
-    handleErrors(this.routeController, this.alertController, response.error)
-    return response.data as GetListClienteResponse
+    handleErrors(response?.error)
+    return response?.data as GetListClienteResponse
   }
 
   async getById (params: GetParams): Promise<GetOneClienteResponse> {
@@ -37,7 +36,7 @@ export class ClienteServiceImpl implements ClienteService {
       token
     })
 
-    handleErrors(this.routeController, this.alertController, response.error)
-    return response.data as GetOneClienteResponse
+    handleErrors(response?.error)
+    return response?.data as GetOneClienteResponse
   }
 }

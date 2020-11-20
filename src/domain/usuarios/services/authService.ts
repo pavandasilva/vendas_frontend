@@ -36,16 +36,12 @@ export class AuthServiceImpl implements AuthService {
       path: 'auth'
     })
 
-    handleErrors(this.routeController, this.alertController, response.error)
+    handleErrors(response.error)
 
     if (response.status === 200) {
       this.routeController.goTo('/')
     }
 
     return response.data
-  }
-
-  async logout (): Promise<boolean> {
-    return true
   }
 }

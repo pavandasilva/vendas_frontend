@@ -20,7 +20,7 @@ export class EmpresaServiceImpl implements EmpresaService {
       query
     })
 
-    return response.data as GetListEmpresaResponse
+    return response?.data as GetListEmpresaResponse
   }
 
   async getById (params: GetParams): Promise<GetOneEmpresaResponse> {
@@ -31,6 +31,6 @@ export class EmpresaServiceImpl implements EmpresaService {
       token
     })
 
-    return response.data as GetOneEmpresaResponse
+    return response?.data as GetOneEmpresaResponse
   }
 }

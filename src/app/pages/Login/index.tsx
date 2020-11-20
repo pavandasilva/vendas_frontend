@@ -1,12 +1,12 @@
 import React, { ChangeEvent, FormEvent, useEffect, useState, useCallback } from 'react'
 import { Button, Image, Spinner } from 'react-bootstrap'
 import Form from 'react-bootstrap/Form'
-import { useUsuario } from '../../hooks'
 import Brasao from '../../assets/imgs/brasao.png'
+import useLogar from '../../hooks/useLogar'
 import './styles.scss'
 
 export const Login: React.FC = () => {
-  const { login, loading } = useUsuario()
+  const [response, execLogar] = useLogar()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [rememberPassword, setRememberPassword] = useState(false)
@@ -31,8 +31,8 @@ export const Login: React.FC = () => {
 
   const handleSubmit = useCallback((event: FormEvent) => {
     event.preventDefault()
-    login(email, password, rememberPassword)
-  }, [email, login, password, rememberPassword])
+    execLogar({ email, password })
+  }, [email, execLogar, password])
 
   const handleCheckOnChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
     localStorage.setItem(`@${process.env.REACT_APP_NAME}:remember`, JSON.stringify(event.target.checked))
@@ -62,8 +62,8 @@ export const Login: React.FC = () => {
         <Form.Group>
           <Form.Check type="checkbox" checked={rememberPassword} className="mr-1" label="Manter conectado" id="lembrar" onChange={handleCheckOnChange} />
         </Form.Group>
-        <Button size="lg" variant="primary" disabled={loading || (!email || !password)} type="submit" block>
-          {loading ? <Spinner
+        <Button size="lg" variant="primary" disabled={response.loading || (!email || !password)} type="submit" block>
+          {response.loading ? <Spinner
             as="span"
             animation="border"
             size="sm"
