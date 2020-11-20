@@ -23,7 +23,7 @@ export const Clientes = () => {
   const { addTab } = useTabs()
 
   const trazerSuggestoesClientesFidelizados = useMemo(() => makeTrazerSugestoesClientesFidelizados(), [])
-  const [clientesFidelizados, execTrazerClientesFidelizados] = useClientesFidelizados()
+  const { response: clientesFidelizados, execTrazerClientesFidelizados } = useClientesFidelizados()
 
   useEffect(() => {
     execTrazerClientesFidelizados({

@@ -22,7 +22,7 @@ interface UseClientesFidelizados {
 export default function useClientesFidelizados () {
   const { data: clienteData } = useUsuario()
 
-  const [clientesFidelizados, setClientesFidelizados] = useState({
+  const [response, setResponse] = useState({
     data: [] as Cliente[],
     count: 0,
     loading: false,
@@ -39,11 +39,11 @@ export default function useClientesFidelizados () {
         search || ''
       )
 
-      setClientesFidelizados({ data: response.data, count: response.metadata.count, loading: false, error: null })
+      setResponse({ data: response.data, count: response.metadata.count, loading: false, error: null })
     } catch (error) {
-      setClientesFidelizados({ data: [] as Cliente[], count: 0, loading: false, error: error })
+      setResponse({ data: [] as Cliente[], count: 0, loading: false, error: error })
     }
   }, [clienteData])
 
-  return [clientesFidelizados, execTrazerClientesFidelizados] as const
+  return { response, execTrazerClientesFidelizados }
 }
