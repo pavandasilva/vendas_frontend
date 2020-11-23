@@ -1,5 +1,5 @@
 import capitalize from 'capitalize-pt-br'
-import React, { useEffect, useState, useMemo, useCallback } from 'react'
+import React, { useState, useMemo, useCallback } from 'react'
 import { Table, Pagination } from 'react-bootstrap'
 import Autosuggest from 'react-autosuggest'
 import { Cliente } from '../../../domain/clientes/models/cliente'
@@ -14,6 +14,8 @@ interface SuggestionsFetchRequestedParams {
   value: string
 }
 
+const trazerSuggestoesClientesFidelizados = makeTrazerSugestoesClientesFidelizados()
+
 export const Clientes = () => {
   const [search, setSearch] = useState('')
   const [currentPage, setCurrentPage] = useState(1)
@@ -22,16 +24,11 @@ export const Clientes = () => {
   const { data: userData } = useUsuario()
   const { addTab } = useTabs()
 
-  const trazerSuggestoesClientesFidelizados = useMemo(() => makeTrazerSugestoesClientesFidelizados(), [])
-  const { response: clientesFidelizados, execTrazerClientesFidelizados } = useClientesFidelizados()
-
-  useEffect(() => {
-    execTrazerClientesFidelizados({
-      perPage,
-      search,
-      currentPage
-    })
-  }, [currentPage, execTrazerClientesFidelizados, search])
+  const { data, error } = useClientesFidelizados({
+    currentPage,
+    perPage,
+    search
+  })
 
   const getSuggestionValue = useCallback((suggestion: string) => {
     const newValue = value.replace(getLastWord(value) as string, suggestion)
@@ -51,7 +48,7 @@ export const Clientes = () => {
     })
 
     setSuggestions(suggestions)
-  }, [trazerSuggestoesClientesFidelizados, userData])
+  }, [userData])
 
   const onSuggestionsClearRequested = useCallback(() => {
     setSuggestions([])
@@ -91,12 +88,16 @@ export const Clientes = () => {
   }, [addTab])
 
   const handlePaginationOnClick = useCallback((page: number) => {
-    if (page < 1 || page > Math.ceil(clientesFidelizados.count / perPage)) {
+    if (!data?.metadata?.count) {
+      return
+    }
+
+    if (page < 1 || page > Math.ceil(data.metadata.count / perPage)) {
       return
     }
 
     setCurrentPage(page)
-  }, [clientesFidelizados.count])
+  }, [data])
 
   return (
     <div className="card">
@@ -111,7 +112,7 @@ export const Clientes = () => {
           inputProps={inputProps}
         />
 
-        { clientesFidelizados.loading ? <h1>loading...</h1> : (
+        { !data ? <h1>loading...</h1> : (
           <>
             <Table striped bordered hover size="sm">
               <thead>
@@ -124,7 +125,7 @@ export const Clientes = () => {
                 </tr>
               </thead>
               <tbody>
-                { clientesFidelizados?.data?.map(cliente => (
+                { data?.data?.map(cliente => (
                   <tr key={cliente?.id?.toString()}>
                     <td>{cliente?.id}</td>
                     <td>{capitalize(cliente?.razao_social as string)}</td>
@@ -137,12 +138,12 @@ export const Clientes = () => {
             </Table>
 
             {
-              clientesFidelizados.count > perPage && (
+              data.metadata.count > perPage && (
                 <Pagination>
                   <Pagination.First onClick={() => handlePaginationOnClick(1)}/>
                   <Pagination.Prev onClick={() => handlePaginationOnClick(currentPage - 1)}/>
 
-                  { Array.apply(0, Array(Math.ceil(clientesFidelizados.count / perPage))).map((_, i) =>
+                  { Array.apply(0, Array(Math.ceil(data.metadata.count / perPage))).map((_, i) =>
                     <Pagination.Item
                       active={currentPage === i + 1}
                       onClick={() => handlePaginationOnClick(i + 1)}
@@ -151,7 +152,7 @@ export const Clientes = () => {
                     </Pagination.Item>
                   )}
                   <Pagination.Next onClick={() => handlePaginationOnClick(currentPage + 1)}/>
-                  <Pagination.Last onClick={() => handlePaginationOnClick(Math.ceil(clientesFidelizados.count / perPage))}/>
+                  <Pagination.Last onClick={() => handlePaginationOnClick(Math.ceil(data.metadata.count / perPage))}/>
                 </Pagination>
               )
             }
