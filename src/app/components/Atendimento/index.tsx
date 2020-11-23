@@ -10,19 +10,18 @@ interface AtendimentoProps {
 }
 
 export const Atendimento = ({ cliente }: AtendimentoProps) => {
-  const [ dashboard, setDashboard ] = useState(true)
-  const [ pedido, setPedido ] = useState(false)
+  const [dashboard, setDashboard] = useState(true)
+  const [pedido, setPedido] = useState(false)
 
-  const handleDashboard = ()=> {
+  const handleDashboard = () => {
     setDashboard(true)
     setPedido(false)
   }
 
-  const handlePedido = ()=> {
+  const handlePedido = () => {
     setPedido(true)
     setDashboard(false)
   }
-
 
   return (
     <div id="atendimento" className="container-fluid">
@@ -32,9 +31,7 @@ export const Atendimento = ({ cliente }: AtendimentoProps) => {
         {dashboard && <DashboardCliente/>}
         {pedido && <PedidoCliente/>}
 
-
       </div>
-
 
       {/* PEDIDOS */}
       <div className="menu">
@@ -46,7 +43,6 @@ export const Atendimento = ({ cliente }: AtendimentoProps) => {
           <li><span className="icon"><FaHandHoldingUsd/></span> Financeiro</li>
         </ul>
       </div>
-
 
     </div>
 

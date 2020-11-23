@@ -4,6 +4,7 @@ import { Nav, Tab } from 'react-bootstrap'
 import capitalize from 'capitalize-pt-br'
 import { FaTimes } from 'react-icons/fa'
 import { useTabs } from '../../hooks/contexts'
+import './style.scss'
 
 interface TabsProps {
   fixedContent?: React.ReactNode
@@ -35,7 +36,9 @@ export const Tabs = ({ fixedContent }: TabsProps) => {
           {/*   tab fixa */}
           <Nav.Item key={-1} onClick={() => setActiveTab(-1)}>
             <Nav.Link eventKey={-1}>
-              { tabFixedTitle }
+              <div className='ellipsis'>
+                { tabFixedTitle }
+              </div>
             </Nav.Link>
           </Nav.Item>
           {/* tab fixa */}
@@ -44,7 +47,9 @@ export const Tabs = ({ fixedContent }: TabsProps) => {
             <>
               <Nav.Item key={`tab${index + 1}`.toString()} onClick={() => setActiveTab(index)}>
                 <Nav.Link eventKey={index}>
-                  { tab.title }
+                  <div className='ellipsis'>
+                    { tab.title }
+                  </div>
                 </Nav.Link>
               </Nav.Item>
 
