@@ -1,6 +1,7 @@
 @import '~bootstrap/scss/bootstrap';
 
 @import 'scss/aside-menu';
+@import 'scss/cards';
 @import 'scss/nav-tabs';
 @import 'scss/form-control';
 @import 'scss/toastify';
@@ -443,21 +444,6 @@ h6 {
   box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.25);
 }
 
-.card {
-  border-radius: 0.15rem;
-  border: none;
-  // box-shadow: 0 3px 10px rgba(62, 85, 120, 0.045);
-}
-
-.card .card-header {
-  margin: 5px 5px 0 5px;
-  background-color: transparent;
-}
-
-.card .card-body {
-  padding: 1.2rem 1.2rem;
-}
-
 .page-header {
   border-left: 1px solid $gray-300;
   border-right: 1px solid $gray-300;
@@ -557,28 +543,6 @@ ul:not(.list-unstyled) {
 
 ul:not(.list-unstyled) li {
   /* list-style-type: none; */
-}
-
-#cards .disabled {
-  border-color: #ccc !important;
-  color: #ccc !important;
-}
-
-#cards .disabled span {
-  border-color: #ccc !important;
-  color: #ccc !important;
-}
-
-#cards .close {
-  font-size: 15px;
-  position: absolute;
-  right: 10px;
-  top: 10px;
-  cursor: pointer;
-}
-
-#cards .card {
-  cursor: pointer !important;
 }
 
 .modal.slide {
