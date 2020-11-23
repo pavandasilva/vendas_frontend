@@ -1,5 +1,6 @@
 import capitalize from 'capitalize-pt-br'
 import React, { useState, useCallback } from 'react'
+import { Formik } from 'formik'
 import { Table, Pagination, Form, InputGroup, Card, Row, Col, Button, Modal } from 'react-bootstrap'
 
 import { Cliente } from '../../../domain/clientes/models/cliente'
@@ -146,6 +147,18 @@ export const ListaClientesFidelizados = () => {
             <br />
             <Form.Row>
               <Col>
+                <Form.Control placeholder="Email" />
+              </Col>
+              <Col>
+                <Form.Control placeholder="Email Nota Fiscal" />
+              </Col>
+              <Col>
+                <Form.Control placeholder="Email Nota Fiscal 2" />
+              </Col>
+            </Form.Row>
+            <br />
+            <Form.Row>
+              <Col>
                 <Form.Control placeholder="CNPJ" />
               </Col>
               <Col>
@@ -154,23 +167,50 @@ export const ListaClientesFidelizados = () => {
             </Form.Row>
             <br />
             <Form.Row>
-              <Col sm="3" lg="3">
+              <Col sm="2" lg="2">
                 <Form.Control placeholder="CEP" />
+              </Col>
+              <Col sm="8" lg="8">
+                <Form.Control placeholder="Endereço" />
+              </Col>
+              <Col sm="2" lg="2">
+                <Form.Control placeholder="Número" />
               </Col>
             </Form.Row>
             <br />
             <Form.Row>
-              <Col>
-                <Form.Control placeholder="Endereço" />
-              </Col>
-              <Col>
+              <Col sm="3" lg="3">
                 <Form.Control placeholder="Bairro" />
               </Col>
-              <Col>
+              <Col sm="3" lg="3">
                 <Form.Control placeholder="Cidade" />
+              </Col>
+              <Col sm="4" lg="4">
+                <Form.Control placeholder="Região" />
+              </Col>
+              <Col sm="2" lg="2">
+                <Form.Control as="select" size="sm">
+                  <option>SP</option>
+                  <option>PA</option>
+                  <option>SP</option>
+                  <option>PA</option>
+                  <option>SP</option>
+                  <option>PA</option>
+                </Form.Control>
               </Col>
             </Form.Row>
             <br />
+            <Form.Row>
+              <Col sm="3" lg="3">
+                <Form.Check type="checkbox" label="Cliente final" />
+              </Col >
+              <Col sm="3" lg="3">
+                <Form.Check type="checkbox" label="Órgão Estadual" />
+              </Col>
+              <Col sm="3" lg="3">
+                <Form.Check type="checkbox" label="Revenda" />
+              </Col>
+            </Form.Row>
             <Button variant="primary" type="submit" className="float-right">
               Salvar
             </Button>
