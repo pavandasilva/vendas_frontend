@@ -24,7 +24,7 @@ export const Clientes = () => {
   const { data: userData } = useUsuario()
   const { addTab } = useTabs()
 
-  const { data, error } = useClientesFidelizados({
+  const { data: clientesFidelizados } = useClientesFidelizados({
     currentPage,
     perPage,
     search
@@ -88,16 +88,16 @@ export const Clientes = () => {
   }, [addTab])
 
   const handlePaginationOnClick = useCallback((page: number) => {
-    if (!data?.metadata?.count) {
+    if (!clientesFidelizados?.metadata?.count) {
       return
     }
 
-    if (page < 1 || page > Math.ceil(data.metadata.count / perPage)) {
+    if (page < 1 || page > Math.ceil(clientesFidelizados.metadata.count / perPage)) {
       return
     }
 
     setCurrentPage(page)
-  }, [data])
+  }, [clientesFidelizados])
 
   return (
     <div className="card">
@@ -112,7 +112,7 @@ export const Clientes = () => {
           inputProps={inputProps}
         />
 
-        { !data ? <h1>loading...</h1> : (
+        { !clientesFidelizados?.data ? <h1>loading...</h1> : (
           <>
             <Table striped bordered hover size="sm">
               <thead>
@@ -125,7 +125,7 @@ export const Clientes = () => {
                 </tr>
               </thead>
               <tbody>
-                { data?.data?.map(cliente => (
+                { clientesFidelizados?.data?.map(cliente => (
                   <tr key={cliente?.id?.toString()}>
                     <td>{cliente?.id}</td>
                     <td>{capitalize(cliente?.razao_social as string)}</td>
@@ -138,12 +138,12 @@ export const Clientes = () => {
             </Table>
 
             {
-              data.metadata.count > perPage && (
+              clientesFidelizados && clientesFidelizados.metadata?.count > perPage && (
                 <Pagination>
                   <Pagination.First onClick={() => handlePaginationOnClick(1)}/>
                   <Pagination.Prev onClick={() => handlePaginationOnClick(currentPage - 1)}/>
 
-                  { Array.apply(0, Array(Math.ceil(data.metadata.count / perPage))).map((_, i) =>
+                  { Array.apply(0, Array(Math.ceil(clientesFidelizados.metadata.count / perPage))).map((_, i) =>
                     <Pagination.Item
                       active={currentPage === i + 1}
                       onClick={() => handlePaginationOnClick(i + 1)}
@@ -152,7 +152,7 @@ export const Clientes = () => {
                     </Pagination.Item>
                   )}
                   <Pagination.Next onClick={() => handlePaginationOnClick(currentPage + 1)}/>
-                  <Pagination.Last onClick={() => handlePaginationOnClick(Math.ceil(data.metadata.count / perPage))}/>
+                  <Pagination.Last onClick={() => handlePaginationOnClick(Math.ceil(clientesFidelizados.metadata.count / perPage))}/>
                 </Pagination>
               )
             }

@@ -1,9 +1,11 @@
 import React, { useCallback, useState } from 'react'
+import capitalize from 'capitalize-pt-br'
 import { FaSearch, FaCog, FaThLarge, FaBars } from 'react-icons/fa'
 import { Button, Dropdown, Image, Modal } from 'react-bootstrap'
-import './styles.scss'
 import { useSideBar, useUsuario } from '../../hooks/contexts'
 import useLogout from '../../hooks/useLogout'
+import { Link } from 'react-router-dom'
+import './styles.scss'
 
 export const Navbar = () => {
   const [show, setShow] = useState(false)
@@ -31,11 +33,11 @@ export const Navbar = () => {
             <Dropdown>
               <Dropdown.Toggle as="div" bsPrefix="avatar">
                 <Image src="https://www.w3schools.com/howto/img_avatar.png" roundedCircle />
-                <span>{data?.email}</span>
+                <span>{capitalize(data?.nome as string)}</span>
               </Dropdown.Toggle>
 
               <Dropdown.Menu>
-                <Dropdown.Item href="#/action-1">Meus Dados</Dropdown.Item>
+                <Dropdown.Item><Link to='/meus-dados'>Meus Dados</Link></Dropdown.Item>
                 <Dropdown.Item href="#/action-2">Notificações</Dropdown.Item>
                 <Dropdown.Item href="#/action-3">Configurações</Dropdown.Item>
                 <Dropdown.Divider />
