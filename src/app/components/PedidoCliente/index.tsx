@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 import { Form, FormControl, InputGroup, Nav, Table } from 'react-bootstrap'
 import { FaCalendar, FaDashcube, FaEdit, FaFilter, FaHandHoldingUsd, FaSearch, FaShoppingCart } from 'react-icons/fa'
 
@@ -6,7 +6,7 @@ export const PedidoCliente: React.FC = () => {
   return (
     <div className="pedidos">
       <div className="title">
-Pedidos
+        Pedidos
         <div className="float-right">
           <button className="btn btn-sm btn-dark">novo pedido</button>
         </div>
@@ -124,13 +124,9 @@ Pedidos
             </td>
           </tr>
 
-
-
-
         </tbody>
       </Table>
 
-
     </div>
-  );
+  )
 }

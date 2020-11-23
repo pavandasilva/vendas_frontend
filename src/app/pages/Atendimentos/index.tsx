@@ -8,7 +8,7 @@ export const Atendimentos: React.FC = () => {
       <div id="container" className="container-fluid">
         <div className="card">
           <div className="card-body">
-                  conteudo
+            conteudo
           </div>
         </div>
       </div>

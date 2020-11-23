@@ -27,7 +27,8 @@ export default function useClientesFidelizados ({ funcionarioId, perPage, curren
     (currentPage - 1) * perPage,
     search || ''
   ), {
-    dedupingInterval: 60000
+    dedupingInterval: 60000,
+    refreshInterval: 10000
   })
 
   return { data, error }

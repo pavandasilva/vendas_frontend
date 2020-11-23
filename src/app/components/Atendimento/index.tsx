@@ -25,12 +25,9 @@ export const Atendimento = ({ cliente }: AtendimentoProps) => {
 
   return (
     <div id="atendimento" className="container-fluid">
-
       <div className="content">
-
         {dashboard && <DashboardCliente/>}
         {pedido && <PedidoCliente/>}
-
       </div>
 
       {/* PEDIDOS */}

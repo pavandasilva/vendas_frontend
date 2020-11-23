@@ -36,7 +36,7 @@ export const Tabs = ({ fixedContent }: TabsProps) => {
           {/*   tab fixa */}
           <Nav.Item key={-1} onClick={() => setActiveTab(-1)}>
             <Nav.Link eventKey={-1}>
-              <div className='ellipsis'>
+              <div className='ellipsis tab-fixed'>
                 { tabFixedTitle }
               </div>
             </Nav.Link>
@@ -44,17 +44,16 @@ export const Tabs = ({ fixedContent }: TabsProps) => {
           {/* tab fixa */}
 
           { tabs?.map((tab, index) => (
-            <>
-              <Nav.Item key={`tab${index + 1}`.toString()} onClick={() => setActiveTab(index)}>
-                <Nav.Link eventKey={index}>
+            <div key={`tab${index + 1}`.toString()} className="wrapper-nav-item">
+              <Nav.Item onClick={() => setActiveTab(index)}>
+                <Nav.Link className="tab-item" eventKey={index}>
                   <div className='ellipsis'>
                     { tab.title }
                   </div>
                 </Nav.Link>
               </Nav.Item>
-
               <span className='close' onClick={() => handleCloseTabOnClick(index)}><FaTimes /></span>
-            </>
+            </div>
           ))}
         </Nav>
         <Tab.Content>
