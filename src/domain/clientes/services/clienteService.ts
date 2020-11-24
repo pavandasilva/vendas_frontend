@@ -1,17 +1,16 @@
-import { generateSearchQuery } from '../../../helpers'
+import { AppError, generateSearchQuery } from '../../../helpers'
 import { handleErrors } from '../../../helpers/handleErrors'
-import { AlertController, GetParams, RouteController } from '../../_interfaces'
+import { GetParams, PostParams, Validator } from '../../_interfaces'
 import { HttpRequest } from '../../_interfaces/httpRequest'
 import { ClienteService, GetListClienteResponse, GetOneClienteResponse } from '../interfaces'
+import { Cliente } from '../models/cliente'
 export class ClienteServiceImpl implements ClienteService {
   private readonly httpRequest: HttpRequest
-  private readonly routeController: RouteController
-  private readonly alertController: AlertController
+  private readonly validator: Validator
 
-  constructor (httpRequest: HttpRequest, routeController: RouteController, alertController: AlertController) {
+  constructor (httpRequest: HttpRequest, validator: Validator) {
+    this.validator = validator
     this.httpRequest = httpRequest
-    this.routeController = routeController
-    this.alertController = alertController
   }
 
   async getlist (params: GetParams): Promise<GetListClienteResponse> {
@@ -38,5 +37,19 @@ export class ClienteServiceImpl implements ClienteService {
 
     handleErrors(response?.error)
     return response?.data as GetOneClienteResponse
+  }
+
+  async create (params: PostParams): Promise<Cliente> {
+    let { body, token } = params
+    await this.validator.validate(body)
+
+    const response = await this.httpRequest.post<Cliente>({
+      path: 'clientes',
+      body,
+      token
+    })
+
+    handleErrors(response?.error)
+    return response?.data as Cliente
   }
 }
