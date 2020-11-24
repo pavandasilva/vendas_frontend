@@ -359,7 +359,7 @@ export const FormNovoCliente = () => {
           </Form.Control.Feedback>
         </Col>
       </Form.Row>
-      <Button variant="primary" type="submit" className="float-right">
+      <Button disabled={loading} variant="primary" type="submit" className="float-right">
         Salvar
       </Button>
     </Form>
