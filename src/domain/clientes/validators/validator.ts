@@ -1,4 +1,3 @@
-import { AppError } from '../../../helpers'
 import { Validator } from '../../_interfaces'
 
 export class ClienteValidator implements Validator {

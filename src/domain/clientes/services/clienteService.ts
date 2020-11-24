@@ -1,4 +1,4 @@
-import { AppError, generateSearchQuery } from '../../../helpers'
+import { generateSearchQuery } from '../../../helpers'
 import { handleErrors } from '../../../helpers/handleErrors'
 import { GetParams, PostParams, Validator } from '../../_interfaces'
 import { HttpRequest } from '../../_interfaces/httpRequest'
