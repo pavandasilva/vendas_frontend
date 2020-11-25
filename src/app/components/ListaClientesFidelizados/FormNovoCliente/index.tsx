@@ -1,7 +1,8 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import InputMask from 'react-input-mask'
 import { useFormik } from 'formik'
 import { Form, Col, Button, InputGroup } from 'react-bootstrap'
+import EstadosMunicipios from '../../../assets/jsons/estados_municipios.json'
 import { Cliente } from '../../../../domain/clientes/models/cliente'
 import useClientes from '../../../hooks/useClientes'
 
@@ -13,6 +14,17 @@ export const FormNovoCliente = ({ afterSave }: FormNovoClienteProps) => {
   const [loading, setLoading] = useState(false)
   const [errors, setErrors] = useState({} as any)
   const { add: addCliente } = useClientes()
+  const [cidades, setCidades] = useState([] as string[])
+  const [uf, setUF] = useState('')
+
+  useEffect(() => {
+    if (!uf) {
+      return
+    }
+
+    const [estado] = EstadosMunicipios.estados.filter(estado => estado.sigla === uf)
+    setCidades(estado.cidades)
+  }, [uf])
 
   const sanetizeCliente = (values: any): Cliente => {
     const cliente: Cliente = {
@@ -74,6 +86,12 @@ export const FormNovoCliente = ({ afterSave }: FormNovoClienteProps) => {
   const submitForm = (e: any) => {
     e.preventDefault()
     formik.handleSubmit()
+  }
+
+  const handleUfInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault()
+    setUF(e.target.value)
+    handleInputChange(e)
   }
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -245,14 +263,18 @@ export const FormNovoCliente = ({ afterSave }: FormNovoClienteProps) => {
         </Col>
         <Col sm="3" lg="3">
           <Form.Control
-            placeholder="Cidade"
             id="cidade"
             name="cidade"
+            as="select"
+            size="sm"
             type="text"
             onChange={handleInputChange}
             value={formik.values.cidade}
             isInvalid={!!errors.cidade}
-          />
+          >
+            <option selected value="default">Escolha cidade</option>
+            { cidades.map(cidade => <option key={cidade} value={cidade}>{cidade}</option>)}
+          </Form.Control>
           <Form.Control.Feedback type="invalid" tooltip>
             {errors?.cidade}
           </Form.Control.Feedback>
@@ -278,16 +300,12 @@ export const FormNovoCliente = ({ afterSave }: FormNovoClienteProps) => {
             as="select"
             size="sm"
             type="text"
-            onChange={handleInputChange}
+            onChange={handleUfInputChange}
             value={formik.values.uf}
             isInvalid={!!errors.uf}
           >
             <option selected value="default">Escolha UF</option>
-            <option value="PA">PA</option>
-            <option>SP</option>
-            <option>PA</option>
-            <option>SP</option>
-            <option>PA</option>
+            { EstadosMunicipios.estados.map(estado => <option key={estado.sigla} value={estado.sigla}>{estado.sigla}</option>)}
           </Form.Control>
           <Form.Control.Feedback type="invalid" tooltip>
             {errors?.uf}
