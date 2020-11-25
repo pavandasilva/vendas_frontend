@@ -282,7 +282,8 @@ export const FormNovoCliente = ({ afterSave }: FormNovoClienteProps) => {
             value={formik.values.uf}
             isInvalid={!!errors.uf}
           >
-            <option selected>PA</option>
+            <option selected value="default">Escolha UF</option>
+            <option value="PA">PA</option>
             <option>SP</option>
             <option>PA</option>
             <option>SP</option>
