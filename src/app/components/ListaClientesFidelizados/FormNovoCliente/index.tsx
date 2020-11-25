@@ -5,7 +5,11 @@ import { Form, Col, Button, InputGroup } from 'react-bootstrap'
 import { Cliente } from '../../../../domain/clientes/models/cliente'
 import useClientes from '../../../hooks/useClientes'
 
-export const FormNovoCliente = () => {
+interface FormNovoClienteProps {
+  afterSave: () => void
+}
+
+export const FormNovoCliente = ({ afterSave }: FormNovoClienteProps) => {
   const [loading, setLoading] = useState(false)
   const [errors, setErrors] = useState({} as any)
   const { add: addCliente } = useClientes()
@@ -55,9 +59,15 @@ export const FormNovoCliente = () => {
       is_revenda: false
     },
     onSubmit: async (values) => {
-      const { error: addClienteError, loading } = await addCliente(sanetizeCliente(values))
-      setLoading(loading)
+      setLoading(true)
+      const { error: addClienteError, loading, data } = await addCliente(sanetizeCliente(values))
+
+      if (data.id) {
+        afterSave()
+      }
+
       addClienteError && setErrors(addClienteError)
+      setLoading(loading)
     }
   })
 
@@ -132,7 +142,6 @@ export const FormNovoCliente = () => {
               {errors?.email}
             </Form.Control.Feedback>
           </InputGroup>
-
         </Col>
         <Col>
           <InputGroup>
@@ -169,39 +178,6 @@ export const FormNovoCliente = () => {
               {errors?.email_nfe2}
             </Form.Control.Feedback>
           </InputGroup>
-        </Col>
-      </Form.Row>
-      <br />
-      <Form.Row>
-        <Col>
-          <Form.Control
-            placeholder="CNPJ"
-            id="cnpj"
-            name="cnpj"
-            type="text"
-            onChange={handleInputChange}
-            value={formik.values.cnpj}
-            isInvalid={!!errors.cnpj}
-            as={InputMask}
-            mask='99.999.999/9999-99'
-          />
-          <Form.Control.Feedback type="invalid" tooltip>
-            {errors?.cnpj}
-          </Form.Control.Feedback>
-        </Col>
-        <Col>
-          <Form.Control
-            placeholder="IE"
-            id="ie"
-            name="ie"
-            type="text"
-            onChange={handleInputChange}
-            value={formik.values.ie}
-            isInvalid={!!errors.ie}
-          />
-          <Form.Control.Feedback type="invalid" tooltip>
-            {errors?.ie}
-          </Form.Control.Feedback>
         </Col>
       </Form.Row>
       <br />
@@ -319,6 +295,39 @@ export const FormNovoCliente = () => {
       </Form.Row>
       <br />
       <Form.Row>
+        <Col>
+          <Form.Control
+            placeholder="CNPJ"
+            id="cnpj"
+            name="cnpj"
+            type="text"
+            onChange={handleInputChange}
+            value={formik.values.cnpj}
+            isInvalid={!!errors.cnpj}
+            as={InputMask}
+            mask='99.999.999/9999-99'
+          />
+          <Form.Control.Feedback type="invalid" tooltip>
+            {errors?.cnpj}
+          </Form.Control.Feedback>
+        </Col>
+        <Col>
+          <Form.Control
+            placeholder="IE"
+            id="ie"
+            name="ie"
+            type="text"
+            onChange={handleInputChange}
+            value={formik.values.ie}
+            isInvalid={!!errors.ie}
+          />
+          <Form.Control.Feedback type="invalid" tooltip>
+            {errors?.ie}
+          </Form.Control.Feedback>
+        </Col>
+      </Form.Row>
+      <br />
+      <Form.Row>
         <Col sm="3" lg="3">
           <Form.Check
             type="checkbox"
@@ -368,6 +377,7 @@ export const FormNovoCliente = () => {
           </Form.Control.Feedback>
         </Col>
       </Form.Row>
+      <br />
       <Button disabled={loading} variant="primary" type="submit" className="float-right">
         Salvar
       </Button>

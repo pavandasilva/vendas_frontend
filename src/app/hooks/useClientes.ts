@@ -18,6 +18,12 @@ export default function useClientes () {
     try {
       const data = await cadastrarCliente.execute({ body: cliente, token: token || dadosUsuario?.token })
 
+      if (data) {
+        toast.success('Cliente cadastrado com sucesso')
+      } else {
+        toast.warning('O servidor não retornou uma confirmação de cadastro de cliente. Por favor, verificar')
+      }
+
       return {
         data,
         error: null,
@@ -25,7 +31,7 @@ export default function useClientes () {
       }
     } catch (error) {
       if (error.type !== 'validate') {
-        toast.error(error.message)
+        toast.error(error.message.replace('Error: ', ''))
       }
 
       return {

@@ -134,7 +134,7 @@ export const ListaClientesFidelizados = () => {
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <FormNovoCliente />
+          <FormNovoCliente afterSave={() => setShowModal(false)}/>
         </Modal.Body>
       </Modal>
     </>
