@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import InputMask from 'react-input-mask'
 import { useFormik } from 'formik'
 import { Form, Col, Button, InputGroup } from 'react-bootstrap'
 import EstadosMunicipios from '../../../assets/jsons/estados_municipios.json'
 import { Cliente } from '../../../../domain/clientes/models/cliente'
 import useClientes from '../../../hooks/useClientes'
+import { getIEMask } from '../../../../helpers/getIEMask'
 
 interface FormNovoClienteProps {
   afterSave: () => void
@@ -16,6 +17,8 @@ export const FormNovoCliente = ({ afterSave }: FormNovoClienteProps) => {
   const { add: addCliente } = useClientes()
   const [cidades, setCidades] = useState([] as string[])
   const [uf, setUF] = useState('')
+  const [pessoa, setPessoa] = useState('pj')
+  const [ieMask, setIeMask] = useState('')
 
   useEffect(() => {
     if (!uf) {
@@ -24,6 +27,8 @@ export const FormNovoCliente = ({ afterSave }: FormNovoClienteProps) => {
 
     const [estado] = EstadosMunicipios.estados.filter(estado => estado.sigla === uf)
     setCidades(estado.cidades)
+    const ieMask = getIEMask(uf)
+    setIeMask(ieMask)
   }, [uf])
 
   const sanetizeCliente = (values: any): Cliente => {
@@ -314,9 +319,34 @@ export const FormNovoCliente = ({ afterSave }: FormNovoClienteProps) => {
       </Form.Row>
       <br />
       <Form.Row>
+        <Col sm="2" lg="2">
+          <Form.Check
+            type="radio"
+            label="Pessoa Física"
+            id="pf"
+            name="pf"
+            value="pf"
+            onChange={() => setPessoa('pf')}
+            checked={pessoa === 'pf'}
+          />
+        </Col>
+        <Col sm="2" lg="2">
+          <Form.Check
+            type="radio"
+            label="Pessoa Jurídica"
+            id="pj"
+            name="pj"
+            value="pj"
+            onChange={() => setPessoa('pj')}
+            checked={pessoa === 'pj'}
+          />
+        </Col>
+      </Form.Row>
+      <br />
+      <Form.Row>
         <Col>
           <Form.Control
-            placeholder="CNPJ"
+            placeholder={pessoa === 'pj' ? 'CNPJ' : 'CPF'}
             id="cnpj"
             name="cnpj"
             type="text"
@@ -324,7 +354,7 @@ export const FormNovoCliente = ({ afterSave }: FormNovoClienteProps) => {
             value={formik.values.cnpj}
             isInvalid={!!errors.cnpj}
             as={InputMask}
-            mask='99.999.999/9999-99'
+            mask={pessoa === 'pj' ? '99.999.999/9999-99' : '999.999.999-99'}
           />
           <Form.Control.Feedback type="invalid" tooltip>
             {errors?.cnpj}
@@ -339,6 +369,8 @@ export const FormNovoCliente = ({ afterSave }: FormNovoClienteProps) => {
             onChange={handleInputChange}
             value={formik.values.ie}
             isInvalid={!!errors.ie}
+            as={InputMask}
+            mask={ieMask}
           />
           <Form.Control.Feedback type="invalid" tooltip>
             {errors?.ie}
