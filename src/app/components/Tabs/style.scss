@@ -16,22 +16,32 @@
 
   span.close {
     position: absolute !important;
-    top: 0px;
-    right: 5px;
+    top: -2px;
+    right: 8px;
     cursor: pointer;
 
     svg {
-      width: 14px;
-      height: 14px;
+      width: 12px;
+      height: 12px;
     }
- }
+  }
 }
 
 .nav-tabs {
   padding-right: 20px;
 
-  .nav-link {
-    background-color: #fff;
+  .nav-item {
+    margin-right: 2px;
+
+    .nav-link {
+      color: #a8a8a8;
+      background-color: $gray-300;
+
+      &:hover {
+        border-color: $gray-300;
+        background-color: $gray-200;
+      }
+    }
   }
 
   .nav-link-add {
@@ -46,12 +56,6 @@
   background-color: $gray-400;
 }
 
-.tab-content {
-  padding: 0px !important;
-}
-
 .nav-item {
   position: relative;
 }
-
-
