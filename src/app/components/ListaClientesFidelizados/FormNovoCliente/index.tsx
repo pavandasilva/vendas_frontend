@@ -1,4 +1,7 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect, useCallback } from 'react'
+import capitalize from 'capitalize-pt-br'
+import { FaAt } from 'react-icons/fa'
 import InputMask from 'react-input-mask'
 import { useFormik } from 'formik'
 import { Form, Col, Button, InputGroup } from 'react-bootstrap'
@@ -6,6 +9,12 @@ import EstadosMunicipios from '../../../assets/jsons/estados_municipios.json'
 import { Cliente } from '../../../../domain/clientes/models/cliente'
 import useClientes from '../../../hooks/useClientes'
 import { getIEMask } from '../../../../helpers/getIEMask'
+import { makeTrazerEnderecoCep } from '../../../../domain/clientes/factories/makeTrazerEnderecoCep'
+import { makeTrazerDadosCNPJ } from '../../../../domain/clientes/factories/makeTrazerDadosCNPJ'
+import { removerAcento } from '../../../../helpers/removerAcentos'
+
+const trazerEnderecoPorCep = makeTrazerEnderecoCep()
+const trazerDadosCNPJ = makeTrazerDadosCNPJ()
 
 interface FormNovoClienteProps {
   afterSave: () => void
@@ -31,16 +40,16 @@ export const FormNovoCliente = ({ afterSave }: FormNovoClienteProps) => {
     setIeMask(ieMask)
   }, [uf])
 
-  const sanetizeCliente = (values: any): Cliente => {
+  const sanetizeCliente = useCallback((values: any): Cliente => {
     const cliente: Cliente = {
       razao_social: values.razao_social,
       nome_fantasia: values.nome_fantasia,
       email: values.email,
       email_nfe: values.email_nfe,
       email_nfe2: values.email_nfe2,
-      cnpj: values.cnpj.replace(/[^\w\s]/gi, ''),
-      ie: values.ie.replace(/[^\w\s]/gi, ''),
-      cep: values.cep.replace(/[^\w\s]/gi, ''),
+      cnpj: values.cnpj.replace(/[^\w\s]/gi, '').replace(/_/g, ''),
+      ie: values.ie.replace(/[^\w\s]/gi, '').replace(/_/g, ''),
+      cep: values.cep.replace(/[^\w\s]/gi, '').replace(/_/g, ''),
       endereco: values.endereco,
       numero: values.numero,
       bairro: values.bairro,
@@ -53,7 +62,7 @@ export const FormNovoCliente = ({ afterSave }: FormNovoClienteProps) => {
     }
 
     return cliente
-  }
+  }, [])
 
   const formik = useFormik({
     initialValues: {
@@ -88,18 +97,12 @@ export const FormNovoCliente = ({ afterSave }: FormNovoClienteProps) => {
     }
   })
 
-  const submitForm = (e: any) => {
+  const submitForm = useCallback((e: any) => {
     e.preventDefault()
     formik.handleSubmit()
-  }
+  }, [formik])
 
-  const handleUfInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    e.preventDefault()
-    setUF(e.target.value)
-    handleInputChange(e)
-  }
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault()
 
     setErrors((errors: any) => {
@@ -108,10 +111,151 @@ export const FormNovoCliente = ({ afterSave }: FormNovoClienteProps) => {
     })
 
     formik.handleChange(e)
+  }, [formik])
+
+  const handleUfInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault()
+    setUF(e.target.value)
+    handleInputChange(e)
+  }, [handleInputChange])
+
+  const handleCepInputChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    handleInputChange(e)
+    const cep = e.currentTarget.value.replace(/[^\w\s]/gi, '').replace(/_/g, '')
+    if (cep.length === 8) {
+      const response = await trazerEnderecoPorCep.execute(cep)
+      if (!response.data.erro) {
+        const [estado] = EstadosMunicipios.estados.filter(estado => estado.sigla === response.data.uf)
+        setCidades(estado.cidades)
+
+        setErrors((err: any) => {
+          const newErrors = delete (err.cep)
+          return newErrors
+        })
+
+        formik.setValues((v) => {
+          const newValues = {
+            ...v,
+            ...{
+              endereco: response.data.logradouro,
+              uf: response.data.uf,
+              cidade: response.data.localidade,
+              bairro: response.data.bairro
+            }
+          }
+          return newValues
+        })
+      }
+    }
+  }
+
+  const handleInputCNPJ = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    handleInputChange(e)
+    let cidade = ''
+    const cnpj = e.currentTarget.value.replace(/[^\w\s]/gi, '').replace(/_/g, '')
+    if (cnpj.length === 14) {
+      const response = await trazerDadosCNPJ.execute('bf2cc265e3073aab06df3484f56f603e7c409b55e01cddc0bfde6781624c8494', cnpj)
+
+      console.log(response)
+
+      if (response.data) {
+        const [estado] = EstadosMunicipios.estados.filter(estado => estado.sigla === response.data.uf)
+
+        if (estado) {
+          setCidades(estado.cidades)
+
+          const filtered: string[] = estado.cidades.filter(cidade => {
+            return removerAcento(cidade).toLowerCase() === removerAcento(response.data.municipio).toLowerCase()
+          })
+
+          if (filtered[0]) {
+            cidade = filtered[0]
+          }
+        }
+
+        formik.setValues(v => {
+          const newValues = {
+            ...v,
+            ...{
+              endereco: capitalize(response.data.logradouro),
+              numero: response.data.numero,
+              uf: response.data.uf,
+              cidade,
+              bairro: capitalize(response.data.bairro),
+              cep: response.data.cep,
+              email: response.data.email,
+              razao_social: capitalize(response.data.nome),
+              nome_fantasia: capitalize(response.data.fantasia)
+            }
+          }
+          return newValues
+        })
+      }
+    }
   }
 
   return (
     <Form noValidate onSubmit={submitForm} >
+      <Form.Row>
+        <Col sm="2" lg="2">
+          <Form.Check
+            type="radio"
+            label="Pessoa Física"
+            id="pf"
+            name="pf"
+            value="pf"
+            onChange={() => setPessoa('pf')}
+            checked={pessoa === 'pf'}
+          />
+        </Col>
+        <Col sm="2" lg="2">
+          <Form.Check
+            type="radio"
+            label="Pessoa Jurídica"
+            id="pj"
+            name="pj"
+            value="pj"
+            onChange={() => setPessoa('pj')}
+            checked={pessoa === 'pj'}
+          />
+        </Col>
+      </Form.Row>
+      <br />
+      <Form.Row>
+        <Col>
+          <Form.Control
+            placeholder={pessoa === 'pj' ? 'CNPJ' : 'CPF'}
+            id="cnpj"
+            name="cnpj"
+            type="text"
+            onChange={handleInputCNPJ}
+            value={formik.values.cnpj}
+            isInvalid={!!errors.cnpj}
+            as={InputMask}
+            mask={pessoa === 'pj' ? '99.999.999/9999-99' : '999.999.999-99'}
+          />
+          <Form.Control.Feedback type="invalid" tooltip>
+            {errors?.cnpj}
+          </Form.Control.Feedback>
+        </Col>
+        <Col>
+          <Form.Control
+            placeholder="IE"
+            id="ie"
+            name="ie"
+            type="text"
+            onChange={handleInputChange}
+            value={formik.values.ie}
+            isInvalid={!!errors.ie}
+            as={InputMask}
+            mask={ieMask}
+          />
+          <Form.Control.Feedback type="invalid" tooltip>
+            {errors?.ie}
+          </Form.Control.Feedback>
+        </Col>
+      </Form.Row>
+      <br />
       <Form.Row>
         <Col>
           <Form.Control
@@ -149,7 +293,7 @@ export const FormNovoCliente = ({ afterSave }: FormNovoClienteProps) => {
         <Col>
           <InputGroup>
             <InputGroup.Prepend>
-              <InputGroup.Text>@</InputGroup.Text>
+              <InputGroup.Text><FaAt /></InputGroup.Text>
             </InputGroup.Prepend>
 
             <Form.Control
@@ -168,7 +312,9 @@ export const FormNovoCliente = ({ afterSave }: FormNovoClienteProps) => {
         </Col>
         <Col>
           <InputGroup>
-            <InputGroup.Text>@</InputGroup.Text>
+            <InputGroup.Prepend>
+              <InputGroup.Text><FaAt /></InputGroup.Text>
+            </InputGroup.Prepend>
             <Form.Control
               placeholder="Email Nota Fiscal"
               id="email_nfe"
@@ -186,7 +332,7 @@ export const FormNovoCliente = ({ afterSave }: FormNovoClienteProps) => {
         <Col>
           <InputGroup>
             <InputGroup.Prepend>
-              <InputGroup.Text>@</InputGroup.Text>
+              <InputGroup.Text><FaAt /></InputGroup.Text>
             </InputGroup.Prepend>
             <Form.Control
               placeholder="Email Nota Fiscal 2"
@@ -211,7 +357,7 @@ export const FormNovoCliente = ({ afterSave }: FormNovoClienteProps) => {
             id="cep"
             name="cep"
             type="text"
-            onChange={handleInputChange}
+            onChange={handleCepInputChange}
             value={formik.values.cep}
             isInvalid={!!errors.cep}
             as={InputMask}
@@ -319,67 +465,7 @@ export const FormNovoCliente = ({ afterSave }: FormNovoClienteProps) => {
       </Form.Row>
       <br />
       <Form.Row>
-        <Col sm="2" lg="2">
-          <Form.Check
-            type="radio"
-            label="Pessoa Física"
-            id="pf"
-            name="pf"
-            value="pf"
-            onChange={() => setPessoa('pf')}
-            checked={pessoa === 'pf'}
-          />
-        </Col>
-        <Col sm="2" lg="2">
-          <Form.Check
-            type="radio"
-            label="Pessoa Jurídica"
-            id="pj"
-            name="pj"
-            value="pj"
-            onChange={() => setPessoa('pj')}
-            checked={pessoa === 'pj'}
-          />
-        </Col>
-      </Form.Row>
-      <br />
-      <Form.Row>
-        <Col>
-          <Form.Control
-            placeholder={pessoa === 'pj' ? 'CNPJ' : 'CPF'}
-            id="cnpj"
-            name="cnpj"
-            type="text"
-            onChange={handleInputChange}
-            value={formik.values.cnpj}
-            isInvalid={!!errors.cnpj}
-            as={InputMask}
-            mask={pessoa === 'pj' ? '99.999.999/9999-99' : '999.999.999-99'}
-          />
-          <Form.Control.Feedback type="invalid" tooltip>
-            {errors?.cnpj}
-          </Form.Control.Feedback>
-        </Col>
-        <Col>
-          <Form.Control
-            placeholder="IE"
-            id="ie"
-            name="ie"
-            type="text"
-            onChange={handleInputChange}
-            value={formik.values.ie}
-            isInvalid={!!errors.ie}
-            as={InputMask}
-            mask={ieMask}
-          />
-          <Form.Control.Feedback type="invalid" tooltip>
-            {errors?.ie}
-          </Form.Control.Feedback>
-        </Col>
-      </Form.Row>
-      <br />
-      <Form.Row>
-        <Col sm="3" lg="3">
+        <Col sm="3" lg="3" >
           <Form.Check
             type="checkbox"
             label="Cliente final"

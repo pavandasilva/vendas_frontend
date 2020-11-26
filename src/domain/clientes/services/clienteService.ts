@@ -2,13 +2,14 @@ import { generateSearchQuery } from '../../../helpers'
 import { handleErrors } from '../../../helpers/handleErrors'
 import { GetParams, PostParams, Validator } from '../../_interfaces'
 import { HttpRequest } from '../../_interfaces/httpRequest'
-import { ClienteService, GetListClienteResponse, GetOneClienteResponse } from '../interfaces'
+import { ClienteService, GetDadosClienteCNPJResponse, GetListClienteResponse, GetOneClienteResponse } from '../interfaces'
+import { GetEnderecoPorCep } from '../interfaces/getEnderecoPorCep'
 import { Cliente } from '../models/cliente'
 export class ClienteServiceImpl implements ClienteService {
   private readonly httpRequest: HttpRequest
-  private readonly validator: Validator
+  private readonly validator: Validator | undefined
 
-  constructor (httpRequest: HttpRequest, validator: Validator) {
+  constructor (httpRequest: HttpRequest, validator?: Validator) {
     this.validator = validator
     this.httpRequest = httpRequest
   }
@@ -41,7 +42,7 @@ export class ClienteServiceImpl implements ClienteService {
 
   async create (params: PostParams): Promise<Cliente> {
     let { body, token } = params
-    await this.validator.validate(body)
+    await this.validator?.validate(body)
 
     const response = await this.httpRequest.post<Cliente>({
       path: 'clientes',
@@ -51,5 +52,25 @@ export class ClienteServiceImpl implements ClienteService {
 
     handleErrors(response?.error)
     return response?.data as Cliente
+  }
+
+  async getDadosReceitaPorCNPJ (params:GetParams): Promise<GetDadosClienteCNPJResponse> {
+    const response = await this.httpRequest.get({
+      url: 'https://www.receitaws.com.br/v1/',
+      path: `cnpj/${params.filter}`,
+      token: params.token
+    })
+
+    handleErrors(response?.error)
+    return response as GetDadosClienteCNPJResponse
+  }
+
+  async getEnderecoPorCep (params: GetParams): Promise<GetEnderecoPorCep> {
+    const response = await this.httpRequest.get<GetEnderecoPorCep>({
+      url: 'https://viacep.com.br/ws/',
+      path: `${params.filter}/json/`
+    })
+
+    return response as unknown as GetEnderecoPorCep
   }
 }
