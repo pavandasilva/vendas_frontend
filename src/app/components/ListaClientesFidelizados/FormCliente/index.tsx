@@ -4,7 +4,7 @@ import capitalize from 'capitalize-pt-br'
 import { FaAt } from 'react-icons/fa'
 import InputMask from 'react-input-mask'
 import { useFormik } from 'formik'
-import { Form, Col, Button, InputGroup, Tabs, Nav, Tab, Row, Table } from 'react-bootstrap'
+import { Form, Col, Button, InputGroup, Nav, Tab, Row } from 'react-bootstrap'
 import EstadosMunicipios from '../../../assets/jsons/estados_municipios.json'
 import { Cliente } from '../../../../domain/clientes/models/cliente'
 import useClientes from '../../../hooks/useClientes'
@@ -12,6 +12,7 @@ import { getIEMask } from '../../../../helpers/getIEMask'
 import { makeTrazerEnderecoCep } from '../../../../domain/clientes/factories/makeTrazerEnderecoCep'
 import { makeTrazerDadosCNPJ } from '../../../../domain/clientes/factories/makeTrazerDadosCNPJ'
 import { removerAcento } from '../../../../helpers/removerAcentos'
+import { TableContatos } from './TableContatos'
 
 const trazerEnderecoPorCep = makeTrazerEnderecoCep()
 const trazerDadosCNPJ = makeTrazerDadosCNPJ()
@@ -20,7 +21,7 @@ interface FormNovoClienteProps {
   afterSave: () => void
 }
 
-export const FormNovoCliente = ({ afterSave }: FormNovoClienteProps) => {
+export const FormCliente = ({ afterSave }: FormNovoClienteProps) => {
   const [loading, setLoading] = useState(false)
   const [errors, setErrors] = useState({} as any)
   const { add: addCliente } = useClientes()
@@ -83,7 +84,9 @@ export const FormNovoCliente = ({ afterSave }: FormNovoClienteProps) => {
       uf: '',
       is_cliente_final: false,
       is_orgao_estadual: false,
-      is_revenda: false
+      is_revenda: false,
+      is_isento: false,
+      contatos: []
     },
     onSubmit: async (values) => {
       setLoading(true)
@@ -195,13 +198,17 @@ export const FormNovoCliente = ({ afterSave }: FormNovoClienteProps) => {
     }
   }
 
+  const handleChangeIsIsento = (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log(e.currentTarget.value)
+
+    handleInputChange(e)
+  }
+
   return (
     <Form noValidate onSubmit={submitForm} >
-
       <Tab.Container defaultActiveKey="dados">
         <Row>
-
-          <Col sm={12} className="mb-4 border-bottom pb-3 pt-3 bg-light" style={{marginTop: "-16px"}}>
+          <Col sm={12} className="mb-4 border-bottom pb-3 pt-3 bg-light" style={{ marginTop: '-16px' }}>
             <Nav variant="pills">
               <Nav.Item>
                 <Nav.Link eventKey="dados">Dados</Nav.Link>
@@ -251,7 +258,7 @@ export const FormNovoCliente = ({ afterSave }: FormNovoClienteProps) => {
                   <Col lg="7">
                     <Form.Label>Grupo</Form.Label>
                     <Form.Row>
-                      <Col lg="4">
+                      <Col lg="2">
                         <Form.Check
                           type="checkbox"
                           label="Cliente final"
@@ -265,6 +272,22 @@ export const FormNovoCliente = ({ afterSave }: FormNovoClienteProps) => {
 
                         <Form.Control.Feedback type="invalid" tooltip>
                           {errors?.is_cliente_final}
+                        </Form.Control.Feedback>
+                      </Col >
+                      <Col lg="2">
+                        <Form.Check
+                          id="is_isento"
+                          name="is_isento"
+                          type="checkbox"
+                          label="Isento"
+                          defaultChecked={ false }
+                          onChange={handleChangeIsIsento}
+                          checked={formik.values.is_isento}
+                          isInvalid={!!errors.is_isento}
+                        />
+
+                        <Form.Control.Feedback type="invalid" tooltip>
+                          {errors?.is_isento}
                         </Form.Control.Feedback>
                       </Col >
                       <Col lg="4">
@@ -326,7 +349,7 @@ export const FormNovoCliente = ({ afterSave }: FormNovoClienteProps) => {
                   <Form.Group as={Col} md={6} controlId="ie">
                     <Form.Label>IE</Form.Label>
                     <Form.Control
-                      placeholder="IE"
+                      placeholder={formik.values.is_isento ? 'isento' : 'IE'}
                       id="ie"
                       name="ie"
                       type="text"
@@ -335,6 +358,7 @@ export const FormNovoCliente = ({ afterSave }: FormNovoClienteProps) => {
                       isInvalid={!!errors.ie}
                       as={InputMask}
                       mask={ieMask}
+                      disabled={formik.values.is_isento}
                     />
                     <Form.Control.Feedback type="invalid" tooltip>
                       {errors?.ie}
@@ -374,7 +398,6 @@ export const FormNovoCliente = ({ afterSave }: FormNovoClienteProps) => {
                     </Form.Control.Feedback>
                   </Form.Group>
                 </Form.Row>
-
 
                 <Form.Row>
                   <Col>
@@ -438,7 +461,6 @@ export const FormNovoCliente = ({ afterSave }: FormNovoClienteProps) => {
                 </Form.Row>
 
               </Tab.Pane>
-
 
               <Tab.Pane eventKey="endereco">
 
@@ -550,7 +572,6 @@ export const FormNovoCliente = ({ afterSave }: FormNovoClienteProps) => {
                     </Form.Control.Feedback>
                   </Form.Group>
 
-
                 </Form.Row>
 
                 <Form.Row>
@@ -586,79 +607,15 @@ export const FormNovoCliente = ({ afterSave }: FormNovoClienteProps) => {
                       {errors?.regiao}
                     </Form.Control.Feedback>
                   </Form.Group>
-
                 </Form.Row>
-
               </Tab.Pane>
-
-
-              
               <Tab.Pane eventKey="contatos">
-
-                <Table bordered hover size="sm">
-                  <thead>
-                    <tr>
-                      <th>Nome</th>
-                      <th></th>
-                      <th></th>
-                      <th></th>
-                      <th className="text-center">Comercial</th>
-                      <th className="text-center">Fiscal</th>
-                      <th className="text-center">Financeiro</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>Nome</td>
-                      <td>Telefone</td>
-                      <td>Celular</td>
-                      <td>
-                        <Form.Check
-                          type="checkbox"
-                          id=""
-                          name=""
-                          value=""
-                        />
-                      </td>
-                      <td className="text-center align-middle">
-                        <Form.Check
-                          type="checkbox"
-                          id=""
-                          name=""
-                          value=""
-                        />
-                      </td>
-                      <td className="text-center align-middle">
-                        <Form.Check
-                          type="checkbox"
-                          id=""
-                          name=""
-                          value=""
-                        />
-                      </td>
-                      <td className="text-center align-middle">
-                        <Form.Check
-                          type="checkbox"
-                          id=""
-                          name=""
-                          value=""
-                        />
-                      </td>
-                    </tr>
-
-                  </tbody>
-                </Table>
-
-
-
+                <TableContatos cliente={formik.values as unknown as Cliente}/>
               </Tab.Pane>
-
             </Tab.Content>
           </Col>
         </Row>
       </Tab.Container>
-
-
 
       <br />
       <Button disabled={loading} variant="primary" type="submit" className="float-right">

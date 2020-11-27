@@ -1,4 +1,5 @@
 import { ModelBase } from '../../_interfaces'
+import { Contato } from './contato'
 
 export interface Cliente extends ModelBase {
   id?: number | string
@@ -30,4 +31,5 @@ export interface Cliente extends ModelBase {
   classe?: 'a' | 'b' | 'c'
   grupo_id?: number
   status?: 'bloqueado' | 'liberado' | 'inativo' | 'internet' | 'off'
+  contatos?: Contato[]
 }

@@ -7,7 +7,7 @@ import useClientesFidelizados from '../../hooks/useClientesFidelizados'
 import { useTabs } from '../../hooks/contexts'
 import { FaSearch } from 'react-icons/fa'
 import { LoadingTable } from '../LoadingTable'
-import { FormNovoCliente } from './FormNovoCliente'
+import { FormCliente } from './FormCliente'
 
 const perPage = 30
 
@@ -128,7 +128,6 @@ export const ListaClientesFidelizados = () => {
         onHide={() => setShowModal(false)}
         backdrop="static"
         keyboard={false}
-        
       >
         <Modal.Header closeButton>
           <Modal.Title>
@@ -136,7 +135,7 @@ export const ListaClientesFidelizados = () => {
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <FormNovoCliente afterSave={() => setShowModal(false)}/>
+          <FormCliente afterSave={() => setShowModal(false)}/>
         </Modal.Body>
       </Modal>
     </>
