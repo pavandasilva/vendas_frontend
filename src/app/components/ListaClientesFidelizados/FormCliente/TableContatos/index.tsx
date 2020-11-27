@@ -8,11 +8,11 @@ interface TableContatosProps {
 }
 
 export const TableContatos = ({ cliente }: TableContatosProps) => {
-  const [contatoSelected, setContatoSelected] = useState({} as Contato)
+  const [contatoSelecionado, setContatoSelecionado] = useState({} as Contato)
 
   return (
     <>
-      <TableTelefones contato={contatoSelected}/>
+      <TableTelefones contato={contatoSelecionado}/>
       <Table bordered hover size="sm">
         <thead>
           <tr>
