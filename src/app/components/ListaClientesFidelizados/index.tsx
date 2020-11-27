@@ -126,10 +126,12 @@ export const ListaClientesFidelizados = () => {
         size="lg"
         show={showModal}
         onHide={() => setShowModal(false)}
-        aria-labelledby="example-modal-sizes-title-sm"
+        backdrop="static"
+        keyboard={false}
+        
       >
         <Modal.Header closeButton>
-          <Modal.Title id="example-modal-sizes-title-sm">
+          <Modal.Title>
             Cadastro de cliente
           </Modal.Title>
         </Modal.Header>

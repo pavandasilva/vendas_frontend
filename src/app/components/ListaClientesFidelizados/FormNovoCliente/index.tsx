@@ -4,7 +4,7 @@ import capitalize from 'capitalize-pt-br'
 import { FaAt } from 'react-icons/fa'
 import InputMask from 'react-input-mask'
 import { useFormik } from 'formik'
-import { Form, Col, Button, InputGroup } from 'react-bootstrap'
+import { Form, Col, Button, InputGroup, Tabs, Nav, Tab, Row, Table } from 'react-bootstrap'
 import EstadosMunicipios from '../../../assets/jsons/estados_municipios.json'
 import { Cliente } from '../../../../domain/clientes/models/cliente'
 import useClientes from '../../../hooks/useClientes'
@@ -78,6 +78,7 @@ export const FormNovoCliente = ({ afterSave }: FormNovoClienteProps) => {
       numero: '',
       bairro: '',
       cidade: '',
+      complemento: '',
       regiao: '',
       uf: '',
       is_cliente_final: false,
@@ -196,324 +197,469 @@ export const FormNovoCliente = ({ afterSave }: FormNovoClienteProps) => {
 
   return (
     <Form noValidate onSubmit={submitForm} >
-      <Form.Row>
-        <Col sm="2" lg="2">
-          <Form.Check
-            type="radio"
-            label="Pessoa Física"
-            id="pf"
-            name="pf"
-            value="pf"
-            onChange={() => setPessoa('pf')}
-            checked={pessoa === 'pf'}
-          />
-        </Col>
-        <Col sm="2" lg="2">
-          <Form.Check
-            type="radio"
-            label="Pessoa Jurídica"
-            id="pj"
-            name="pj"
-            value="pj"
-            onChange={() => setPessoa('pj')}
-            checked={pessoa === 'pj'}
-          />
-        </Col>
-      </Form.Row>
-      <br />
-      <Form.Row>
-        <Col>
-          <Form.Control
-            placeholder={pessoa === 'pj' ? 'CNPJ' : 'CPF'}
-            id="cnpj"
-            name="cnpj"
-            type="text"
-            onChange={handleInputCNPJ}
-            value={formik.values.cnpj}
-            isInvalid={!!errors.cnpj}
-            as={InputMask}
-            mask={pessoa === 'pj' ? '99.999.999/9999-99' : '999.999.999-99'}
-          />
-          <Form.Control.Feedback type="invalid" tooltip>
-            {errors?.cnpj}
-          </Form.Control.Feedback>
-        </Col>
-        <Col>
-          <Form.Control
-            placeholder="IE"
-            id="ie"
-            name="ie"
-            type="text"
-            onChange={handleInputChange}
-            value={formik.values.ie}
-            isInvalid={!!errors.ie}
-            as={InputMask}
-            mask={ieMask}
-          />
-          <Form.Control.Feedback type="invalid" tooltip>
-            {errors?.ie}
-          </Form.Control.Feedback>
-        </Col>
-      </Form.Row>
-      <br />
-      <Form.Row>
-        <Col>
-          <Form.Control
-            id="razao_social"
-            name="razao_social"
-            placeholder="Razão Social"
-            type="text"
-            onChange={handleInputChange}
-            value={formik.values.razao_social}
-            isInvalid={!!errors.razao_social}
-          />
 
-          <Form.Control.Feedback type="invalid" tooltip>
-            { errors?.razao_social}
-          </Form.Control.Feedback>
-        </Col>
-        <Col>
-          <Form.Control
-            placeholder="Nome Fantasia"
-            id="nome_fantasia"
-            name="nome_fantasia"
-            type="text"
-            onChange={handleInputChange}
-            value={formik.values.nome_fantasia}
-            isInvalid={!!errors.nome_fantasia}
-          />
+      <Tab.Container defaultActiveKey="dados">
+        <Row>
 
-          <Form.Control.Feedback type="invalid" tooltip>
-            {errors?.nome_fantasia}
-          </Form.Control.Feedback>
-        </Col>
-      </Form.Row>
-      <br />
-      <Form.Row>
-        <Col>
-          <InputGroup>
-            <InputGroup.Prepend>
-              <InputGroup.Text><FaAt /></InputGroup.Text>
-            </InputGroup.Prepend>
+          <Col sm={12} className="mb-4 border-bottom pb-3 pt-3 bg-light" style={{marginTop: "-16px"}}>
+            <Nav variant="pills">
+              <Nav.Item>
+                <Nav.Link eventKey="dados">Dados</Nav.Link>
+              </Nav.Item>
+              <Nav.Item>
+                <Nav.Link eventKey="endereco">Endereço</Nav.Link>
+              </Nav.Item>
+              <Nav.Item>
+                <Nav.Link eventKey="contatos">Contatos</Nav.Link>
+              </Nav.Item>
+            </Nav>
+          </Col>
 
-            <Form.Control
-              placeholder="Email"
-              id="email"
-              name="email"
-              type="email"
-              onChange={handleInputChange}
-              value={formik.values.email}
-              isInvalid={!!errors.email}
-            />
-            <Form.Control.Feedback type="invalid" tooltip>
-              {errors?.email}
-            </Form.Control.Feedback>
-          </InputGroup>
-        </Col>
-        <Col>
-          <InputGroup>
-            <InputGroup.Prepend>
-              <InputGroup.Text><FaAt /></InputGroup.Text>
-            </InputGroup.Prepend>
-            <Form.Control
-              placeholder="Email Nota Fiscal"
-              id="email_nfe"
-              name="email_nfe"
-              type="email"
-              onChange={handleInputChange}
-              value={formik.values.email_nfe}
-              isInvalid={!!errors.email_nfe}
-            />
-            <Form.Control.Feedback type="invalid" tooltip>
-              {errors?.email_nfe2}
-            </Form.Control.Feedback>
-          </InputGroup>
-        </Col>
-        <Col>
-          <InputGroup>
-            <InputGroup.Prepend>
-              <InputGroup.Text><FaAt /></InputGroup.Text>
-            </InputGroup.Prepend>
-            <Form.Control
-              placeholder="Email Nota Fiscal 2"
-              id="email_nfe2"
-              name="email_nfe2"
-              type="email"
-              onChange={handleInputChange}
-              value={formik.values.email_nfe2}
-              isInvalid={!!errors.email_nfe2}
-            />
-            <Form.Control.Feedback type="invalid" tooltip>
-              {errors?.email_nfe2}
-            </Form.Control.Feedback>
-          </InputGroup>
-        </Col>
-      </Form.Row>
-      <br />
-      <Form.Row>
-        <Col sm="2" lg="2">
-          <Form.Control
-            placeholder="CEP"
-            id="cep"
-            name="cep"
-            type="text"
-            onChange={handleCepInputChange}
-            value={formik.values.cep}
-            isInvalid={!!errors.cep}
-            as={InputMask}
-            mask="99999-999"
-          />
-          <Form.Control.Feedback type="invalid" tooltip>
-            {errors?.cep}
-          </Form.Control.Feedback>
-        </Col>
-        <Col sm="8" lg="8">
-          <Form.Control
-            placeholder="Endereço"
-            id="endereco"
-            name="endereco"
-            type="text"
-            onChange={handleInputChange}
-            value={formik.values.endereco}
-            isInvalid={!!errors.endereco}
-          />
-          <Form.Control.Feedback type="invalid" tooltip>
-            {errors?.endereco}
-          </Form.Control.Feedback>
-        </Col>
-        <Col sm="2" lg="2">
-          <Form.Control
-            placeholder="Número"
-            id="numero"
-            name="numero"
-            type="text"
-            onChange={handleInputChange}
-            value={formik.values.numero}
-            isInvalid={!!errors.numero}
-          />
-          <Form.Control.Feedback type="invalid" tooltip>
-            {errors?.numero}
-          </Form.Control.Feedback>
-        </Col>
-      </Form.Row>
-      <br />
-      <Form.Row>
-        <Col sm="3" lg="3">
-          <Form.Control
-            placeholder="Bairro"
-            id="bairro"
-            name="bairro"
-            type="text"
-            onChange={handleInputChange}
-            value={formik.values.bairro}
-            isInvalid={!!errors.bairro}
-          />
-          <Form.Control.Feedback type="invalid" tooltip>
-            {errors?.bairro}
-          </Form.Control.Feedback>
-        </Col>
-        <Col sm="3" lg="3">
-          <Form.Control
-            id="cidade"
-            name="cidade"
-            as="select"
-            size="sm"
-            type="text"
-            onChange={handleInputChange}
-            value={formik.values.cidade}
-            isInvalid={!!errors.cidade}
-          >
-            <option selected value="default">Escolha cidade</option>
-            { cidades.map(cidade => <option key={cidade} value={cidade}>{cidade}</option>)}
-          </Form.Control>
-          <Form.Control.Feedback type="invalid" tooltip>
-            {errors?.cidade}
-          </Form.Control.Feedback>
-        </Col>
-        <Col sm="4" lg="4">
-          <Form.Control
-            placeholder="Região"
-            id="regiao"
-            name="regiao"
-            type="text"
-            onChange={handleInputChange}
-            value={formik.values.regiao}
-            isInvalid={!!errors.regiao}
-          />
-          <Form.Control.Feedback type="invalid" tooltip>
-            {errors?.regiao}
-          </Form.Control.Feedback>
-        </Col>
-        <Col sm="2" lg="2">
-          <Form.Control
-            id="uf"
-            name="uf"
-            as="select"
-            size="sm"
-            type="text"
-            onChange={handleUfInputChange}
-            value={formik.values.uf}
-            isInvalid={!!errors.uf}
-          >
-            <option selected value="default">Escolha UF</option>
-            { EstadosMunicipios.estados.map(estado => <option key={estado.sigla} value={estado.sigla}>{estado.sigla}</option>)}
-          </Form.Control>
-          <Form.Control.Feedback type="invalid" tooltip>
-            {errors?.uf}
-          </Form.Control.Feedback>
-        </Col>
-      </Form.Row>
-      <br />
-      <Form.Row>
-        <Col sm="3" lg="3" >
-          <Form.Check
-            type="checkbox"
-            label="Cliente final"
-            id="is_cliente_final"
-            name="is_cliente_final"
-            defaultChecked={ false }
-            onChange={handleInputChange}
-            checked={formik.values.is_cliente_final}
-            isInvalid={!!errors.is_cliente_final}
-          />
+          <Col sm={12}>
+            <Tab.Content>
 
-          <Form.Control.Feedback type="invalid" tooltip>
-            {errors?.is_cliente_final}
-          </Form.Control.Feedback>
-        </Col >
-        <Col sm="3" lg="3">
-          <Form.Check
-            type="checkbox"
-            label="Órgão Estadual"
-            id="is_orgao_estadual"
-            name="is_orgao_estadual"
-            defaultChecked={ false }
-            onChange={handleInputChange}
-            checked={formik.values.is_orgao_estadual}
-            isInvalid={!!errors.is_orgao_estadual}
-          />
+              <Tab.Pane eventKey="dados">
+                <Form.Row>
+                  <Col>
+                    <Form.Label>Tipo do Cliente</Form.Label>
+                    <Form.Row>
+                      <Col>
+                        <Form.Check
+                          type="radio"
+                          label="Pessoa Física"
+                          id="pf"
+                          name="pf"
+                          value="pf"
+                          onChange={() => setPessoa('pf')}
+                          checked={pessoa === 'pf'}
+                        />
+                      </Col>
+                      <Col>
+                        <Form.Check
+                          type="radio"
+                          label="Pessoa Jurídica"
+                          id="pj"
+                          name="pj"
+                          value="pj"
+                          onChange={() => setPessoa('pj')}
+                          checked={pessoa === 'pj'}
+                        />
+                      </Col>
+                    </Form.Row>
+                  </Col>
 
-          <Form.Control.Feedback type="invalid" tooltip>
-            {errors?.is_orgao_estadual}
-          </Form.Control.Feedback>
-        </Col>
-        <Col sm="3" lg="3">
-          <Form.Check
-            type="checkbox"
-            label="Revenda"
-            id="is_revenda"
-            name="is_revenda"
-            defaultChecked={ false }
-            onChange={handleInputChange}
-            checked={formik.values.is_revenda}
-            isInvalid={!!errors.is_revenda}
-          />
+                  <Col lg="7">
+                    <Form.Label>Grupo</Form.Label>
+                    <Form.Row>
+                      <Col lg="4">
+                        <Form.Check
+                          type="checkbox"
+                          label="Cliente final"
+                          id="is_cliente_final"
+                          name="is_cliente_final"
+                          defaultChecked={ false }
+                          onChange={handleInputChange}
+                          checked={formik.values.is_cliente_final}
+                          isInvalid={!!errors.is_cliente_final}
+                        />
 
-          <Form.Control.Feedback type="invalid" tooltip>
-            {errors?.is_revenda}
-          </Form.Control.Feedback>
-        </Col>
-      </Form.Row>
+                        <Form.Control.Feedback type="invalid" tooltip>
+                          {errors?.is_cliente_final}
+                        </Form.Control.Feedback>
+                      </Col >
+                      <Col lg="4">
+                        <Form.Check
+                          type="checkbox"
+                          label="Órgão Estadual"
+                          id="is_orgao_estadual"
+                          name="is_orgao_estadual"
+                          defaultChecked={ false }
+                          onChange={handleInputChange}
+                          checked={formik.values.is_orgao_estadual}
+                          isInvalid={!!errors.is_orgao_estadual}
+                        />
+
+                        <Form.Control.Feedback type="invalid" tooltip>
+                          {errors?.is_orgao_estadual}
+                        </Form.Control.Feedback>
+                      </Col>
+                      <Col lg="4">
+                        <Form.Check
+                          type="checkbox"
+                          label="Revenda"
+                          id="is_revenda"
+                          name="is_revenda"
+                          defaultChecked={ false }
+                          onChange={handleInputChange}
+                          checked={formik.values.is_revenda}
+                          isInvalid={!!errors.is_revenda}
+                        />
+
+                        <Form.Control.Feedback type="invalid" tooltip>
+                          {errors?.is_revenda}
+                        </Form.Control.Feedback>
+                      </Col>
+                    </Form.Row>
+                  </Col>
+                </Form.Row>
+
+                <hr/>
+
+                <Form.Row>
+                  <Form.Group as={Col} md={6} controlId="cnpj">
+                    <Form.Label>{pessoa === 'pj' ? 'CNPJ' : 'CPF'}</Form.Label>
+                    <Form.Control
+                      placeholder={pessoa === 'pj' ? 'CNPJ' : 'CPF'}
+                      id="cnpj"
+                      name="cnpj"
+                      type="text"
+                      onChange={handleInputCNPJ}
+                      value={formik.values.cnpj}
+                      isInvalid={!!errors.cnpj}
+                      as={InputMask}
+                      mask={pessoa === 'pj' ? '99.999.999/9999-99' : '999.999.999-99'}
+                    />
+                    <Form.Control.Feedback type="invalid" tooltip>
+                      {errors?.cnpj}
+                    </Form.Control.Feedback>
+                  </Form.Group>
+                  <Form.Group as={Col} md={6} controlId="ie">
+                    <Form.Label>IE</Form.Label>
+                    <Form.Control
+                      placeholder="IE"
+                      id="ie"
+                      name="ie"
+                      type="text"
+                      onChange={handleInputChange}
+                      value={formik.values.ie}
+                      isInvalid={!!errors.ie}
+                      as={InputMask}
+                      mask={ieMask}
+                    />
+                    <Form.Control.Feedback type="invalid" tooltip>
+                      {errors?.ie}
+                    </Form.Control.Feedback>
+                  </Form.Group>
+                </Form.Row>
+
+                <Form.Row>
+                  <Form.Group as={Col} md={6} controlId="razao_social">
+                    <Form.Label>Razão Social</Form.Label>
+                    <Form.Control
+                      id="razao_social"
+                      name="razao_social"
+                      // placeholder="Razão Social"
+                      type="text"
+                      onChange={handleInputChange}
+                      value={formik.values.razao_social}
+                      isInvalid={!!errors.razao_social}
+                    />
+                    <Form.Control.Feedback type="invalid" tooltip>
+                      { errors?.razao_social}
+                    </Form.Control.Feedback>
+                  </Form.Group>
+                  <Form.Group as={Col} md={6} controlId="nome_fantasia">
+                    <Form.Label>Nome Fantasia</Form.Label>
+                    <Form.Control
+                      placeholder="Nome Fantasia"
+                      id="nome_fantasia"
+                      name="nome_fantasia"
+                      type="text"
+                      onChange={handleInputChange}
+                      value={formik.values.nome_fantasia}
+                      isInvalid={!!errors.nome_fantasia}
+                    />
+                    <Form.Control.Feedback type="invalid" tooltip>
+                      {errors?.nome_fantasia}
+                    </Form.Control.Feedback>
+                  </Form.Group>
+                </Form.Row>
+
+
+                <Form.Row>
+                  <Col>
+                    <InputGroup>
+                      <InputGroup.Prepend>
+                        <InputGroup.Text><FaAt /></InputGroup.Text>
+                      </InputGroup.Prepend>
+
+                      <Form.Control
+                        placeholder="Email"
+                        id="email"
+                        name="email"
+                        type="email"
+                        onChange={handleInputChange}
+                        value={formik.values.email}
+                        isInvalid={!!errors.email}
+                      />
+                      <Form.Control.Feedback type="invalid" tooltip>
+                        {errors?.email}
+                      </Form.Control.Feedback>
+                    </InputGroup>
+                  </Col>
+                  <Col>
+                    <InputGroup>
+                      <InputGroup.Prepend>
+                        <InputGroup.Text><FaAt /></InputGroup.Text>
+                      </InputGroup.Prepend>
+                      <Form.Control
+                        placeholder="Email Nota Fiscal"
+                        id="email_nfe"
+                        name="email_nfe"
+                        type="email"
+                        onChange={handleInputChange}
+                        value={formik.values.email_nfe}
+                        isInvalid={!!errors.email_nfe}
+                      />
+                      <Form.Control.Feedback type="invalid" tooltip>
+                        {errors?.email_nfe2}
+                      </Form.Control.Feedback>
+                    </InputGroup>
+                  </Col>
+                  <Col>
+                    <InputGroup>
+                      <InputGroup.Prepend>
+                        <InputGroup.Text><FaAt /></InputGroup.Text>
+                      </InputGroup.Prepend>
+                      <Form.Control
+                        placeholder="Email Nota Fiscal 2"
+                        id="email_nfe2"
+                        name="email_nfe2"
+                        type="email"
+                        onChange={handleInputChange}
+                        value={formik.values.email_nfe2}
+                        isInvalid={!!errors.email_nfe2}
+                      />
+                      <Form.Control.Feedback type="invalid" tooltip>
+                        {errors?.email_nfe2}
+                      </Form.Control.Feedback>
+                    </InputGroup>
+                  </Col>
+                </Form.Row>
+
+              </Tab.Pane>
+
+
+              <Tab.Pane eventKey="endereco">
+
+                <Form.Row>
+                  <Form.Group as={Col} md={2} controlId="cep">
+                    <Form.Label>C.E.P.</Form.Label>
+                    <Form.Control
+                      placeholder="CEP"
+                      id="cep"
+                      name="cep"
+                      type="text"
+                      onChange={handleCepInputChange}
+                      value={formik.values.cep}
+                      isInvalid={!!errors.cep}
+                      as={InputMask}
+                      mask="99999-999"
+                    />
+                    <Form.Control.Feedback type="invalid" tooltip>
+                      {errors?.cep}
+                    </Form.Control.Feedback>
+                  </Form.Group>
+
+                  <Form.Group as={Col} md={7} controlId="endereco">
+                    <Form.Label>Endereço</Form.Label>
+                    <Form.Control
+                      placeholder="Endereço"
+                      id="endereco"
+                      name="endereco"
+                      type="text"
+                      onChange={handleInputChange}
+                      value={formik.values.endereco}
+                      isInvalid={!!errors.endereco}
+                    />
+                    <Form.Control.Feedback type="invalid" tooltip>
+                      {errors?.endereco}
+                    </Form.Control.Feedback>
+                  </Form.Group>
+
+                  <Form.Group as={Col} controlId="numero">
+                    <Form.Label>Número</Form.Label>
+                    <Form.Control
+                      placeholder="Número"
+                      id="numero"
+                      name="numero"
+                      type="text"
+                      onChange={handleInputChange}
+                      value={formik.values.numero}
+                      isInvalid={!!errors.numero}
+                    />
+                    <Form.Control.Feedback type="invalid" tooltip>
+                      {errors?.numero}
+                    </Form.Control.Feedback>
+                  </Form.Group>
+                </Form.Row>
+
+                <Form.Row>
+                  <Form.Group as={Col} md={2} controlId="uf">
+                    <Form.Label>Estado</Form.Label>
+                    <Form.Control
+                      id="uf"
+                      name="uf"
+                      as="select"
+                      type="text"
+                      onChange={handleUfInputChange}
+                      value={formik.values.uf}
+                      isInvalid={!!errors.uf}
+                    >
+                      <option selected value="default"></option>
+                      { EstadosMunicipios.estados.map(estado => <option key={estado.sigla} value={estado.sigla}>{estado.sigla}</option>)}
+                    </Form.Control>
+                    <Form.Control.Feedback type="invalid" tooltip>
+                      {errors?.uf}
+                    </Form.Control.Feedback>
+                  </Form.Group>
+
+                  <Form.Group as={Col} md={4} controlId="cidade">
+                    <Form.Label>Cidade</Form.Label>
+                    <Form.Control
+                      id="cidade"
+                      name="cidade"
+                      as="select"
+                      // size="sm"
+                      type="text"
+                      onChange={handleInputChange}
+                      value={formik.values.cidade}
+                      isInvalid={!!errors.cidade}
+                    >
+                      <option selected value="default">Escolha cidade</option>
+                      { cidades.map(cidade => <option key={cidade} value={cidade}>{cidade}</option>)}
+                    </Form.Control>
+                    <Form.Control.Feedback type="invalid" tooltip>
+                      {errors?.cidade}
+                    </Form.Control.Feedback>
+                  </Form.Group>
+
+                  <Form.Group as={Col} controlId="cidade">
+                    <Form.Label>Bairro</Form.Label>
+                    <Form.Control
+                      placeholder="Bairro"
+                      id="bairro"
+                      name="bairro"
+                      type="text"
+                      onChange={handleInputChange}
+                      value={formik.values.bairro}
+                      isInvalid={!!errors.bairro}
+                    />
+                    <Form.Control.Feedback type="invalid" tooltip>
+                      {errors?.bairro}
+                    </Form.Control.Feedback>
+                  </Form.Group>
+
+
+                </Form.Row>
+
+                <Form.Row>
+
+                  <Form.Group as={Col} md={7} controlId="complemento">
+                    <Form.Label>Complemento</Form.Label>
+                    <Form.Control
+                      placeholder=""
+                      id="complemento"
+                      name="complemento"
+                      type="text"
+                      onChange={handleInputChange}
+                      value={formik.values.complemento}
+                      isInvalid={!!errors.complemento}
+                    />
+                    <Form.Control.Feedback type="invalid" tooltip>
+                      {errors?.regiao}
+                    </Form.Control.Feedback>
+                  </Form.Group>
+
+                  <Form.Group as={Col} md={5} controlId="regiao">
+                    <Form.Label>Região</Form.Label>
+                    <Form.Control
+                      placeholder="informe uma região"
+                      id="regiao"
+                      name="regiao"
+                      type="text"
+                      onChange={handleInputChange}
+                      value={formik.values.regiao}
+                      isInvalid={!!errors.regiao}
+                    />
+                    <Form.Control.Feedback type="invalid" tooltip>
+                      {errors?.regiao}
+                    </Form.Control.Feedback>
+                  </Form.Group>
+
+                </Form.Row>
+
+              </Tab.Pane>
+
+
+              
+              <Tab.Pane eventKey="contatos">
+
+                <Table bordered hover size="sm">
+                  <thead>
+                    <tr>
+                      <th>Nome</th>
+                      <th></th>
+                      <th></th>
+                      <th></th>
+                      <th className="text-center">Comercial</th>
+                      <th className="text-center">Fiscal</th>
+                      <th className="text-center">Financeiro</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Nome</td>
+                      <td>Telefone</td>
+                      <td>Celular</td>
+                      <td>
+                        <Form.Check
+                          type="checkbox"
+                          id=""
+                          name=""
+                          value=""
+                        />
+                      </td>
+                      <td className="text-center align-middle">
+                        <Form.Check
+                          type="checkbox"
+                          id=""
+                          name=""
+                          value=""
+                        />
+                      </td>
+                      <td className="text-center align-middle">
+                        <Form.Check
+                          type="checkbox"
+                          id=""
+                          name=""
+                          value=""
+                        />
+                      </td>
+                      <td className="text-center align-middle">
+                        <Form.Check
+                          type="checkbox"
+                          id=""
+                          name=""
+                          value=""
+                        />
+                      </td>
+                    </tr>
+
+                  </tbody>
+                </Table>
+
+
+
+              </Tab.Pane>
+
+            </Tab.Content>
+          </Col>
+        </Row>
+      </Tab.Container>
+
+
+
       <br />
       <Button disabled={loading} variant="primary" type="submit" className="float-right">
         Salvar
