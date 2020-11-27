@@ -48,7 +48,7 @@ export const TableTelefones = ({ contato }: TableTelefonesProps) => {
                 <td>{telefone.ddd}</td>
                 <td>{ telefone.numero}</td>
                 <td>{telefone.ramal}</td>
-                <td>{telefone.e_whatsapp}</td>
+                <td>{telefone.e_whatsapp ? 'Sim' : 'Não'}</td>
               </tr>
             )) : <h3>Nenhum telefone cadastrado</h3>
           }
