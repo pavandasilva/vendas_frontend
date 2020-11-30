@@ -1,19 +1,19 @@
 import capitalize from 'capitalize-pt-br'
 import React, { useState, useCallback } from 'react'
-import { Table, Pagination, Form, InputGroup, Card, Row, Col, Button, Modal } from 'react-bootstrap'
+import { Table, Pagination, Form, InputGroup, Card, Row, Col, Button } from 'react-bootstrap'
 import { Cliente } from '../../../domain/clientes/models/cliente'
 import { Atendimento } from '../Atendimento'
 import useClientesFidelizados from '../../hooks/useClientesFidelizados'
 import { useTabs } from '../../hooks/contexts'
 import { FaSearch } from 'react-icons/fa'
 import { LoadingTable } from '../LoadingTable'
-import { FormCliente } from './FormCliente'
+import { useHistory } from 'react-router-dom'
 
 const perPage = 30
 
 export const ListaClientesFidelizados = () => {
+  const history = useHistory()
   const [search, setSearch] = useState('')
-  const [showModal, setShowModal] = useState(false)
   const [currentPage, setCurrentPage] = useState(1)
   const { addTab } = useTabs()
 
@@ -51,93 +51,78 @@ export const ListaClientesFidelizados = () => {
     setCurrentPage(page)
   }, [clientesFidelizados])
 
+  const handleClickNovoCLiente = () => {
+    history.push('/cadastro-cliente')
+  }
+
   return (
-    <>
-      <Card>
-        <Card.Body>
-          <Row>
-            <Col>
-              <InputGroup className="mb-3">
-                <InputGroup.Prepend >
-                  <InputGroup.Text id="inputGroup-sizing-sm"><FaSearch/></InputGroup.Text>
-                </InputGroup.Prepend>
-                <Form.Control as="input" onChange={onChange}/>
-              </InputGroup>
-            </Col>
-          </Row>
+    <Card>
+      <Card.Body>
+        <Row>
+          <Col>
+            <InputGroup className="mb-3">
+              <InputGroup.Prepend >
+                <InputGroup.Text id="inputGroup-sizing-sm"><FaSearch/></InputGroup.Text>
+              </InputGroup.Prepend>
+              <Form.Control as="input" onChange={onChange}/>
+            </InputGroup>
+          </Col>
+        </Row>
 
-          <div className="title">
-          Clientes
-            <div className="float-right">
-              <Button size="sm" variant="primary" onClick={() => setShowModal(true)}>Novo cliente</Button>
-            </div>
+        <div className="title">
+        Clientes
+          <div className="float-right">
+            <Button size="sm" variant="primary" onClick={handleClickNovoCLiente}>Novo cliente</Button>
           </div>
+        </div>
 
-          { !clientesFidelizados?.data ? <LoadingTable /> : (
-            <>
-              <Table striped bordered hover size="sm">
-                <thead>
-                  <tr>
-                    <th>#</th>
-                    <th>Razão</th>
-                    <th>UF</th>
-                    <th>Cidade</th>
-                    <th>Ações</th>
+        { !clientesFidelizados?.data ? <LoadingTable /> : (
+          <>
+            <Table striped bordered hover size="sm">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Razão</th>
+                  <th>UF</th>
+                  <th>Cidade</th>
+                  <th>Ações</th>
+                </tr>
+              </thead>
+              <tbody>
+                { clientesFidelizados?.data?.map(cliente => (
+                  <tr key={cliente?.id?.toString()}>
+                    <td>{cliente?.id}</td>
+                    <td>{capitalize(cliente?.razao_social as string)}</td>
+                    <td>{cliente?.uf?.toUpperCase()}</td>
+                    <td>{capitalize(cliente?.cidade as string)}</td>
+                    <td><Button size="sm" variant="link" onClick={() => handleAtenderOnClick(cliente)}>Atender</Button></td>
                   </tr>
-                </thead>
-                <tbody>
-                  { clientesFidelizados?.data?.map(cliente => (
-                    <tr key={cliente?.id?.toString()}>
-                      <td>{cliente?.id}</td>
-                      <td>{capitalize(cliente?.razao_social as string)}</td>
-                      <td>{cliente?.uf?.toUpperCase()}</td>
-                      <td>{capitalize(cliente?.cidade as string)}</td>
-                      <td><Button size="sm" variant="link" onClick={() => handleAtenderOnClick(cliente)}>Atender</Button></td>
-                    </tr>
-                  ))}
-                </tbody>
-              </Table>
+                ))}
+              </tbody>
+            </Table>
 
-              {
-                clientesFidelizados && clientesFidelizados.metadata?.count > perPage && (
-                  <Pagination size="sm">
-                    <Pagination.First onClick={() => handlePaginationOnClick(1)}/>
-                    <Pagination.Prev onClick={() => handlePaginationOnClick(currentPage - 1)}/>
+            {
+              clientesFidelizados && clientesFidelizados.metadata?.count > perPage && (
+                <Pagination size="sm">
+                  <Pagination.First onClick={() => handlePaginationOnClick(1)}/>
+                  <Pagination.Prev onClick={() => handlePaginationOnClick(currentPage - 1)}/>
 
-                    { Array.apply(0, Array(Math.ceil(clientesFidelizados.metadata.count / perPage))).map((_, i) =>
-                      <Pagination.Item
-                        active={currentPage === i + 1}
-                        onClick={() => handlePaginationOnClick(i + 1)}
-                        key={i.toString()}>
-                        {i + 1}
-                      </Pagination.Item>
-                    )}
-                    <Pagination.Next onClick={() => handlePaginationOnClick(currentPage + 1)}/>
-                    <Pagination.Last onClick={() => handlePaginationOnClick(Math.ceil(clientesFidelizados.metadata.count / perPage))}/>
-                  </Pagination>
-                )
-              }
-            </>
-          )}
-        </Card.Body>
-      </Card>
-
-      <Modal
-        size="lg"
-        show={showModal}
-        onHide={() => setShowModal(false)}
-        backdrop="static"
-        keyboard={false}
-      >
-        <Modal.Header closeButton>
-          <Modal.Title>
-            Cadastro de cliente
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <FormCliente afterSave={() => setShowModal(false)}/>
-        </Modal.Body>
-      </Modal>
-    </>
+                  { Array.apply(0, Array(Math.ceil(clientesFidelizados.metadata.count / perPage))).map((_, i) =>
+                    <Pagination.Item
+                      active={currentPage === i + 1}
+                      onClick={() => handlePaginationOnClick(i + 1)}
+                      key={i.toString()}>
+                      {i + 1}
+                    </Pagination.Item>
+                  )}
+                  <Pagination.Next onClick={() => handlePaginationOnClick(currentPage + 1)}/>
+                  <Pagination.Last onClick={() => handlePaginationOnClick(Math.ceil(clientesFidelizados.metadata.count / perPage))}/>
+                </Pagination>
+              )
+            }
+          </>
+        )}
+      </Card.Body>
+    </Card>
   )
 }

@@ -1,7 +1,7 @@
 import React from 'react'
 import { Switch } from 'react-router-dom'
 import { Desempenho } from '../pages/Desempenho'
-import { DashBoard, Login, Demo, TabsTeste, Atendimentos, MeusDados } from '../pages'
+import { DashBoard, Login, Demo, TabsTeste, Atendimentos, MeusDados, CadastroCliente } from '../pages'
 import { Route } from './route'
 
 export const Routes: React.FC = () => (
@@ -9,9 +9,10 @@ export const Routes: React.FC = () => (
     <Route path="/demo" component={Demo} isPrivate />
     <Route path="/login" component={Login} />
     <Route exact path="/" component={DashBoard} isPrivate />
-    <Route exact path="/atendimentos" component={Atendimentos} isPrivate />
-    <Route exact path="/desempenho" component={Desempenho} isPrivate />
-    <Route exact path="/tabs" component={TabsTeste} isPrivate />
-    <Route exact path="/meus-dados" component={MeusDados} isPrivate />
+    <Route path="/atendimentos" component={Atendimentos} isPrivate />
+    <Route path="/desempenho" component={Desempenho} isPrivate />
+    <Route path="/tabs" component={TabsTeste} isPrivate />
+    <Route path="/meus-dados" component={MeusDados} isPrivate />
+    <Route path="/cadastro-cliente" component={CadastroCliente} isPrivate />
   </Switch>
 )

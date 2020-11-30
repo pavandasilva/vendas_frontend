@@ -5,23 +5,24 @@ import { FaAt } from 'react-icons/fa'
 import InputMask from 'react-input-mask'
 import { useFormik } from 'formik'
 import { Form, Col, Button, InputGroup, Nav, Tab, Row } from 'react-bootstrap'
-import EstadosMunicipios from '../../../assets/jsons/estados_municipios.json'
-import { Cliente } from '../../../../domain/clientes/models/cliente'
-import useClientes from '../../../hooks/useClientes'
-import { getIEMask } from '../../../../helpers/getIEMask'
-import { makeTrazerEnderecoCep } from '../../../../domain/clientes/factories/makeTrazerEnderecoCep'
-import { makeTrazerDadosCNPJ } from '../../../../domain/clientes/factories/makeTrazerDadosCNPJ'
-import { removerAcento } from '../../../../helpers/removerAcentos'
-import { TableContatos } from './TableContatos'
+import EstadosMunicipios from '../../assets/jsons/estados_municipios.json'
+import { Cliente } from '../../../domain/clientes/models/cliente'
+import useClientes from '../../hooks/useClientes'
+import { getIEMask } from '../../../helpers/getIEMask'
+import { makeTrazerEnderecoCep } from '../../../domain/clientes/factories/makeTrazerEnderecoCep'
+import { makeTrazerDadosCNPJ } from '../../../domain/clientes/factories/makeTrazerDadosCNPJ'
+import { removerAcento } from '../../../helpers/removerAcentos'
+import { TableContatos } from '../TableContatos'
 
 const trazerEnderecoPorCep = makeTrazerEnderecoCep()
 const trazerDadosCNPJ = makeTrazerDadosCNPJ()
 
-interface FormNovoClienteProps {
+/* interface FormNovoClienteProps {
   afterSave: () => void
 }
-
-export const FormCliente = ({ afterSave }: FormNovoClienteProps) => {
+ */
+/* export const FormCliente = ({ afterSave }: FormNovoClienteProps) => { */
+export const FormCliente = () => {
   const [loading, setLoading] = useState(false)
   const [errors, setErrors] = useState({} as any)
   const { add: addCliente } = useClientes()
@@ -92,10 +93,10 @@ export const FormCliente = ({ afterSave }: FormNovoClienteProps) => {
       setLoading(true)
       const { error: addClienteError, loading, data } = await addCliente(sanetizeCliente(values))
 
-      if (data.id) {
+      /* if (data.id) {
         afterSave()
       }
-
+ */
       addClienteError && setErrors(addClienteError)
       setLoading(loading)
     }
@@ -329,7 +330,7 @@ export const FormCliente = ({ afterSave }: FormNovoClienteProps) => {
                 <hr/>
 
                 <Form.Row>
-                  <Form.Group as={Col} md={6} controlId="cnpj">
+                  <Form.Group as={Col} md={6}>
                     <Form.Label>{pessoa === 'pj' ? 'CNPJ' : 'CPF'}</Form.Label>
                     <Form.Control
                       placeholder={pessoa === 'pj' ? 'CNPJ' : 'CPF'}
@@ -346,7 +347,7 @@ export const FormCliente = ({ afterSave }: FormNovoClienteProps) => {
                       {errors?.cnpj}
                     </Form.Control.Feedback>
                   </Form.Group>
-                  <Form.Group as={Col} md={6} controlId="ie">
+                  <Form.Group as={Col} md={6}>
                     <Form.Label>IE</Form.Label>
                     <Form.Control
                       placeholder={formik.values.is_isento ? 'isento' : 'IE'}
@@ -367,7 +368,7 @@ export const FormCliente = ({ afterSave }: FormNovoClienteProps) => {
                 </Form.Row>
 
                 <Form.Row>
-                  <Form.Group as={Col} md={6} controlId="razao_social">
+                  <Form.Group as={Col} md={6}>
                     <Form.Label>Razão Social</Form.Label>
                     <Form.Control
                       id="razao_social"
@@ -382,7 +383,7 @@ export const FormCliente = ({ afterSave }: FormNovoClienteProps) => {
                       { errors?.razao_social}
                     </Form.Control.Feedback>
                   </Form.Group>
-                  <Form.Group as={Col} md={6} controlId="nome_fantasia">
+                  <Form.Group as={Col} md={6}>
                     <Form.Label>Nome Fantasia</Form.Label>
                     <Form.Control
                       placeholder="Nome Fantasia"
@@ -463,9 +464,8 @@ export const FormCliente = ({ afterSave }: FormNovoClienteProps) => {
               </Tab.Pane>
 
               <Tab.Pane eventKey="endereco">
-
                 <Form.Row>
-                  <Form.Group as={Col} md={2} controlId="cep">
+                  <Form.Group as={Col} md={2}>
                     <Form.Label>C.E.P.</Form.Label>
                     <Form.Control
                       placeholder="CEP"
@@ -483,7 +483,7 @@ export const FormCliente = ({ afterSave }: FormNovoClienteProps) => {
                     </Form.Control.Feedback>
                   </Form.Group>
 
-                  <Form.Group as={Col} md={7} controlId="endereco">
+                  <Form.Group as={Col} md={7}>
                     <Form.Label>Endereço</Form.Label>
                     <Form.Control
                       placeholder="Endereço"
@@ -499,7 +499,7 @@ export const FormCliente = ({ afterSave }: FormNovoClienteProps) => {
                     </Form.Control.Feedback>
                   </Form.Group>
 
-                  <Form.Group as={Col} controlId="numero">
+                  <Form.Group as={Col}>
                     <Form.Label>Número</Form.Label>
                     <Form.Control
                       placeholder="Número"
@@ -517,7 +517,7 @@ export const FormCliente = ({ afterSave }: FormNovoClienteProps) => {
                 </Form.Row>
 
                 <Form.Row>
-                  <Form.Group as={Col} md={2} controlId="uf">
+                  <Form.Group as={Col} md={2}>
                     <Form.Label>Estado</Form.Label>
                     <Form.Control
                       id="uf"
@@ -536,7 +536,7 @@ export const FormCliente = ({ afterSave }: FormNovoClienteProps) => {
                     </Form.Control.Feedback>
                   </Form.Group>
 
-                  <Form.Group as={Col} md={4} controlId="cidade">
+                  <Form.Group as={Col} md={4}>
                     <Form.Label>Cidade</Form.Label>
                     <Form.Control
                       id="cidade"
@@ -556,7 +556,7 @@ export const FormCliente = ({ afterSave }: FormNovoClienteProps) => {
                     </Form.Control.Feedback>
                   </Form.Group>
 
-                  <Form.Group as={Col} controlId="cidade">
+                  <Form.Group as={Col} >
                     <Form.Label>Bairro</Form.Label>
                     <Form.Control
                       placeholder="Bairro"
@@ -575,8 +575,7 @@ export const FormCliente = ({ afterSave }: FormNovoClienteProps) => {
                 </Form.Row>
 
                 <Form.Row>
-
-                  <Form.Group as={Col} md={7} controlId="complemento">
+                  <Form.Group as={Col} md={7}>
                     <Form.Label>Complemento</Form.Label>
                     <Form.Control
                       placeholder=""
@@ -592,7 +591,7 @@ export const FormCliente = ({ afterSave }: FormNovoClienteProps) => {
                     </Form.Control.Feedback>
                   </Form.Group>
 
-                  <Form.Group as={Col} md={5} controlId="regiao">
+                  <Form.Group as={Col} md={5}>
                     <Form.Label>Região</Form.Label>
                     <Form.Control
                       placeholder="informe uma região"
@@ -611,16 +610,15 @@ export const FormCliente = ({ afterSave }: FormNovoClienteProps) => {
               </Tab.Pane>
               <Tab.Pane eventKey="contatos">
                 <TableContatos cliente={formik.values as unknown as Cliente}/>
+                <Button disabled={loading} variant="primary" type="submit" className="float-right">
+                   Salvar
+                </Button>
               </Tab.Pane>
             </Tab.Content>
           </Col>
         </Row>
       </Tab.Container>
-
       <br />
-      <Button disabled={loading} variant="primary" type="submit" className="float-right">
-        Salvar
-      </Button>
     </Form>
   )
 }
