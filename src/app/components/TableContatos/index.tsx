@@ -114,9 +114,6 @@ export const TableContatos = ({ cliente }: TableContatosProps) => {
 
       <ModalContato show={showModalContato} handleSubmit={handleSubmitContato} handleCancelarButton={() => setShowModalContato(false)}/>
       <ModalTelefone show={showModalTelefone} handleSubmit={handleSubmitTelefone} handleCancelarButton={() => setShowModalTelefone(false)}/>
-      { indexContatoSelected}
-      { JSON.stringify(contatos)}
-
     </>
   )
 }
