@@ -1,11 +1,12 @@
-import React, { ChangeEvent, useState } from 'react'
+import React, { ChangeEvent, FormEvent, useState } from 'react'
 import { Button, Col, Form, Modal } from 'react-bootstrap'
 import { Contato } from '../../../domain/clientes/models'
 
 interface ModalContatoProps {
   show?: boolean
-  handleSubmit(contato: Contato): void;
-  handleCancelarButton: () => void
+  handleSubmit(contato: Contato): void
+  handleCancelar(): void
+  afterSubmit(): void
 }
 
 const initialState: Contato = {
@@ -17,7 +18,7 @@ const initialState: Contato = {
   status: 'ativo'
 }
 
-export const ModalContato = ({ show, handleSubmit, handleCancelarButton }: ModalContatoProps) => {
+export const ModalContato = ({ show, handleSubmit, handleCancelar, afterSubmit }: ModalContatoProps) => {
   const [contato, setContato] = useState(initialState)
 
   const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -42,13 +43,28 @@ export const ModalContato = ({ show, handleSubmit, handleCancelarButton }: Modal
       return newContato
     })
   }
+  const formHandleSubmit = (e: FormEvent) => {
+    e.preventDefault()
+    handleSubmit(contato)
+
+    // limpa o formulário
+    setContato(initialState)
+
+    afterSubmit()
+  }
+
+  const handleCancelarClick = () => {
+    // limpa o formulário
+    setContato(initialState)
+    handleCancelar()
+  }
 
   return (
     <Modal show={show}>
       <Modal.Header closeButton>
         <Modal.Title>Cadastro contato</Modal.Title>
       </Modal.Header>
-      <Form onSubmit={() => handleSubmit(contato)}>
+      <Form onSubmit={formHandleSubmit}>
         <Modal.Body>
           <Form.Row>
             <Form.Group as={Col} md={12}>
@@ -72,7 +88,7 @@ export const ModalContato = ({ show, handleSubmit, handleCancelarButton }: Modal
                 id="email"
                 name="email"
                 placeholder="E-mail"
-                type="text"
+                type="email"
                 isInvalid={false}
                 value={contato.email}
                 onChange={handleOnChange}
@@ -139,7 +155,7 @@ export const ModalContato = ({ show, handleSubmit, handleCancelarButton }: Modal
           </Form.Row>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleCancelarButton}>
+          <Button variant="secondary" onClick={handleCancelarClick}>
             Cancelar
           </Button>
           <Button type="submit" variant="primary">

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Table, Form, Button, Card, Col, InputGroup, Row } from 'react-bootstrap'
-import { FaSearch } from 'react-icons/fa'
+import { FaSearch, FaWhatsapp, FaPhone, FaPlus } from 'react-icons/fa'
 import { ModalTelefone } from '..'
 import { Cliente, Contato, Telefone } from '../../../domain/clientes/models'
 import { ModalContato } from '../ModalContato'
@@ -57,6 +57,10 @@ export const TableContatos = ({ cliente }: TableContatosProps) => {
     })
   }
 
+  const editarContatoClick = () => {
+    setShowModalContato(true)
+  }
+
   return (
     <>
       <Card>
@@ -92,28 +96,47 @@ export const TableContatos = ({ cliente }: TableContatosProps) => {
             </thead>
             <tbody>
               { contatos?.map((contato, index) => (
-                <tr key={index.toString()}>
-                  <td>{contato.nome}</td>
-                  <td>{contato.email}</td>
-                  <td>{contato.status}</td>
-                  <td>{contato.e_comercial === 's' ? 'Sim' : 'Não'}</td>
-                  <td>{contato.e_fiscal === 's' ? 'Sim' : 'Não'}</td>
-                  <td>{contato.e_financeiro === 's' ? 'Sim' : 'Não'}</td>
+                <>
+                  <tr key={index.toString()}>
+                    <td className="align-middle">{contato.nome}</td>
+                    <td className="align-middle">{contato.email}</td>
+                    <td className="align-middle">{contato.status}</td>
+                    <td className="text-center align-middle">{contato.e_comercial === 's' ? 'Sim' : 'Não'}</td>
+                    <td className="text-center align-middle">{contato.e_fiscal === 's' ? 'Sim' : 'Não'}</td>
+                    <td className="text-center align-middle">{contato.e_financeiro === 's' ? 'Sim' : 'Não'}</td>
 
-                  <td className="text-center align-middle">
-                    <Button variant="Link">+</Button>
-                    <Button variant="Link" onClick={() => handleAddTelefoneOnClick(index)}>+ Telefone</Button>
-                    <Button variant="Link">Editar</Button>
-                  </td>
-                </tr>
+                    <td className="text-center align-middle">
+                      {contato?.telefones?.length && <Button variant="Link">Telefones</Button>}
+                      <Button variant="Link" onClick={() => handleAddTelefoneOnClick(index)}>Adicionar Telefone</Button>
+                      <Button variant="Link" onClick={editarContatoClick}>Editar contato</Button>
+                    </td>
+                  </tr>
+                  {contato?.telefones && <tr>
+                    <td id={`accordion${index.toString()}`} className="collapse" colSpan={7}>
+                      {
+                        contato?.telefones?.map((telefone, index) => <div key={index.toString()}> {`(${telefone.ddd}) ${telefone.numero}`} {telefone.e_whatsapp === 's' && <FaWhatsapp/>}</div>)
+                      }
+                    </td>
+                  </tr>}
+                </>
               ))}
             </tbody>
           </Table>
         </Card.Body>
       </Card>
 
-      <ModalContato show={showModalContato} handleSubmit={handleSubmitContato} handleCancelarButton={() => setShowModalContato(false)}/>
-      <ModalTelefone show={showModalTelefone} handleSubmit={handleSubmitTelefone} handleCancelarButton={() => setShowModalTelefone(false)}/>
+      <ModalContato
+        show={showModalContato}
+        handleSubmit={handleSubmitContato}
+        handleCancelar={() => setShowModalContato(false)}
+        afterSubmit={() => setShowModalContato(false)}
+      />
+
+      <ModalTelefone
+        show={showModalTelefone}
+        handleSubmit={handleSubmitTelefone}
+        handleCancelar={() => setShowModalTelefone(false)}
+        afterSubmit={() => setShowModalTelefone(false)}/>
     </>
   )
 }
