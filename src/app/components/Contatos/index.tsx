@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Table, Form, Button, Card, Col, InputGroup, Row } from 'react-bootstrap'
-import { FaSearch, FaWhatsapp, FaPhone, FaPlus } from 'react-icons/fa'
+import { FaSearch, FaWhatsapp } from 'react-icons/fa'
 import { ModalTelefone } from '..'
 import { Cliente, Contato, Telefone } from '../../../domain/clientes/models'
 import { ModalContato } from '../ModalContato'
@@ -9,7 +9,7 @@ interface TableContatosProps {
   cliente: Cliente
 }
 
-export const TableContatos = ({ cliente }: TableContatosProps) => {
+export const Contatos = ({ cliente }: TableContatosProps) => {
   const [contatos, setContatos] = useState([] as Contato[])
   const [indexContatoSelected, setIndexContatoSelected] = useState(-1)
   const [showModalContato, setShowModalContato] = useState(false)
@@ -91,10 +91,12 @@ export const TableContatos = ({ cliente }: TableContatosProps) => {
                 <th className="text-center">Comercial</th>
                 <th className="text-center">Fiscal</th>
                 <th className="text-center">Financeiro</th>
+                <th className="text-center">Telefone</th>
                 <th className="text-center">Ações</th>
               </tr>
             </thead>
             <tbody>
+
               { contatos?.map((contato, index) => (
                 <>
                   <tr key={index.toString()}>
@@ -104,18 +106,16 @@ export const TableContatos = ({ cliente }: TableContatosProps) => {
                     <td className="text-center align-middle">{contato.e_comercial === 's' ? 'Sim' : 'Não'}</td>
                     <td className="text-center align-middle">{contato.e_fiscal === 's' ? 'Sim' : 'Não'}</td>
                     <td className="text-center align-middle">{contato.e_financeiro === 's' ? 'Sim' : 'Não'}</td>
-
                     <td className="text-center align-middle">
-                      {contato?.telefones?.length && <Button variant="Link">Telefones</Button>}
-                      <Button variant="Link" onClick={() => handleAddTelefoneOnClick(index)}>Adicionar Telefone</Button>
-                      <Button variant="Link" onClick={editarContatoClick}>Editar contato</Button>
+                      <Button variant="link" onClick={() => handleAddTelefoneOnClick(index)}>Adicionar</Button>
+                    </td>
+                    <td className="text-center align-middle">
+                      <Button variant="link" onClick={editarContatoClick}>Editar</Button>
                     </td>
                   </tr>
                   {contato?.telefones && <tr>
                     <td id={`accordion${index.toString()}`} className="collapse" colSpan={7}>
-                      {
-                        contato?.telefones?.map((telefone, index) => <div key={index.toString()}> {`(${telefone.ddd}) ${telefone.numero}`} {telefone.e_whatsapp === 's' && <FaWhatsapp/>}</div>)
-                      }
+                      { contato?.telefones?.map((telefone, index) => <div key={index.toString()}> {`(${telefone.ddd}) ${telefone.numero}`} {telefone.e_whatsapp === 's' && <FaWhatsapp/>}</div>) }
                     </td>
                   </tr>}
                 </>

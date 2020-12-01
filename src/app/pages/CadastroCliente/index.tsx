@@ -12,17 +12,13 @@ import { getIEMask } from '../../../helpers/getIEMask'
 import { makeTrazerEnderecoCep } from '../../../domain/clientes/factories/makeTrazerEnderecoCep'
 import { makeTrazerDadosCNPJ } from '../../../domain/clientes/factories/makeTrazerDadosCNPJ'
 import { removerAcento } from '../../../helpers/removerAcentos'
-import { TableContatos } from '../../components/TableContatos'
+import { Contatos } from '../../components'
 import { Layout } from '../Layout'
+import './styles.scss'
 
 const trazerEnderecoPorCep = makeTrazerEnderecoCep()
 const trazerDadosCNPJ = makeTrazerDadosCNPJ()
 
-/* interface FormNovoClienteProps {
-  afterSave: () => void
-}
- */
-/* export const FormCliente = ({ afterSave }: FormNovoClienteProps) => { */
 export const CadastroCliente = () => {
   const [loading, setLoading] = useState(false)
   const [errors, setErrors] = useState({} as any)
@@ -92,7 +88,7 @@ export const CadastroCliente = () => {
     },
     onSubmit: async (values) => {
       setLoading(true)
-      const { error: addClienteError, loading, data } = await addCliente(sanetizeCliente(values))
+      const { error: addClienteError, loading } = await addCliente(sanetizeCliente(values))
 
       /* if (data.id) {
         afterSave()
@@ -222,12 +218,15 @@ export const CadastroCliente = () => {
                     <Nav.Item>
                       <Nav.Link eventKey="contatos">Contatos</Nav.Link>
                     </Nav.Item>
+                    <div className="button-salvar">
+
+                      <Button type="button">Salvar</Button>
+                    </div>
                   </Nav>
                 </Col>
 
                 <Col sm={12}>
                   <Tab.Content>
-
                     <Tab.Pane eventKey="dados">
                       <Form.Row>
                         <Col>
@@ -256,6 +255,7 @@ export const CadastroCliente = () => {
                               />
                             </Col>
                           </Form.Row>
+
                         </Col>
 
                         <Col lg="7">
@@ -368,7 +368,6 @@ export const CadastroCliente = () => {
                           </Form.Control.Feedback>
                         </Form.Group>
                       </Form.Row>
-
                       <Form.Row>
                         <Form.Group as={Col} md={6}>
                           <Form.Label>Razão Social</Form.Label>
@@ -462,7 +461,6 @@ export const CadastroCliente = () => {
                           </InputGroup>
                         </Col>
                       </Form.Row>
-
                     </Tab.Pane>
 
                     <Tab.Pane eventKey="endereco">
@@ -611,10 +609,7 @@ export const CadastroCliente = () => {
                       </Form.Row>
                     </Tab.Pane>
                     <Tab.Pane eventKey="contatos">
-                      <TableContatos cliente={formik.values as unknown as Cliente}/>
-                      <Button disabled={loading} variant="primary" type="submit" className="float-right">
-                   Salvar
-                      </Button>
+                      <Contatos cliente={formik.values as unknown as Cliente}/>
                     </Tab.Pane>
                   </Tab.Content>
                 </Col>
