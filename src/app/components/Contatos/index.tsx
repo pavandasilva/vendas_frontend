@@ -1,65 +1,28 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useCallback } from 'react'
 import { Table, Form, Button, Card, Col, InputGroup, Row } from 'react-bootstrap'
 import { FaSearch, FaWhatsapp } from 'react-icons/fa'
 import { ModalTelefone } from '..'
-import { Cliente, Contato, Telefone } from '../../../domain/clientes/models'
+import { useClienteDataCadastro } from '../../hooks/contexts/clienteDataCadastroContext'
 import { ModalContato } from '../ModalContato'
 
-interface TableContatosProps {
-  cliente: Cliente
-}
-
-export const Contatos = ({ cliente }: TableContatosProps) => {
-  const [contatos, setContatos] = useState([] as Contato[])
+export const Contatos = () => {
+  const [cliente] = useClienteDataCadastro()
   const [indexContatoSelected, setIndexContatoSelected] = useState(-1)
   const [showModalContato, setShowModalContato] = useState(false)
   const [showModalTelefone, setShowModalTelefone] = useState(false)
 
-  useEffect(() => {
-    if (cliente?.contatos) {
-      setContatos(cliente?.contatos)
-    }
-  }, [cliente])
-
-  const handleFilterOnChange = () => {
-
-  }
-
-  const novoContatoOnClick = () => {
+  const novoContatoOnClick = useCallback(() => {
     setShowModalContato(true)
-  }
+  }, [])
 
-  const handleSubmitContato = (contato: Contato) => {
-    setContatos(contatos =>
-      [...contatos, contato]
-    )
-
-    setShowModalContato(false)
-  }
-
-  const handleAddTelefoneOnClick = (index: number) => {
+  const handleAddTelefoneOnClick = useCallback((index: number) => {
     setIndexContatoSelected(index)
     setShowModalTelefone(true)
-  }
+  }, [])
 
-  const handleSubmitTelefone = (telefone: Telefone) => {
-    const contatoSelected = contatos[indexContatoSelected]
-
-    if (!contatoSelected.telefones?.length) {
-      contatoSelected.telefones = [telefone]
-    } else {
-      contatoSelected?.telefones?.push(telefone)
-    }
-
-    setContatos(contatos => {
-      contatos[indexContatoSelected] = contatoSelected
-      return contatos
-    })
-  }
-
-  const editarContatoClick = () => {
+  const editarContatoClick = useCallback(() => {
     setShowModalContato(true)
-  }
+  }, [])
 
   return (
     <>
@@ -77,7 +40,7 @@ export const Contatos = ({ cliente }: TableContatosProps) => {
                 <InputGroup.Prepend >
                   <InputGroup.Text id="inputGroup-sizing-sm"><FaSearch/></InputGroup.Text>
                 </InputGroup.Prepend>
-                <Form.Control as="input" onChange={handleFilterOnChange}/>
+                <Form.Control as="input" />
               </InputGroup>
             </Col>
           </Row>
@@ -97,7 +60,7 @@ export const Contatos = ({ cliente }: TableContatosProps) => {
             </thead>
             <tbody>
 
-              { contatos?.map((contato, index) => (
+              { cliente.contatos?.map((contato, index) => (
                 <>
                   <tr key={index.toString()}>
                     <td className="align-middle">{contato.nome}</td>
@@ -127,16 +90,15 @@ export const Contatos = ({ cliente }: TableContatosProps) => {
 
       <ModalContato
         show={showModalContato}
-        handleSubmit={handleSubmitContato}
         handleCancelar={() => setShowModalContato(false)}
-        afterSubmit={() => setShowModalContato(false)}
+        afterAdicionarClick={() => setShowModalContato(false)}
       />
 
       <ModalTelefone
         show={showModalTelefone}
-        handleSubmit={handleSubmitTelefone}
+        indexContato={indexContatoSelected}
         handleCancelar={() => setShowModalTelefone(false)}
-        afterSubmit={() => setShowModalTelefone(false)}/>
+        afterAdicionarClick={() => setShowModalTelefone(false)}/>
     </>
   )
 }

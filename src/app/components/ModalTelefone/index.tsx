@@ -1,13 +1,15 @@
-import React, { ChangeEvent, FormEvent, useState } from 'react'
+import React, { ChangeEvent, useCallback, useState } from 'react'
+import produce from 'immer'
 import { Button, Col, Form, Modal } from 'react-bootstrap'
 import InputMask from 'react-input-mask'
 import { Telefone } from '../../../domain/clientes/models'
+import { useClienteDataCadastro } from '../../hooks/contexts'
 
 interface ModalTelefoneProps {
   show?: boolean;
-  handleSubmit(telefone: Telefone): void;
   handleCancelar(): void;
-  afterSubmit(): void
+  afterAdicionarClick(): void;
+  indexContato: number
 }
 
 const initialState: Telefone = {
@@ -17,23 +19,22 @@ const initialState: Telefone = {
   ramal: ''
 }
 
-export const ModalTelefone = ({ show, handleSubmit, handleCancelar, afterSubmit }: ModalTelefoneProps) => {
+export const ModalTelefone = ({ show, handleCancelar, afterAdicionarClick, indexContato }: ModalTelefoneProps) => {
   const [telefone, setTelefone] = useState(initialState)
+  const [, setCliente] = useClienteDataCadastro()
 
-  const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const resetForm = useCallback(() => {
+    setTelefone(initialState)
+  }, [])
+
+  const handleOnChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     let value = e.target.value
 
+    if (e.target.type === 'checkbox') {
+      value = e.target.checked ? 's' : 'n'
+    }
+
     setTelefone(telefone => {
-      if (e.target.type === 'checkbox') {
-        const checkbox = telefone[e.target.name as keyof Telefone]
-
-        if (checkbox && checkbox === 's') {
-          value = 'n'
-        } else {
-          value = 's'
-        }
-      }
-
       const newContato = {
         ...telefone,
         [e.target.name]: value
@@ -41,26 +42,38 @@ export const ModalTelefone = ({ show, handleSubmit, handleCancelar, afterSubmit 
 
       return newContato
     })
-  }
+  }, [])
 
-  const formHandleSubmit = (e: FormEvent) => {
-    e.preventDefault()
-    handleSubmit(telefone)
-    setTelefone(initialState)
-    afterSubmit()
-  }
+  const handleSubmit = useCallback(() => {
+    setCliente(cliente => {
+      const newState = produce(cliente, draftState => {
+        if (!draftState?.contatos?.length) {
+          return cliente
+        }
 
-  const handleCancelarClick = () => {
+        draftState?.contatos[indexContato]?.telefones?.push(telefone)
+      })
+
+      return newState
+    })
+
     setTelefone(initialState)
+    resetForm()
+    afterAdicionarClick()
+  }, [afterAdicionarClick, indexContato, resetForm, setCliente, telefone])
+
+  const handleCancelarClick = useCallback(() => {
+    setTelefone(initialState)
+    resetForm()
     handleCancelar()
-  }
+  }, [handleCancelar, resetForm])
 
   return (
     <Modal show={show}>
       <Modal.Header closeButton>
         <Modal.Title>Cadastro Telefone</Modal.Title>
       </Modal.Header>
-      <Form onSubmit={formHandleSubmit}>
+      <Form onSubmit={handleSubmit}>
         <Modal.Body>
           <Form.Row>
             <Form.Group as={Col} md={2}>
@@ -130,10 +143,10 @@ export const ModalTelefone = ({ show, handleSubmit, handleCancelar, afterSubmit 
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleCancelarClick}>
-    Cancelar
+            Cancelar
           </Button>
-          <Button type="submit" variant="primary">
-    Adicionar
+          <Button type="button" variant="primary" onClick={handleSubmit}>
+            Adicionar
           </Button>
         </Modal.Footer>
       </Form>

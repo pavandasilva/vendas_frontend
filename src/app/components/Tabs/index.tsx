@@ -7,10 +7,11 @@ import { useTabs } from '../../hooks/contexts'
 import './style.scss'
 
 interface TabsProps {
-  fixedContent?: React.ReactNode
+  fixedContent?: React.ReactNode,
+  titleTable: string
 }
 
-export const Tabs = ({ fixedContent }: TabsProps) => {
+export const Tabs = ({ fixedContent, titleTable }: TabsProps) => {
   const [tabFixedTitle, setTabFixedTitle] = useState('')
   const { activeTab, setActiveTab, tabs, removeTab } = useTabs()
   const { pathname } = useLocation()
@@ -37,7 +38,7 @@ export const Tabs = ({ fixedContent }: TabsProps) => {
           <Nav.Item key={-1} onClick={() => setActiveTab(-1)}>
             <Nav.Link eventKey={-1}>
               <div className='ellipsis tab-fixed'>
-                { tabFixedTitle }
+                { titleTable || tabFixedTitle }
               </div>
             </Nav.Link>
           </Nav.Item>

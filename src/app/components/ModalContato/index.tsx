@@ -1,12 +1,13 @@
-import React, { ChangeEvent, FormEvent, useState } from 'react'
+import React, { ChangeEvent, useCallback, useState } from 'react'
+import produce from 'immer'
 import { Button, Col, Form, Modal } from 'react-bootstrap'
 import { Contato } from '../../../domain/clientes/models'
+import { useClienteDataCadastro } from '../../hooks/contexts'
 
 interface ModalContatoProps {
   show?: boolean
-  handleSubmit(contato: Contato): void
   handleCancelar(): void
-  afterSubmit(): void
+  afterAdicionarClick(): void
 }
 
 const initialState: Contato = {
@@ -18,21 +19,16 @@ const initialState: Contato = {
   status: 'ativo'
 }
 
-export const ModalContato = ({ show, handleSubmit, handleCancelar, afterSubmit }: ModalContatoProps) => {
+export const ModalContato = ({ show, handleCancelar, afterAdicionarClick }: ModalContatoProps) => {
+  const [, setCliente] = useClienteDataCadastro()
   const [contato, setContato] = useState(initialState)
 
-  const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleOnChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     let value = e.target.value
 
     setContato(contato => {
       if (e.target.type === 'checkbox') {
-        const checkbox = contato[e.target.name as keyof Contato]
-
-        if (checkbox && checkbox === 's') {
-          value = 'n'
-        } else {
-          value = 's'
-        }
+        value = e.target.checked ? 's' : 'n'
       }
 
       const newContato = {
@@ -42,22 +38,29 @@ export const ModalContato = ({ show, handleSubmit, handleCancelar, afterSubmit }
 
       return newContato
     })
-  }
-  const formHandleSubmit = (e: FormEvent) => {
-    e.preventDefault()
-    handleSubmit(contato)
+  }, [])
 
-    // limpa o formulário
+  const formHandleSubmit = useCallback(() => {
+    setCliente(cliente => {
+      const newState = produce(cliente, draftState => {
+        draftState?.contatos?.push(contato)
+      })
+
+      return newState
+    })
+
+    afterAdicionarClick()
+  }, [afterAdicionarClick, contato, setCliente])
+
+  const resetForm = useCallback(() => {
     setContato(initialState)
+  }, [])
 
-    afterSubmit()
-  }
-
-  const handleCancelarClick = () => {
+  const handleCancelarClick = useCallback(() => {
     // limpa o formulário
-    setContato(initialState)
     handleCancelar()
-  }
+    resetForm()
+  }, [handleCancelar, resetForm])
 
   return (
     <Modal show={show}>
@@ -158,7 +161,7 @@ export const ModalContato = ({ show, handleSubmit, handleCancelar, afterSubmit }
           <Button variant="secondary" onClick={handleCancelarClick}>
             Cancelar
           </Button>
-          <Button type="submit" variant="primary">
+          <Button type="button" variant="primary" onClick={formHandleSubmit}>
             Adicionar
           </Button>
         </Modal.Footer>

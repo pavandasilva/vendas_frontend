@@ -9,14 +9,14 @@ interface LayoutProps {
   title: string
 }
 
-export const Layout: React.FC <LayoutProps> = ({ children }) => {
+export const Layout: React.FC <LayoutProps> = ({ title, children }) => {
   return (
     <Container fluid>
       <div id="main">
         <AsideMenu />
         <div id="wrapper">
           <Navbar />
-          <Tabs fixedContent={children} />
+          <Tabs titleTable={title} fixedContent={children} />
           <Footer />
         </div>
       </div>

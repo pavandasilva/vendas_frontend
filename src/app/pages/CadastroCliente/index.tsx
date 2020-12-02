@@ -1,13 +1,9 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-import React, { useState, useEffect, useCallback } from 'react'
-import capitalize from 'capitalize-pt-br'
+import React, { useState, useEffect, useCallback, FormEvent } from 'react'
 import { FaAt } from 'react-icons/fa'
 import InputMask from 'react-input-mask'
-import { useFormik } from 'formik'
 import { Form, Col, Button, InputGroup, Nav, Tab, Row, Card } from 'react-bootstrap'
 import EstadosMunicipios from '../../assets/jsons/estados_municipios.json'
 import { Cliente } from '../../../domain/clientes/models/cliente'
-import useClientes from '../../hooks/useClientes'
 import { getIEMask } from '../../../helpers/getIEMask'
 import { makeTrazerEnderecoCep } from '../../../domain/clientes/factories/makeTrazerEnderecoCep'
 import { makeTrazerDadosCNPJ } from '../../../domain/clientes/factories/makeTrazerDadosCNPJ'
@@ -15,18 +11,19 @@ import { removerAcento } from '../../../helpers/removerAcentos'
 import { Contatos } from '../../components'
 import { Layout } from '../Layout'
 import './styles.scss'
+import { useClienteDataCadastro } from '../../hooks/contexts/clienteDataCadastroContext'
 
 const trazerEnderecoPorCep = makeTrazerEnderecoCep()
 const trazerDadosCNPJ = makeTrazerDadosCNPJ()
 
 export const CadastroCliente = () => {
-  const [loading, setLoading] = useState(false)
+  const [controlFormIsIsento, setControlFormIsIsento] = useState(false)
   const [errors, setErrors] = useState({} as any)
-  const { add: addCliente } = useClientes()
-  const [cidades, setCidades] = useState([] as string[])
+  const [controlCidades, setControlCidades] = useState([] as string[])
   const [uf, setUF] = useState('')
-  const [pessoa, setPessoa] = useState('pj')
+  const [controlFormPessoa, setControlFormPessoa] = useState('pj')
   const [ieMask, setIeMask] = useState('')
+  const [cliente, setCliente] = useClienteDataCadastro()
 
   useEffect(() => {
     if (!uf) {
@@ -34,7 +31,7 @@ export const CadastroCliente = () => {
     }
 
     const [estado] = EstadosMunicipios.estados.filter(estado => estado.sigla === uf)
-    setCidades(estado.cidades)
+    setControlCidades(estado.cidades)
     const ieMask = getIEMask(uf)
     setIeMask(ieMask)
   }, [uf])
@@ -55,65 +52,39 @@ export const CadastroCliente = () => {
       cidade: values.cidade,
       regiao: values.regiao,
       uf: values.uf,
-      is_cliente_final: values.is_cliente_final ? 's' : 'n',
-      is_orgao_estadual: values.is_orgao_estadual ? 's' : 'n',
-      is_revenda: values.is_orgao_estadual ? 's' : 'n'
+      is_cliente_final: values.is_cliente_final,
+      is_orgao_estadual: values.is_orgao_estadual,
+      is_revenda: values.is_orgao_estadual
     }
 
     return cliente
   }, [])
 
-  const formik = useFormik({
-    initialValues: {
-      razao_social: '',
-      nome_fantasia: '',
-      email: '',
-      email_nfe: '',
-      email_nfe2: '',
-      cnpj: '',
-      ie: '',
-      cep: '',
-      endereco: '',
-      numero: '',
-      bairro: '',
-      cidade: '',
-      complemento: '',
-      regiao: '',
-      uf: '',
-      is_cliente_final: false,
-      is_orgao_estadual: false,
-      is_revenda: false,
-      is_isento: false,
-      contatos: []
-    },
-    onSubmit: async (values) => {
-      setLoading(true)
-      const { error: addClienteError, loading } = await addCliente(sanetizeCliente(values))
-
-      /* if (data.id) {
-        afterSave()
-      }
- */
-      addClienteError && setErrors(addClienteError)
-      setLoading(loading)
-    }
-  })
-
-  const submitForm = useCallback((e: any) => {
+  const submitForm = useCallback((e: FormEvent) => {
     e.preventDefault()
-    formik.handleSubmit()
-  }, [formik])
+    console.log('cadastroCliente', cliente)
+  }, [cliente])
 
   const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    e.preventDefault()
+    let value = e.target.value
 
+    if (e.target.type === 'checkbox') {
+      value = e.target.checked ? 's' : 'n'
+    }
+
+    const newCliente = {
+      ...cliente,
+      [e.target.name]: value
+    }
+
+    setCliente(newCliente)
+
+    // limpa o erro do input que está sendo editado
     setErrors((errors: any) => {
       delete (errors[e.target.name])
       return errors
     })
-
-    formik.handleChange(e)
-  }, [formik])
+  }, [cliente, setCliente])
 
   const handleUfInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault()
@@ -121,50 +92,46 @@ export const CadastroCliente = () => {
     handleInputChange(e)
   }, [handleInputChange])
 
-  const handleCepInputChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    handleInputChange(e)
+  const handleCepInputChange = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
     const cep = e.currentTarget.value.replace(/[^\w\s]/gi, '').replace(/_/g, '')
     if (cep.length === 8) {
       const response = await trazerEnderecoPorCep.execute(cep)
       if (!response.data.erro) {
         const [estado] = EstadosMunicipios.estados.filter(estado => estado.sigla === response.data.uf)
-        setCidades(estado.cidades)
+        setControlCidades(estado.cidades)
 
         setErrors((err: any) => {
           const newErrors = delete (err.cep)
           return newErrors
         })
 
-        formik.setValues((v) => {
-          const newValues = {
-            ...v,
-            ...{
-              endereco: response.data.logradouro,
-              uf: response.data.uf,
-              cidade: response.data.localidade,
-              bairro: response.data.bairro
-            }
+        const newValues = {
+          ...cliente,
+          ...{
+            endereco: response.data.logradouro,
+            uf: response.data.uf,
+            cidade: response.data.localidade,
+            bairro: response.data.bairro
           }
-          return newValues
-        })
+        }
+
+        setCliente(newValues)
       }
     }
-  }
+  }, [cliente, setCliente])
 
   const handleInputCNPJ = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    handleInputChange(e)
     let cidade = ''
     const cnpj = e.currentTarget.value.replace(/[^\w\s]/gi, '').replace(/_/g, '')
+
     if (cnpj.length === 14) {
       const response = await trazerDadosCNPJ.execute('bf2cc265e3073aab06df3484f56f603e7c409b55e01cddc0bfde6781624c8494', cnpj)
-
-      console.log(response)
 
       if (response.data) {
         const [estado] = EstadosMunicipios.estados.filter(estado => estado.sigla === response.data.uf)
 
         if (estado) {
-          setCidades(estado.cidades)
+          setControlCidades(estado.cidades)
 
           const filtered: string[] = estado.cidades.filter(cidade => {
             return removerAcento(cidade).toLowerCase() === removerAcento(response.data.municipio).toLowerCase()
@@ -174,34 +141,18 @@ export const CadastroCliente = () => {
             cidade = filtered[0]
           }
         }
-
-        formik.setValues(v => {
-          const newValues = {
-            ...v,
-            ...{
-              endereco: capitalize(response.data.logradouro),
-              numero: response.data.numero,
-              uf: response.data.uf,
-              cidade,
-              bairro: capitalize(response.data.bairro),
-              cep: response.data.cep,
-              email: response.data.email,
-              razao_social: capitalize(response.data.nome),
-              nome_fantasia: capitalize(response.data.fantasia)
-            }
-          }
-          return newValues
-        })
       }
     }
-  }
 
-  const handleChangeIsIsento = (e: React.ChangeEvent<HTMLInputElement>) => {
     handleInputChange(e)
   }
 
+  const handleIsIsentoOnChange = useCallback(() => {
+    setControlFormIsIsento(v => !v)
+  }, [])
+
   return (
-    <Layout title="Dashboard">
+    <Layout title="Cadastro de cliente">
       <Card>
         <Card.Body>
           <Form noValidate onSubmit={submitForm} >
@@ -218,9 +169,8 @@ export const CadastroCliente = () => {
                     <Nav.Item>
                       <Nav.Link eventKey="contatos">Contatos</Nav.Link>
                     </Nav.Item>
-                    <div className="button-salvar">
-
-                      <Button type="button">Salvar</Button>
+                    <div className="wrapper-button-salvar">
+                      <Button type="submit" >Salvar</Button>
                     </div>
                   </Nav>
                 </Col>
@@ -239,8 +189,8 @@ export const CadastroCliente = () => {
                                 id="pf"
                                 name="pf"
                                 value="pf"
-                                onChange={() => setPessoa('pf')}
-                                checked={pessoa === 'pf'}
+                                onChange={() => setControlFormPessoa('pf')}
+                                checked={controlFormPessoa === 'pf'}
                               />
                             </Col>
                             <Col>
@@ -250,8 +200,8 @@ export const CadastroCliente = () => {
                                 id="pj"
                                 name="pj"
                                 value="pj"
-                                onChange={() => setPessoa('pj')}
-                                checked={pessoa === 'pj'}
+                                onChange={() => setControlFormPessoa('pj')}
+                                checked={controlFormPessoa === 'pj'}
                               />
                             </Col>
                           </Form.Row>
@@ -263,16 +213,15 @@ export const CadastroCliente = () => {
                           <Form.Row>
                             <Col lg="2">
                               <Form.Check
-                                type="checkbox"
-                                label="Cliente final"
                                 id="is_cliente_final"
                                 name="is_cliente_final"
+                                type="checkbox"
+                                label="Cliente final"
                                 defaultChecked={ false }
                                 onChange={handleInputChange}
-                                checked={formik.values.is_cliente_final}
+                                checked={cliente?.is_cliente_final === 's'}
                                 isInvalid={!!errors.is_cliente_final}
                               />
-
                               <Form.Control.Feedback type="invalid" tooltip>
                                 {errors?.is_cliente_final}
                               </Form.Control.Feedback>
@@ -284,8 +233,8 @@ export const CadastroCliente = () => {
                                 type="checkbox"
                                 label="Isento"
                                 defaultChecked={ false }
-                                onChange={handleChangeIsIsento}
-                                checked={formik.values.is_isento}
+                                onChange={handleIsIsentoOnChange}
+                                checked={controlFormIsIsento}
                                 isInvalid={!!errors.is_isento}
                               />
 
@@ -301,7 +250,7 @@ export const CadastroCliente = () => {
                                 name="is_orgao_estadual"
                                 defaultChecked={ false }
                                 onChange={handleInputChange}
-                                checked={formik.values.is_orgao_estadual}
+                                checked={cliente?.is_orgao_estadual === 's'}
                                 isInvalid={!!errors.is_orgao_estadual}
                               />
 
@@ -311,13 +260,13 @@ export const CadastroCliente = () => {
                             </Col>
                             <Col lg="4">
                               <Form.Check
-                                type="checkbox"
-                                label="Revenda"
                                 id="is_revenda"
                                 name="is_revenda"
+                                type="checkbox"
+                                label="Revenda"
                                 defaultChecked={ false }
                                 onChange={handleInputChange}
-                                checked={formik.values.is_revenda}
+                                checked={cliente?.is_revenda === 's'}
                                 isInvalid={!!errors.is_revenda}
                               />
 
@@ -333,17 +282,17 @@ export const CadastroCliente = () => {
 
                       <Form.Row>
                         <Form.Group as={Col} md={6}>
-                          <Form.Label>{pessoa === 'pj' ? 'CNPJ' : 'CPF'}</Form.Label>
+                          <Form.Label>{controlFormPessoa === 'pj' ? 'CNPJ' : 'CPF'}</Form.Label>
                           <Form.Control
-                            placeholder={pessoa === 'pj' ? 'CNPJ' : 'CPF'}
+                            placeholder={controlFormPessoa === 'pj' ? 'CNPJ' : 'CPF'}
                             id="cnpj"
                             name="cnpj"
                             type="text"
                             onChange={handleInputCNPJ}
-                            value={formik.values.cnpj}
+                            value={cliente?.cnpj}
                             isInvalid={!!errors.cnpj}
                             as={InputMask}
-                            mask={pessoa === 'pj' ? '99.999.999/9999-99' : '999.999.999-99'}
+                            mask={controlFormPessoa === 'pj' ? '99.999.999/9999-99' : '999.999.999-99'}
                           />
                           <Form.Control.Feedback type="invalid" tooltip>
                             {errors?.cnpj}
@@ -352,16 +301,16 @@ export const CadastroCliente = () => {
                         <Form.Group as={Col} md={6}>
                           <Form.Label>IE</Form.Label>
                           <Form.Control
-                            placeholder={formik.values.is_isento ? 'isento' : 'IE'}
+                            placeholder={controlFormIsIsento ? 'isento' : 'IE'}
                             id="ie"
                             name="ie"
                             type="text"
                             onChange={handleInputChange}
-                            value={formik.values.ie}
+                            value={cliente?.ie}
                             isInvalid={!!errors.ie}
                             as={InputMask}
                             mask={ieMask}
-                            disabled={formik.values.is_isento}
+                            disabled={controlFormIsIsento}
                           />
                           <Form.Control.Feedback type="invalid" tooltip>
                             {errors?.ie}
@@ -374,10 +323,10 @@ export const CadastroCliente = () => {
                           <Form.Control
                             id="razao_social"
                             name="razao_social"
-                            // placeholder="Razão Social"
+                            placeholder="Razão Social"
                             type="text"
                             onChange={handleInputChange}
-                            value={formik.values.razao_social}
+                            value={cliente?.razao_social}
                             isInvalid={!!errors.razao_social}
                           />
                           <Form.Control.Feedback type="invalid" tooltip>
@@ -392,7 +341,7 @@ export const CadastroCliente = () => {
                             name="nome_fantasia"
                             type="text"
                             onChange={handleInputChange}
-                            value={formik.values.nome_fantasia}
+                            value={cliente?.nome_fantasia}
                             isInvalid={!!errors.nome_fantasia}
                           />
                           <Form.Control.Feedback type="invalid" tooltip>
@@ -414,7 +363,7 @@ export const CadastroCliente = () => {
                               name="email"
                               type="email"
                               onChange={handleInputChange}
-                              value={formik.values.email}
+                              value={cliente?.email}
                               isInvalid={!!errors.email}
                             />
                             <Form.Control.Feedback type="invalid" tooltip>
@@ -433,7 +382,7 @@ export const CadastroCliente = () => {
                               name="email_nfe"
                               type="email"
                               onChange={handleInputChange}
-                              value={formik.values.email_nfe}
+                              value={cliente?.email_nfe}
                               isInvalid={!!errors.email_nfe}
                             />
                             <Form.Control.Feedback type="invalid" tooltip>
@@ -452,7 +401,7 @@ export const CadastroCliente = () => {
                               name="email_nfe2"
                               type="email"
                               onChange={handleInputChange}
-                              value={formik.values.email_nfe2}
+                              value={cliente?.email_nfe2}
                               isInvalid={!!errors.email_nfe2}
                             />
                             <Form.Control.Feedback type="invalid" tooltip>
@@ -473,7 +422,7 @@ export const CadastroCliente = () => {
                             name="cep"
                             type="text"
                             onChange={handleCepInputChange}
-                            value={formik.values.cep}
+                            value={cliente?.cep}
                             isInvalid={!!errors.cep}
                             as={InputMask}
                             mask="99999-999"
@@ -491,7 +440,7 @@ export const CadastroCliente = () => {
                             name="endereco"
                             type="text"
                             onChange={handleInputChange}
-                            value={formik.values.endereco}
+                            value={cliente?.endereco}
                             isInvalid={!!errors.endereco}
                           />
                           <Form.Control.Feedback type="invalid" tooltip>
@@ -507,7 +456,7 @@ export const CadastroCliente = () => {
                             name="numero"
                             type="text"
                             onChange={handleInputChange}
-                            value={formik.values.numero}
+                            value={cliente?.numero}
                             isInvalid={!!errors.numero}
                           />
                           <Form.Control.Feedback type="invalid" tooltip>
@@ -525,7 +474,7 @@ export const CadastroCliente = () => {
                             as="select"
                             type="text"
                             onChange={handleUfInputChange}
-                            value={formik.values.uf}
+                            value={cliente?.uf}
                             isInvalid={!!errors.uf}
                           >
                             <option selected value="default"></option>
@@ -545,11 +494,11 @@ export const CadastroCliente = () => {
                             // size="sm"
                             type="text"
                             onChange={handleInputChange}
-                            value={formik.values.cidade}
+                            value={cliente?.cidade}
                             isInvalid={!!errors.cidade}
                           >
                             <option selected value="default">Escolha cidade</option>
-                            { cidades.map(cidade => <option key={cidade} value={cidade}>{cidade}</option>)}
+                            { controlCidades.map(cidade => <option key={cidade} value={cidade}>{cidade}</option>)}
                           </Form.Control>
                           <Form.Control.Feedback type="invalid" tooltip>
                             {errors?.cidade}
@@ -564,7 +513,7 @@ export const CadastroCliente = () => {
                             name="bairro"
                             type="text"
                             onChange={handleInputChange}
-                            value={formik.values.bairro}
+                            value={cliente?.bairro}
                             isInvalid={!!errors.bairro}
                           />
                           <Form.Control.Feedback type="invalid" tooltip>
@@ -583,7 +532,7 @@ export const CadastroCliente = () => {
                             name="complemento"
                             type="text"
                             onChange={handleInputChange}
-                            value={formik.values.complemento}
+                            value={cliente?.complemento}
                             isInvalid={!!errors.complemento}
                           />
                           <Form.Control.Feedback type="invalid" tooltip>
@@ -599,7 +548,7 @@ export const CadastroCliente = () => {
                             name="regiao"
                             type="text"
                             onChange={handleInputChange}
-                            value={formik.values.regiao}
+                            value={cliente?.regiao}
                             isInvalid={!!errors.regiao}
                           />
                           <Form.Control.Feedback type="invalid" tooltip>
@@ -609,7 +558,7 @@ export const CadastroCliente = () => {
                       </Form.Row>
                     </Tab.Pane>
                     <Tab.Pane eventKey="contatos">
-                      <Contatos cliente={formik.values as unknown as Cliente}/>
+                      <Contatos/>
                     </Tab.Pane>
                   </Tab.Content>
                 </Col>
@@ -620,6 +569,5 @@ export const CadastroCliente = () => {
         </Card.Body>
       </Card>
     </Layout>
-
   )
 }
