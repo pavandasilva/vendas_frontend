@@ -20,10 +20,12 @@ const initialState: Contato = {
 }
 
 export const ModalCadastroContato = ({ show, handleCancelar, afterAdicionarClick }: ModalCadastroContatoProps) => {
-  const [cliente, setCliente] = useClienteDataCadastro()
+  const [, setCliente] = useClienteDataCadastro()
   const [contato, setContato] = useState(initialState)
 
-  console.log('modalCadastroContato', cliente)
+  const resetForm = useCallback(() => {
+    setContato(initialState)
+  }, [])
 
   const handleOnChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     let value = e.target.value
@@ -50,13 +52,9 @@ export const ModalCadastroContato = ({ show, handleCancelar, afterAdicionarClick
 
       return newState
     })
-
+    resetForm()
     afterAdicionarClick()
-  }, [afterAdicionarClick, contato, setCliente])
-
-  const resetForm = useCallback(() => {
-    setContato(initialState)
-  }, [])
+  }, [afterAdicionarClick, contato, resetForm, setCliente])
 
   const handleCancelarClick = useCallback(() => {
     // limpa o formulário
