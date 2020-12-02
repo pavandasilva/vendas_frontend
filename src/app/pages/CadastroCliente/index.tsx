@@ -54,7 +54,8 @@ export const CadastroCliente = () => {
       uf: values.uf,
       is_cliente_final: values.is_cliente_final,
       is_orgao_estadual: values.is_orgao_estadual,
-      is_revenda: values.is_orgao_estadual
+      is_revenda: values.is_orgao_estadual,
+      contatos: values.contatos
     }
 
     return cliente
@@ -62,8 +63,8 @@ export const CadastroCliente = () => {
 
   const submitForm = useCallback((e: FormEvent) => {
     e.preventDefault()
-    console.log('cadastroCliente', cliente)
-  }, [cliente])
+    console.log('cadastroCliente', sanetizeCliente(cliente))
+  }, [cliente, sanetizeCliente])
 
   const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     let value = e.target.value
@@ -93,6 +94,8 @@ export const CadastroCliente = () => {
   }, [handleInputChange])
 
   const handleCepInputChange = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
+    handleInputChange(e)
+
     const cep = e.currentTarget.value.replace(/[^\w\s]/gi, '').replace(/_/g, '')
     if (cep.length === 8) {
       const response = await trazerEnderecoPorCep.execute(cep)
@@ -118,7 +121,7 @@ export const CadastroCliente = () => {
         setCliente(newValues)
       }
     }
-  }, [cliente, setCliente])
+  }, [cliente, handleInputChange, setCliente])
 
   const handleInputCNPJ = async (e: React.ChangeEvent<HTMLInputElement>) => {
     let cidade = ''
@@ -415,7 +418,7 @@ export const CadastroCliente = () => {
                     <Tab.Pane eventKey="endereco">
                       <Form.Row>
                         <Form.Group as={Col} md={2}>
-                          <Form.Label>C.E.P.</Form.Label>
+                          <Form.Label>CEP.</Form.Label>
                           <Form.Control
                             placeholder="CEP"
                             id="cep"

@@ -44,11 +44,11 @@ export const ModalCadastroTelefone = ({ show, handleCancelar, afterAdicionarClic
     })
   }, [])
 
-  const handleSubmit = useCallback(() => {
+  const handleAdicionarClick = useCallback(() => {
     setCliente(cliente => {
       const newState = produce(cliente, draftState => {
         if (!draftState?.contatos?.length) {
-          return cliente
+          return draftState
         }
 
         draftState?.contatos[indexContato]?.telefones?.push(telefone)
@@ -73,7 +73,7 @@ export const ModalCadastroTelefone = ({ show, handleCancelar, afterAdicionarClic
       <Modal.Header closeButton>
         <Modal.Title>Cadastro Telefone</Modal.Title>
       </Modal.Header>
-      <Form onSubmit={handleSubmit}>
+      <Form>
         <Modal.Body>
           <Form.Row>
             <Form.Group as={Col} md={2}>
@@ -145,7 +145,7 @@ export const ModalCadastroTelefone = ({ show, handleCancelar, afterAdicionarClic
           <Button variant="secondary" onClick={handleCancelarClick}>
             Cancelar
           </Button>
-          <Button type="button" variant="primary" onClick={handleSubmit}>
+          <Button type="button" variant="primary" onClick={handleAdicionarClick}>
             Adicionar
           </Button>
         </Modal.Footer>

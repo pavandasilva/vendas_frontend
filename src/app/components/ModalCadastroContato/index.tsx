@@ -20,8 +20,10 @@ const initialState: Contato = {
 }
 
 export const ModalCadastroContato = ({ show, handleCancelar, afterAdicionarClick }: ModalCadastroContatoProps) => {
-  const [, setCliente] = useClienteDataCadastro()
+  const [cliente, setCliente] = useClienteDataCadastro()
   const [contato, setContato] = useState(initialState)
+
+  console.log('modalCadastroContato', cliente)
 
   const handleOnChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     let value = e.target.value
@@ -40,7 +42,7 @@ export const ModalCadastroContato = ({ show, handleCancelar, afterAdicionarClick
     })
   }, [])
 
-  const formHandleSubmit = useCallback(() => {
+  const adicionarClick = useCallback(() => {
     setCliente(cliente => {
       const newState = produce(cliente, draftState => {
         draftState?.contatos?.push(contato)
@@ -67,7 +69,7 @@ export const ModalCadastroContato = ({ show, handleCancelar, afterAdicionarClick
       <Modal.Header closeButton>
         <Modal.Title>Cadastro contato</Modal.Title>
       </Modal.Header>
-      <Form onSubmit={formHandleSubmit}>
+      <Form>
         <Modal.Body>
           <Form.Row>
             <Form.Group as={Col} md={12}>
@@ -161,7 +163,7 @@ export const ModalCadastroContato = ({ show, handleCancelar, afterAdicionarClick
           <Button variant="secondary" onClick={handleCancelarClick}>
             Cancelar
           </Button>
-          <Button type="button" variant="primary" onClick={formHandleSubmit}>
+          <Button type="button" variant="primary" onClick={adicionarClick}>
             Adicionar
           </Button>
         </Modal.Footer>
