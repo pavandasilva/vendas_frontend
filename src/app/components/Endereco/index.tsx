@@ -4,6 +4,7 @@ import { Col, Form } from 'react-bootstrap'
 import { makeTrazerEnderecoCep } from '../../../domain/clientes/factories/makeTrazerEnderecoCep'
 import { useClienteDataCadastro } from '../../hooks/contexts'
 import EstadosMunicipios from '../../assets/jsons/estados_municipios.json'
+import { Cliente } from '../../../domain/clientes/models'
 
 const trazerEnderecoPorCep = makeTrazerEnderecoCep()
 
@@ -57,7 +58,7 @@ export const Endereco = () => {
           return newErrors
         })
 
-        const newValues = {
+        const newValues: Cliente = {
           ...cliente,
           ...{
             endereco: response.data.logradouro,
@@ -77,7 +78,7 @@ export const Endereco = () => {
     <>
       <Form.Row>
         <Form.Group as={Col} md={2}>
-          <Form.Label>CEP.</Form.Label>
+          <Form.Label>CEP</Form.Label>
           <Form.Control
             placeholder="CEP"
             id="cep"
