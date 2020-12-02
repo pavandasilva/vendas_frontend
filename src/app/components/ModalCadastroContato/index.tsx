@@ -4,7 +4,7 @@ import { Button, Col, Form, Modal } from 'react-bootstrap'
 import { Contato } from '../../../domain/clientes/models'
 import { useClienteDataCadastro } from '../../hooks/contexts'
 
-interface ModalContatoProps {
+interface ModalCadastroContatoProps {
   show?: boolean
   handleCancelar(): void
   afterAdicionarClick(): void
@@ -19,7 +19,7 @@ const initialState: Contato = {
   status: 'ativo'
 }
 
-export const ModalContato = ({ show, handleCancelar, afterAdicionarClick }: ModalContatoProps) => {
+export const ModalCadastroContato = ({ show, handleCancelar, afterAdicionarClick }: ModalCadastroContatoProps) => {
   const [, setCliente] = useClienteDataCadastro()
   const [contato, setContato] = useState(initialState)
 

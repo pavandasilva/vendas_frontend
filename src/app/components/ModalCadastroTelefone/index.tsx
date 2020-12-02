@@ -5,7 +5,7 @@ import InputMask from 'react-input-mask'
 import { Telefone } from '../../../domain/clientes/models'
 import { useClienteDataCadastro } from '../../hooks/contexts'
 
-interface ModalTelefoneProps {
+interface ModalCadastroTelefoneProps {
   show?: boolean;
   handleCancelar(): void;
   afterAdicionarClick(): void;
@@ -19,7 +19,7 @@ const initialState: Telefone = {
   ramal: ''
 }
 
-export const ModalTelefone = ({ show, handleCancelar, afterAdicionarClick, indexContato }: ModalTelefoneProps) => {
+export const ModalCadastroTelefone = ({ show, handleCancelar, afterAdicionarClick, indexContato }: ModalCadastroTelefoneProps) => {
   const [telefone, setTelefone] = useState(initialState)
   const [, setCliente] = useClienteDataCadastro()
 

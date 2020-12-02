@@ -1,27 +1,26 @@
 import React, { useState, useCallback } from 'react'
 import { Table, Form, Button, Card, Col, InputGroup, Row } from 'react-bootstrap'
 import { FaSearch, FaWhatsapp } from 'react-icons/fa'
-import { ModalTelefone } from '..'
+import { ModalCadastroContato, ModalCadastroTelefone } from '..'
 import { useClienteDataCadastro } from '../../hooks/contexts/clienteDataCadastroContext'
-import { ModalContato } from '../ModalContato'
 
 export const Contatos = () => {
   const [cliente] = useClienteDataCadastro()
   const [indexContatoSelected, setIndexContatoSelected] = useState(-1)
-  const [showModalContato, setShowModalContato] = useState(false)
-  const [showModalTelefone, setShowModalTelefone] = useState(false)
+  const [showModalCadastroContato, setShowModalCadastroContato] = useState(false)
+  const [showModalCadastroTelefone, setShowModalCadastroTelefone] = useState(false)
 
   const novoContatoOnClick = useCallback(() => {
-    setShowModalContato(true)
+    setShowModalCadastroContato(true)
   }, [])
 
   const handleAddTelefoneOnClick = useCallback((index: number) => {
     setIndexContatoSelected(index)
-    setShowModalTelefone(true)
+    setShowModalCadastroTelefone(true)
   }, [])
 
   const editarContatoClick = useCallback(() => {
-    setShowModalContato(true)
+    setShowModalCadastroContato(true)
   }, [])
 
   return (
@@ -88,17 +87,17 @@ export const Contatos = () => {
         </Card.Body>
       </Card>
 
-      <ModalContato
-        show={showModalContato}
-        handleCancelar={() => setShowModalContato(false)}
-        afterAdicionarClick={() => setShowModalContato(false)}
+      <ModalCadastroContato
+        show={showModalCadastroContato}
+        handleCancelar={() => setShowModalCadastroContato(false)}
+        afterAdicionarClick={() => setShowModalCadastroContato(false)}
       />
 
-      <ModalTelefone
-        show={showModalTelefone}
+      <ModalCadastroTelefone
+        show={showModalCadastroTelefone}
         indexContato={indexContatoSelected}
-        handleCancelar={() => setShowModalTelefone(false)}
-        afterAdicionarClick={() => setShowModalTelefone(false)}/>
+        handleCancelar={() => setShowModalCadastroTelefone(false)}
+        afterAdicionarClick={() => setShowModalCadastroTelefone(false)}/>
     </>
   )
 }
