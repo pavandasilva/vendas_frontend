@@ -8,8 +8,12 @@ export interface Endereco {
   ibge: string,
   gia: string,
   ddd: string,
-  siafi: string
-  erro?: string
+  siafi: string,
+  numero: string,
+  fantasia?: string,
+  nome: string,
+  email: string,
+  erro?: string,
 }
 
 export interface GetEnderecoPorCep {

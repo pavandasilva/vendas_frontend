@@ -1,6 +1,10 @@
 export const getIEMask = (uf: string): string => {
   let mask = ''
 
+  if (!uf) {
+    return ''
+  }
+
   switch (uf) {
     case 'AC':
       mask = '99.999.999/999-99'

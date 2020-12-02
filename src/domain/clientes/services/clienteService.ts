@@ -58,7 +58,7 @@ export class ClienteServiceImpl implements ClienteService {
     const response = await this.httpRequest.get({
       url: 'https://www.receitaws.com.br/v1/',
       path: `cnpj/${params.filter}`,
-      token: params.token
+      token: process.env.REACT_APP_API_CNPJ_TOKEN
     })
 
     handleErrors(response?.error)
