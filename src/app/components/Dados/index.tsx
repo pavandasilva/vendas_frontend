@@ -34,7 +34,13 @@ export const Dados = () => {
       [e.target.name]: value
     }
 
-    setCliente({ data: newCliente })
+    // remove o erro do campo que está sendo editado
+    const newError = {
+      ...cliente.error,
+      [e.target.name]: ''
+    }
+
+    setCliente({ data: newCliente, error: newError })
   }, [cliente, setCliente])
 
   const handleIsIsentoOnChange = useCallback(() => {

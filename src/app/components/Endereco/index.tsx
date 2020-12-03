@@ -33,7 +33,16 @@ export const Endereco = () => {
       [e.target.name]: value
     }
 
-    setCliente({ data: newCliente })
+    // remove o erro do campo que está sendo editado
+    const newError = {
+      ...cliente.error,
+      [e.target.name]: ''
+    }
+
+    setCliente({
+      error: newError,
+      data: newCliente
+    })
   }, [cliente, setCliente])
 
   const handleCepInputChange = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -42,7 +51,7 @@ export const Endereco = () => {
 
     if (cep.length === 8) {
       const response = await trazerEnderecoPorCep.execute(cep)
-      if (!response.data.erro) {
+      if (!response?.data?.erro) {
         const [estado] = EstadosMunicipios.estados.filter(estado => estado.sigla === response.data.uf)
         setControlCidades(estado.cidades)
 
