@@ -238,7 +238,7 @@ export const Dados = () => {
             <Form.Control
               id="razao_social"
               name="razao_social"
-              placeholder="Razão Social"
+              placeholder="Razão social"
               type="text"
               onChange={handleInputChange}
               value={cliente?.data?.razao_social}
@@ -251,7 +251,7 @@ export const Dados = () => {
           <Form.Group as={Col} md={6}>
             <Form.Label>Nome Fantasia</Form.Label>
             <Form.Control
-              placeholder="Nome Fantasia"
+              placeholder="Nome fantasia"
               id="nome_fantasia"
               name="nome_fantasia"
               type="text"
@@ -266,14 +266,15 @@ export const Dados = () => {
         </Form.Row>
 
         <Form.Row>
-          <Col>
+          <Form.Group as={Col}>
+            <Form.Label>E-mail principal</Form.Label>
             <InputGroup>
               <InputGroup.Prepend>
                 <InputGroup.Text><FaAt /></InputGroup.Text>
               </InputGroup.Prepend>
 
               <Form.Control
-                placeholder="Email"
+                placeholder="Email principal"
                 id="email"
                 name="email"
                 type="email"
@@ -285,14 +286,17 @@ export const Dados = () => {
                 {cliente?.error?.email}
               </Form.Control.Feedback>
             </InputGroup>
-          </Col>
-          <Col>
+          </Form.Group>
+
+          <Form.Group as={Col}>
+            <Form.Label>E-mail nota fiscal eletrônica</Form.Label>
             <InputGroup>
               <InputGroup.Prepend>
                 <InputGroup.Text><FaAt /></InputGroup.Text>
               </InputGroup.Prepend>
+
               <Form.Control
-                placeholder="Email Nota Fiscal"
+                placeholder="E-mail nota fiscal eletrônica"
                 id="email_nfe"
                 name="email_nfe"
                 type="email"
@@ -304,14 +308,17 @@ export const Dados = () => {
                 {cliente?.error?.email_nfe2}
               </Form.Control.Feedback>
             </InputGroup>
-          </Col>
-          <Col>
+          </Form.Group>
+
+          <Form.Group as={Col}>
+            <Form.Label>E-mail nota fiscal eletrônica 2</Form.Label>
             <InputGroup>
               <InputGroup.Prepend>
                 <InputGroup.Text><FaAt /></InputGroup.Text>
               </InputGroup.Prepend>
+
               <Form.Control
-                placeholder="Email Nota Fiscal 2"
+                placeholder="E-mail nota fiscal eletrônica 2"
                 id="email_nfe2"
                 name="email_nfe2"
                 type="email"
@@ -323,7 +330,7 @@ export const Dados = () => {
                 {cliente?.error?.email_nfe2}
               </Form.Control.Feedback>
             </InputGroup>
-          </Col>
+          </Form.Group>
         </Form.Row>
       </Tab.Pane>
     </>

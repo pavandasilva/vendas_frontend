@@ -3,19 +3,28 @@ import { Table, Form, Button, Card, Col, InputGroup, Row } from 'react-bootstrap
 import { FaSearch, FaWhatsapp } from 'react-icons/fa'
 import { ModalCadastroContato, ModalCadastroTelefone } from '..'
 import { useClienteDataCadastro } from '../../hooks/contexts/clienteDataCadastroContext'
+import './styles.scss'
 
 export const Contatos = () => {
-  const [cliente] = useClienteDataCadastro()
+  const [clienteDataCadastro, setClienteDataCadastro] = useClienteDataCadastro()
   const [indexContatoSelected, setIndexContatoSelected] = useState(-1)
   const [showModalCadastroContato, setShowModalCadastroContato] = useState(false)
   const [showModalCadastroTelefone, setShowModalCadastroTelefone] = useState(false)
   const [filter, setFilter] = useState('')
 
-  console.log(cliente)
-
   const novoContatoOnClick = useCallback(() => {
+    const newError = {
+      ...clienteDataCadastro.error,
+      contatos: ''
+    }
+
+    setClienteDataCadastro(cds => ({
+      ...cds,
+      error: newError
+    }))
+
     setShowModalCadastroContato(true)
-  }, [])
+  }, [clienteDataCadastro.error, setClienteDataCadastro])
 
   const handleAddTelefoneOnClick = useCallback((index: number) => {
     setIndexContatoSelected(index)
@@ -32,10 +41,10 @@ export const Contatos = () => {
 
   const filterContatos = useCallback(() => {
     if (filter === '') {
-      return cliente.data?.contatos
+      return clienteDataCadastro.data?.contatos
     }
 
-    return cliente.data?.contatos?.filter(contato => {
+    return clienteDataCadastro.data?.contatos?.filter(contato => {
       if (contato?.email?.includes(filter)) {
         return true
       }
@@ -44,19 +53,19 @@ export const Contatos = () => {
         return true
       }
     })
-  }, [cliente.data.contatos, filter])
+  }, [clienteDataCadastro.data.contatos, filter])
 
   return (
     <>
       <Card>
-        <Card.Body>
+        <Card.Body className={clienteDataCadastro?.error?.contatos ? 'card-body-error' : ''}>
           <div className="title">
           Contatos
             <div className="float-right">
               <Button size="sm" variant="primary" onClick={novoContatoOnClick}>Novo contato</Button>
             </div>
           </div>
-          {!cliente.data.contatos?.length ? <span>Este cliente não possui contatos</span> : (
+          {!clienteDataCadastro.data.contatos?.length ? <span>Este cliente não possui contatos</span> : (
             <>
               <Row>
                 <Col md={4}>
@@ -113,6 +122,9 @@ export const Contatos = () => {
               }
             </>)}
         </Card.Body>
+
+        { clienteDataCadastro?.error?.contatos && <div className="error-tooltip">{clienteDataCadastro?.error?.contatos}</div>}
+
       </Card>
 
       <ModalCadastroContato
