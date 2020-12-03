@@ -13,9 +13,9 @@ interface ModalCadastroContatoProps {
 const initialState: Contato = {
   nome: '',
   email: '',
-  e_comercial: 'n',
-  e_fiscal: 'n',
-  e_financeiro: 'n',
+  comercial: 'n',
+  fiscal: 'n',
+  financeiro: 'n',
   status: 'ativo'
 }
 
@@ -47,7 +47,7 @@ export const ModalCadastroContato = ({ show, handleCancelar, afterAdicionarClick
   const adicionarClick = useCallback(() => {
     setCliente(cliente => {
       const newState = produce(cliente, draftState => {
-        draftState?.contatos?.push(contato)
+        draftState?.data.contatos?.push(contato)
       })
 
       return newState
@@ -126,10 +126,10 @@ export const ModalCadastroContato = ({ show, handleCancelar, afterAdicionarClick
               <Form.Check
                 type="checkbox"
                 label="Fiscal"
-                id="e_fiscal"
-                name="e_fiscal"
+                id="fiscal"
+                name="fiscal"
                 defaultChecked={ false }
-                checked={contato.e_fiscal === 's'}
+                checked={contato.fiscal === 's'}
                 onChange={handleOnChange}
               />
             </Col>
@@ -137,10 +137,10 @@ export const ModalCadastroContato = ({ show, handleCancelar, afterAdicionarClick
               <Form.Check
                 type="checkbox"
                 label="Comercial"
-                id="e_comercial"
-                name="e_comercial"
+                id="comercial"
+                name="comercial"
                 defaultChecked={ false }
-                checked={contato.e_comercial === 's'}
+                checked={contato.comercial === 's'}
                 onChange={handleOnChange}
               />
             </Col >
@@ -148,10 +148,10 @@ export const ModalCadastroContato = ({ show, handleCancelar, afterAdicionarClick
               <Form.Check
                 type="checkbox"
                 label="Financeiro"
-                id="e_financeiro"
-                name="e_financeiro"
+                id="financeiro"
+                name="financeiro"
                 defaultChecked={ false }
-                checked={contato.e_financeiro === 's'}
+                checked={contato.financeiro === 's'}
                 onChange={handleOnChange}
               />
             </Col >

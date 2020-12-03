@@ -1,31 +1,41 @@
 import React, { createContext, useState, useContext } from 'react'
 import { Cliente } from '../../../domain/clientes/models/cliente'
 
-const initialCliente: Cliente = {
-  razao_social: '',
-  nome_fantasia: '',
-  email: '',
-  email_nfe: '',
-  email_nfe2: '',
-  cnpj: '',
-  ie: '',
-  cep: '',
-  endereco: '',
-  numero: '',
-  bairro: '',
-  cidade: '',
-  complemento: '',
-  regiao: '',
-  uf: '',
-  is_cliente_final: 'n',
-  is_orgao_estadual: 'n',
-  is_revenda: 'n',
-  contatos: []
+interface ClienteDataCadastroState{
+  data: Cliente
+  error?: any
 }
 
-const ClienteDataContext = createContext<[Cliente, React.Dispatch<React.SetStateAction<Cliente>> ]>([] as unknown as [Cliente, React.Dispatch<React.SetStateAction<Cliente>> ])
+const initialState: ClienteDataCadastroState = {
+  error: undefined,
+  data: {
+    razao_social: '',
+    nome_fantasia: '',
+    email: '',
+    email_nfe: '',
+    email_nfe2: '',
+    cnpj: '',
+    ie: '',
+    cep: '',
+    endereco: '',
+    numero: '',
+    bairro: '',
+    cidade: '',
+    complemento: '',
+    regiao: '',
+    uf: '',
+    is_cliente_final: 'n',
+    is_orgao_estadual: 'n',
+    is_revenda: 'n',
+    contatos: []
+  }
 
-export const useClienteDataCadastro = (): [Cliente, React.Dispatch<React.SetStateAction<Cliente>> ] => {
+}
+
+const ClienteDataContext = createContext<[
+  ClienteDataCadastroState, React.Dispatch<React.SetStateAction<ClienteDataCadastroState>> ]>([] as unknown as [ClienteDataCadastroState, React.Dispatch<React.SetStateAction<ClienteDataCadastroState>> ])
+
+export const useClienteDataCadastro = (): [ClienteDataCadastroState, React.Dispatch<React.SetStateAction<ClienteDataCadastroState>> ] => {
   const context = useContext(ClienteDataContext)
 
   if (!context) {
@@ -36,7 +46,7 @@ export const useClienteDataCadastro = (): [Cliente, React.Dispatch<React.SetStat
 }
 
 export const ClienteDataCadastroProvider: React.FC = ({ children }) => {
-  const state = useState(initialCliente)
+  const state = useState(initialState)
 
   return (
     <ClienteDataContext.Provider value={state} >

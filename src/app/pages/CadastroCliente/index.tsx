@@ -1,14 +1,18 @@
 import React, { useCallback, FormEvent } from 'react'
+import { produce } from 'immer'
 import { Form, Col, Button, Nav, Tab, Row, Card } from 'react-bootstrap'
 import { Cliente } from '../../../domain/clientes/models/cliente'
 import { Contatos, Dados, Endereco } from '../../components'
 import { Layout } from '../Layout'
-import { useClienteDataCadastro } from '../../hooks/contexts/clienteDataCadastroContext'
 
 import './styles.scss'
+import { makeCadastrarCliente } from '../../../domain/clientes/factories/makeCadastrarCliente'
+import { useClienteDataCadastro } from '../../hooks/contexts'
+
+const cadastrarCliente = makeCadastrarCliente()
 
 export const CadastroCliente = () => {
-  const [cliente] = useClienteDataCadastro()
+  const [dataFormCliente, setDataFormCliente] = useClienteDataCadastro()
 
   const sanetizeCliente = useCallback((values: any): Cliente => {
     const cliente: Cliente = {
@@ -17,9 +21,9 @@ export const CadastroCliente = () => {
       email: values.email,
       email_nfe: values.email_nfe,
       email_nfe2: values.email_nfe2,
-      cnpj: values.cnpj.replace(/[^\w\s]/gi, '').replace(/_/g, ''),
-      ie: values.ie.replace(/[^\w\s]/gi, '').replace(/_/g, ''),
-      cep: values.cep.replace(/[^\w\s]/gi, '').replace(/_/g, ''),
+      cnpj: values.cnpj?.replace(/[^\w\s]/gi, '').replace(/_/g, ''),
+      ie: values.ie?.replace(/[^\w\s]/gi, '').replace(/_/g, ''),
+      cep: values.cep?.replace(/[^\w\s]/gi, '').replace(/_/g, ''),
       endereco: values.endereco,
       numero: values.numero,
       bairro: values.bairro,
@@ -35,10 +39,21 @@ export const CadastroCliente = () => {
     return cliente
   }, [])
 
-  const submitForm = useCallback((e: FormEvent) => {
+  const submitForm = useCallback(async (e: FormEvent) => {
     e.preventDefault()
-    console.log('cadastroCliente', sanetizeCliente(cliente))
-  }, [cliente, sanetizeCliente])
+
+    try {
+      await cadastrarCliente.execute({
+        body: sanetizeCliente(dataFormCliente.data)
+      })
+    } catch (error) {
+      const newState = produce(dataFormCliente, draftState => {
+        draftState.error = error.data
+      })
+
+      setDataFormCliente(newState)
+    }
+  }, [dataFormCliente, sanetizeCliente, setDataFormCliente])
 
   return (
     <Layout title="Cadastro de cliente">

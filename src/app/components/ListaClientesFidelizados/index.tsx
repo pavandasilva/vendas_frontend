@@ -51,15 +51,15 @@ export const ListaClientesFidelizados = () => {
     setCurrentPage(page)
   }, [clientesFidelizados])
 
-  const handleClickNovoCLiente = () => {
+  const handleClickNovoCLiente = useCallback(() => {
     history.push('/cadastro-cliente')
-  }
+  }, [history])
 
   return (
     <Card>
       <Card.Body>
         <Row>
-          <Col>
+          <Col md={4}>
             <InputGroup className="mb-3">
               <InputGroup.Prepend >
                 <InputGroup.Text id="inputGroup-sizing-sm"><FaSearch/></InputGroup.Text>

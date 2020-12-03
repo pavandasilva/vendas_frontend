@@ -2,7 +2,6 @@ import React, { useState, useCallback } from 'react'
 import { Table, Form, Button, Card, Col, InputGroup, Row } from 'react-bootstrap'
 import { FaSearch, FaWhatsapp } from 'react-icons/fa'
 import { ModalCadastroContato, ModalCadastroTelefone } from '..'
-import { Contato } from '../../../domain/clientes/models'
 import { useClienteDataCadastro } from '../../hooks/contexts/clienteDataCadastroContext'
 
 export const Contatos = () => {
@@ -11,6 +10,8 @@ export const Contatos = () => {
   const [showModalCadastroContato, setShowModalCadastroContato] = useState(false)
   const [showModalCadastroTelefone, setShowModalCadastroTelefone] = useState(false)
   const [filter, setFilter] = useState('')
+
+  console.log(cliente)
 
   const novoContatoOnClick = useCallback(() => {
     setShowModalCadastroContato(true)
@@ -31,10 +32,10 @@ export const Contatos = () => {
 
   const filterContatos = useCallback(() => {
     if (filter === '') {
-      return cliente?.contatos
+      return cliente.data?.contatos
     }
 
-    return cliente?.contatos?.filter(contato => {
+    return cliente.data?.contatos?.filter(contato => {
       if (contato?.email?.includes(filter)) {
         return true
       }
@@ -43,7 +44,7 @@ export const Contatos = () => {
         return true
       }
     })
-  }, [cliente.contatos, filter])
+  }, [cliente.data.contatos, filter])
 
   return (
     <>
@@ -55,10 +56,10 @@ export const Contatos = () => {
               <Button size="sm" variant="primary" onClick={novoContatoOnClick}>Novo contato</Button>
             </div>
           </div>
-          {!cliente.contatos?.length ? <span>Este cliente não possui contatos</span> : (
+          {!cliente.data.contatos?.length ? <span>Este cliente não possui contatos</span> : (
             <>
               <Row>
-                <Col>
+                <Col md={4}>
                   <InputGroup className="mb-3" onChange={searchInputChange}>
                     <InputGroup.Prepend >
                       <InputGroup.Text id="inputGroup-sizing-sm"><FaSearch/></InputGroup.Text>
@@ -69,7 +70,6 @@ export const Contatos = () => {
               </Row>
 
               { !filterContatos()?.length ? <span>Nenhum contato encontrado com estes filtros </span>
-
                 : (<Table bordered striped hover size="sm">
                   <thead>
                     <tr>
@@ -91,9 +91,9 @@ export const Contatos = () => {
                           <td className="align-middle">{contato.nome}</td>
                           <td className="align-middle">{contato.email}</td>
                           <td className="text-center align-middle">{contato.status}</td>
-                          <td className="text-center align-middle">{contato.e_comercial === 's' ? 'Sim' : 'Não'}</td>
-                          <td className="text-center align-middle">{contato.e_fiscal === 's' ? 'Sim' : 'Não'}</td>
-                          <td className="text-center align-middle">{contato.e_financeiro === 's' ? 'Sim' : 'Não'}</td>
+                          <td className="text-center align-middle">{contato.comercial === 's' ? 'Sim' : 'Não'}</td>
+                          <td className="text-center align-middle">{contato.fiscal === 's' ? 'Sim' : 'Não'}</td>
+                          <td className="text-center align-middle">{contato.financeiro === 's' ? 'Sim' : 'Não'}</td>
                           <td className="text-center align-middle">
                             <Button variant="link" onClick={() => handleAddTelefoneOnClick(index)}>Adicionar</Button>
                           </td>
@@ -103,7 +103,7 @@ export const Contatos = () => {
                         </tr>
                         {contato?.telefones && <tr>
                           <td id={`accordion${index.toString()}`} className="collapse" colSpan={7}>
-                            { contato?.telefones?.map((telefone, index) => <div key={index.toString()}> {`(${telefone.ddd}) ${telefone.numero}`} {telefone.e_whatsapp === 's' && <FaWhatsapp/>}</div>) }
+                            { contato?.telefones?.map((telefone, index) => <div key={index.toString()}> {`(${telefone.ddd}) ${telefone.numero}`} {telefone.whatsapp === 's' && <FaWhatsapp/>}</div>) }
                           </td>
                         </tr>}
                       </>

@@ -14,7 +14,7 @@ interface ModalCadastroTelefoneProps {
 
 const initialState: Telefone = {
   ddd: '',
-  e_whatsapp: 'n',
+  whatsapp: 'n',
   numero: '',
   ramal: ''
 }
@@ -47,11 +47,11 @@ export const ModalCadastroTelefone = ({ show, handleCancelar, afterAdicionarClic
   const handleAdicionarClick = useCallback(() => {
     setCliente(cliente => {
       const newState = produce(cliente, draftState => {
-        if (!draftState?.contatos?.length) {
+        if (!draftState?.data.contatos?.length) {
           return draftState
         }
 
-        draftState?.contatos[indexContato]?.telefones?.push(telefone)
+        draftState?.data.contatos[indexContato]?.telefones?.push(telefone)
       })
 
       return newState
@@ -132,10 +132,10 @@ export const ModalCadastroTelefone = ({ show, handleCancelar, afterAdicionarClic
               <Form.Check
                 type="checkbox"
                 label="Whatsapp"
-                id="e_whatsapp"
-                name="e_whatsapp"
+                id="whatsapp"
+                name="whatsapp"
                 defaultChecked={ false }
-                checked={telefone.e_whatsapp === 's'}
+                checked={telefone.whatsapp === 's'}
                 onChange={handleOnChange}
               />
             </Col >

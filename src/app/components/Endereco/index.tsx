@@ -9,18 +9,17 @@ import { Cliente } from '../../../domain/clientes/models'
 const trazerEnderecoPorCep = makeTrazerEnderecoCep()
 
 export const Endereco = () => {
-  const [errors, setErrors] = useState({} as any)
   const [controlCidades, setControlCidades] = useState([] as string[])
   const [cliente, setCliente] = useClienteDataCadastro()
 
   useEffect(() => {
-    if (!cliente.uf) {
+    if (!cliente.data.uf) {
       return
     }
 
-    const [estado] = EstadosMunicipios.estados.filter(estado => estado.sigla === cliente.uf)
+    const [estado] = EstadosMunicipios.estados.filter(estado => estado.sigla === cliente.data.uf)
     setControlCidades(estado.cidades)
-  }, [cliente.uf])
+  }, [cliente.data.uf])
 
   const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     let value = e.target.value
@@ -30,17 +29,11 @@ export const Endereco = () => {
     }
 
     const newCliente = {
-      ...cliente,
+      ...cliente.data,
       [e.target.name]: value
     }
 
-    setCliente(newCliente)
-
-    // limpa o erro do input que está sendo editado
-    setErrors((errors: any) => {
-      delete (errors[e.target.name])
-      return errors
-    })
+    setCliente({ data: newCliente })
   }, [cliente, setCliente])
 
   const handleCepInputChange = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -53,13 +46,8 @@ export const Endereco = () => {
         const [estado] = EstadosMunicipios.estados.filter(estado => estado.sigla === response.data.uf)
         setControlCidades(estado.cidades)
 
-        setErrors((err: any) => {
-          const newErrors = delete (err.cep)
-          return newErrors
-        })
-
         const newValues: Cliente = {
-          ...cliente,
+          ...cliente.data,
           ...{
             endereco: response.data.logradouro,
             uf: response.data.uf,
@@ -69,7 +57,7 @@ export const Endereco = () => {
           }
         }
 
-        setCliente(newValues)
+        setCliente({ data: newValues })
       }
     }
   }, [cliente, handleInputChange, setCliente])
@@ -85,13 +73,13 @@ export const Endereco = () => {
             name="cep"
             type="text"
             onChange={handleCepInputChange}
-            value={cliente?.cep}
-            isInvalid={!!errors.cep}
+            value={cliente?.data?.cep}
+            isInvalid={!!cliente?.error?.cep}
             as={InputMask}
             mask="99999-999"
           />
           <Form.Control.Feedback type="invalid" tooltip>
-            {errors?.cep}
+            {cliente?.error?.cep}
           </Form.Control.Feedback>
         </Form.Group>
 
@@ -103,11 +91,11 @@ export const Endereco = () => {
             name="endereco"
             type="text"
             onChange={handleInputChange}
-            value={cliente?.endereco}
-            isInvalid={!!errors.endereco}
+            value={cliente?.data?.endereco}
+            isInvalid={!!cliente?.error?.endereco}
           />
           <Form.Control.Feedback type="invalid" tooltip>
-            {errors?.endereco}
+            {cliente?.error?.endereco}
           </Form.Control.Feedback>
         </Form.Group>
 
@@ -119,11 +107,11 @@ export const Endereco = () => {
             name="numero"
             type="text"
             onChange={handleInputChange}
-            value={cliente?.numero}
-            isInvalid={!!errors.numero}
+            value={cliente?.data?.numero}
+            isInvalid={!!cliente?.error?.numero}
           />
           <Form.Control.Feedback type="invalid" tooltip>
-            {errors?.numero}
+            {cliente?.error?.numero}
           </Form.Control.Feedback>
         </Form.Group>
       </Form.Row>
@@ -137,14 +125,14 @@ export const Endereco = () => {
             as="select"
             type="text"
             onChange={handleInputChange}
-            value={cliente?.uf}
-            isInvalid={!!errors.uf}
+            value={cliente?.data?.uf}
+            isInvalid={!!cliente?.error?.uf}
           >
             <option selected value="default"></option>
             { EstadosMunicipios.estados.map(estado => <option key={estado.sigla} value={estado.sigla}>{estado.sigla}</option>)}
           </Form.Control>
           <Form.Control.Feedback type="invalid" tooltip>
-            {errors?.uf}
+            {cliente?.error?.uf}
           </Form.Control.Feedback>
         </Form.Group>
 
@@ -157,14 +145,14 @@ export const Endereco = () => {
             // size="sm"
             type="text"
             onChange={handleInputChange}
-            value={cliente?.cidade}
-            isInvalid={!!errors.cidade}
+            value={cliente?.data?.cidade}
+            isInvalid={!!cliente?.error?.cidade}
           >
             <option selected value="default">Escolha cidade</option>
             { controlCidades.map(cidade => <option key={cidade} value={cidade}>{cidade}</option>)}
           </Form.Control>
           <Form.Control.Feedback type="invalid" tooltip>
-            {errors?.cidade}
+            {cliente?.error?.cidade}
           </Form.Control.Feedback>
         </Form.Group>
 
@@ -176,11 +164,11 @@ export const Endereco = () => {
             name="bairro"
             type="text"
             onChange={handleInputChange}
-            value={cliente?.bairro}
-            isInvalid={!!errors.bairro}
+            value={cliente?.data?.bairro}
+            isInvalid={!!cliente?.error?.bairro}
           />
           <Form.Control.Feedback type="invalid" tooltip>
-            {errors?.bairro}
+            {cliente?.error?.bairro}
           </Form.Control.Feedback>
         </Form.Group>
 
@@ -195,11 +183,11 @@ export const Endereco = () => {
             name="complemento"
             type="text"
             onChange={handleInputChange}
-            value={cliente?.complemento}
-            isInvalid={!!errors.complemento}
+            value={cliente?.data?.complemento}
+            isInvalid={!!cliente?.error?.complemento}
           />
           <Form.Control.Feedback type="invalid" tooltip>
-            {errors?.regiao}
+            {cliente?.error?.regiao}
           </Form.Control.Feedback>
         </Form.Group>
 
@@ -211,11 +199,11 @@ export const Endereco = () => {
             name="regiao"
             type="text"
             onChange={handleInputChange}
-            value={cliente?.regiao}
-            isInvalid={!!errors.regiao}
+            value={cliente?.data?.regiao}
+            isInvalid={!!cliente?.error?.regiao}
           />
           <Form.Control.Feedback type="invalid" tooltip>
-            {errors?.regiao}
+            {cliente?.error?.regiao}
           </Form.Control.Feedback>
         </Form.Group>
       </Form.Row>

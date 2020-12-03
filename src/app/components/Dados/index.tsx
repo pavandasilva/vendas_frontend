@@ -14,15 +14,13 @@ const trazerDadosCNPJ = makeTrazerDadosCNPJ()
 
 export const Dados = () => {
   const [cliente, setCliente] = useClienteDataCadastro()
-
   const [controlFormIsIsento, setControlFormIsIsento] = useState(false)
-  const [errors, setErrors] = useState({} as any)
   const [controlFormPessoa, setControlFormPessoa] = useState('pj')
   const [ieMask, setIeMask] = useState('99999999999')
 
   useEffect(() => {
-    cliente.uf && setIeMask(getIEMask(cliente.uf))
-  }, [cliente.uf])
+    cliente.data.uf && setIeMask(getIEMask(cliente.data.uf))
+  }, [cliente.data.uf])
 
   const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     let value = e.target.value
@@ -32,17 +30,11 @@ export const Dados = () => {
     }
 
     const newCliente = {
-      ...cliente,
+      ...cliente?.data,
       [e.target.name]: value
     }
 
-    setCliente(newCliente)
-
-    // limpa o erro do input que está sendo editado
-    setErrors((errors: any) => {
-      delete (errors[e.target.name])
-      return errors
-    })
+    setCliente({ data: newCliente })
   }, [cliente, setCliente])
 
   const handleIsIsentoOnChange = useCallback(() => {
@@ -71,7 +63,7 @@ export const Dados = () => {
         }
 
         const newCliente: Cliente = {
-          ...cliente,
+          ...cliente.data,
           ...{
             endereco: capitalize(response.data.logradouro),
             uf: response.data.uf,
@@ -87,7 +79,7 @@ export const Dados = () => {
           }
         }
 
-        setCliente(newCliente)
+        setCliente({ data: newCliente })
       }
     }
   }
@@ -136,11 +128,11 @@ export const Dados = () => {
                   label="Cliente final"
                   defaultChecked={ false }
                   onChange={handleInputChange}
-                  checked={cliente?.is_cliente_final === 's'}
-                  isInvalid={!!errors.is_cliente_final}
+                  checked={cliente?.data?.is_cliente_final === 's'}
+                  isInvalid={!!cliente?.error?.is_cliente_final}
                 />
                 <Form.Control.Feedback type="invalid" tooltip>
-                  {errors?.is_cliente_final}
+                  {cliente?.error?.is_cliente_final}
                 </Form.Control.Feedback>
               </Col >
               <Col lg="2">
@@ -152,11 +144,11 @@ export const Dados = () => {
                   defaultChecked={ false }
                   onChange={handleIsIsentoOnChange}
                   checked={controlFormIsIsento}
-                  isInvalid={!!errors.is_isento}
+                  isInvalid={!!cliente?.error?.is_isento}
                 />
 
                 <Form.Control.Feedback type="invalid" tooltip>
-                  {errors?.is_isento}
+                  {cliente?.error?.is_isento}
                 </Form.Control.Feedback>
               </Col >
               <Col lg="4">
@@ -167,12 +159,12 @@ export const Dados = () => {
                   name="is_orgao_estadual"
                   defaultChecked={ false }
                   onChange={handleInputChange}
-                  checked={cliente?.is_orgao_estadual === 's'}
-                  isInvalid={!!errors.is_orgao_estadual}
+                  checked={cliente?.data?.is_orgao_estadual === 's'}
+                  isInvalid={!!cliente?.error?.is_orgao_estadual}
                 />
 
                 <Form.Control.Feedback type="invalid" tooltip>
-                  {errors?.is_orgao_estadual}
+                  {cliente?.error?.is_orgao_estadual}
                 </Form.Control.Feedback>
               </Col>
               <Col lg="4">
@@ -183,12 +175,12 @@ export const Dados = () => {
                   label="Revenda"
                   defaultChecked={ false }
                   onChange={handleInputChange}
-                  checked={cliente?.is_revenda === 's'}
-                  isInvalid={!!errors.is_revenda}
+                  checked={cliente?.data?.is_revenda === 's'}
+                  isInvalid={!!cliente?.error?.is_revenda}
                 />
 
                 <Form.Control.Feedback type="invalid" tooltip>
-                  {errors?.is_revenda}
+                  {cliente?.error?.is_revenda}
                 </Form.Control.Feedback>
               </Col>
             </Form.Row>
@@ -206,13 +198,13 @@ export const Dados = () => {
               name="cnpj"
               type="text"
               onChange={handleInputCNPJ}
-              value={cliente?.cnpj}
-              isInvalid={!!errors.cnpj}
+              value={cliente?.data?.cnpj}
+              isInvalid={!!cliente?.error?.cnpj}
               as={InputMask}
               mask={controlFormPessoa === 'pj' ? '99.999.999/9999-99' : '999.999.999-99'}
             />
             <Form.Control.Feedback type="invalid" tooltip>
-              {errors?.cnpj}
+              {cliente?.error?.cnpj}
             </Form.Control.Feedback>
           </Form.Group>
           <Form.Group as={Col} md={6}>
@@ -223,14 +215,14 @@ export const Dados = () => {
               name="ie"
               type="text"
               onChange={handleInputChange}
-              value={cliente?.ie}
-              isInvalid={!!errors.ie}
+              value={cliente?.data?.ie}
+              isInvalid={!!cliente?.error?.ie}
               as={InputMask}
               mask={ieMask}
               disabled={controlFormIsIsento}
             />
             <Form.Control.Feedback type="invalid" tooltip>
-              {errors?.ie}
+              {cliente?.error?.ie}
             </Form.Control.Feedback>
           </Form.Group>
         </Form.Row>
@@ -243,11 +235,11 @@ export const Dados = () => {
               placeholder="Razão Social"
               type="text"
               onChange={handleInputChange}
-              value={cliente?.razao_social}
-              isInvalid={!!errors.razao_social}
+              value={cliente?.data?.razao_social}
+              isInvalid={!!cliente?.error?.razao_social}
             />
             <Form.Control.Feedback type="invalid" tooltip>
-              { errors?.razao_social}
+              { cliente?.error?.razao_social}
             </Form.Control.Feedback>
           </Form.Group>
           <Form.Group as={Col} md={6}>
@@ -258,11 +250,11 @@ export const Dados = () => {
               name="nome_fantasia"
               type="text"
               onChange={handleInputChange}
-              value={cliente?.nome_fantasia}
-              isInvalid={!!errors.nome_fantasia}
+              value={cliente?.data?.nome_fantasia}
+              isInvalid={!!cliente?.error?.nome_fantasia}
             />
             <Form.Control.Feedback type="invalid" tooltip>
-              {errors?.nome_fantasia}
+              {cliente?.error?.nome_fantasia}
             </Form.Control.Feedback>
           </Form.Group>
         </Form.Row>
@@ -280,11 +272,11 @@ export const Dados = () => {
                 name="email"
                 type="email"
                 onChange={handleInputChange}
-                value={cliente?.email}
-                isInvalid={!!errors.email}
+                value={cliente?.data?.email}
+                isInvalid={!!cliente?.error?.email}
               />
               <Form.Control.Feedback type="invalid" tooltip>
-                {errors?.email}
+                {cliente?.error?.email}
               </Form.Control.Feedback>
             </InputGroup>
           </Col>
@@ -299,11 +291,11 @@ export const Dados = () => {
                 name="email_nfe"
                 type="email"
                 onChange={handleInputChange}
-                value={cliente?.email_nfe}
-                isInvalid={!!errors.email_nfe}
+                value={cliente?.data?.email_nfe}
+                isInvalid={!!cliente?.error?.email_nfe}
               />
               <Form.Control.Feedback type="invalid" tooltip>
-                {errors?.email_nfe2}
+                {cliente?.error?.email_nfe2}
               </Form.Control.Feedback>
             </InputGroup>
           </Col>
@@ -318,11 +310,11 @@ export const Dados = () => {
                 name="email_nfe2"
                 type="email"
                 onChange={handleInputChange}
-                value={cliente?.email_nfe2}
-                isInvalid={!!errors.email_nfe2}
+                value={cliente?.data?.email_nfe2}
+                isInvalid={!!cliente?.error?.email_nfe2}
               />
               <Form.Control.Feedback type="invalid" tooltip>
-                {errors?.email_nfe2}
+                {cliente?.error?.email_nfe2}
               </Form.Control.Feedback>
             </InputGroup>
           </Col>

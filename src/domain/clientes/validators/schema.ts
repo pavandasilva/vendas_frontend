@@ -17,5 +17,26 @@ export const schema = yup.object().shape({
   uf: yup.string().required().length(2),
   is_cliente_final: yup.string().length(1).required(),
   is_orgao_estadual: yup.string().length(1).required(),
-  is_revenda: yup.string().length(1).required()
+  is_revenda: yup.string().length(1).required(),
+  contatos: yup.array()
+    .of(
+      yup.object().shape({
+        id: yup.string(),
+        nome: yup.string(),
+        email: yup.string(),
+        fiscal: yup.mixed().oneOf(['s', 'n']),
+        comercial: yup.mixed().oneOf(['s', 'n']),
+        financeiro: yup.mixed().oneOf(['s', 'n']),
+        status: yup.mixed().oneOf(['ativo', 'inativo']),
+        telefones: yup.array()
+          .of(
+            yup.object().shape({
+              ddd: yup.string(),
+              numero: yup.string(),
+              ramal: yup.string(),
+              whatsapp: yup.mixed().oneOf(['s', 'n'])
+            })
+          )
+      })
+    )
 })
