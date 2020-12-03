@@ -4,15 +4,17 @@ import { Form, Col, Button, Nav, Tab, Row, Card } from 'react-bootstrap'
 import { Cliente } from '../../../domain/clientes/models/cliente'
 import { Contatos, Dados, Endereco } from '../../components'
 import { Layout } from '../Layout'
-
-import './styles.scss'
 import { makeCadastrarCliente } from '../../../domain/clientes/factories/makeCadastrarCliente'
 import { useClienteDataCadastro } from '../../hooks/contexts'
+import { useTabCadastroCliente } from '../../hooks/contexts/tabCadastroClienteContext'
+import './styles.scss'
+import { getTabCadastroClienteToRedirect } from '../../../helpers'
 
 const cadastrarCliente = makeCadastrarCliente()
 
 export const CadastroCliente = () => {
   const [dataFormCliente, setDataFormCliente] = useClienteDataCadastro()
+  const [currentTab, setCurrentTab] = useTabCadastroCliente()
 
   const sanetizeCliente = useCallback((values: any): Cliente => {
     const cliente: Cliente = {
@@ -52,26 +54,31 @@ export const CadastroCliente = () => {
       })
 
       setDataFormCliente(newState)
+
+      if (error.type === 'validate') {
+        const tabToRedirect = getTabCadastroClienteToRedirect(error.data)
+        setCurrentTab(tabToRedirect)
+      }
     }
-  }, [dataFormCliente, sanetizeCliente, setDataFormCliente])
+  }, [dataFormCliente, sanetizeCliente, setCurrentTab, setDataFormCliente])
 
   return (
     <Layout title="Cadastro de cliente">
       <Card>
         <Card.Body>
           <Form noValidate onSubmit={submitForm} >
-            <Tab.Container defaultActiveKey="dados">
+            <Tab.Container defaultActiveKey="dados" activeKey={currentTab}>
               <Row>
                 <Col sm={12} className="mb-4 border-bottom pb-3 pt-3 bg-light" style={{ marginTop: '-16px' }}>
                   <Nav variant="pills">
                     <Nav.Item>
-                      <Nav.Link eventKey="dados">Dados</Nav.Link>
+                      <Nav.Link eventKey="dados" onClick={() => setCurrentTab('dados')}>Dados</Nav.Link>
                     </Nav.Item>
                     <Nav.Item>
-                      <Nav.Link eventKey="endereco">Endereço</Nav.Link>
+                      <Nav.Link eventKey="endereco" onClick={() => setCurrentTab('endereco')}>Endereço</Nav.Link>
                     </Nav.Item>
                     <Nav.Item>
-                      <Nav.Link eventKey="contatos">Contatos</Nav.Link>
+                      <Nav.Link eventKey="contatos" onClick={() => setCurrentTab('contatos')}>Contatos</Nav.Link>
                     </Nav.Item>
                     <div className="wrapper-button-salvar">
                       <Button type="submit" >Salvar</Button>
