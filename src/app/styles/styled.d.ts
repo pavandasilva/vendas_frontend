@@ -7,7 +7,14 @@ declare module 'styled-components' {
       primary: string,
       secondary: string,
       background: string,
-      primaryText: string
+      backgroundLight: string,
+      primaryText: string;
+      secondaryText: string;
+      border: string;
+      borderLight: string;
+      info: string,
+      danger: string,
+      sucess: string,
     }
   }
 }

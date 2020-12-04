@@ -1,17 +1,15 @@
 import { handleErrors } from '../../../helpers/handleErrors'
-import { GetParams, RouteController, AlertController } from '../../_interfaces'
+import { GetParams, AlertController } from '../../_interfaces'
 import { HttpRequest } from '../../_interfaces/httpRequest'
 import { FuncionarioService, GetClientesFuncionarioResponse, GetFuncionarioResponse } from '../interfaces'
 import { GetClientesSuggestionResponse } from '../interfaces/getClientesSuggestionResponse'
 
 export class FuncionarioServiceImpl implements FuncionarioService {
   private readonly httpRequest: HttpRequest
-  private readonly routeController: RouteController
   private readonly alertController: AlertController
 
-  constructor (httpRequest: HttpRequest, routeController: RouteController, alertController: AlertController) {
+  constructor (httpRequest: HttpRequest, alertController: AlertController) {
     this.httpRequest = httpRequest
-    this.routeController = routeController
     this.alertController = alertController
   }
 

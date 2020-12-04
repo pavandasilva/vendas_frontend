@@ -13,7 +13,9 @@ export function Route ({
   ...rest
 }: PrivateRouteProps) {
   const { data } = useUsuario()
-  const signed = !!data?.id
+  // const signed = !!data?.id
+
+  const signed = true
 
   return (
     <ReactRoute {...rest}

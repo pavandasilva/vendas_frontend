@@ -1,11 +1,20 @@
 import React from 'react'
-import { Layout } from '../Layout'
-import { ListaClientesFidelizados } from '../../components'
+import { FaSearch } from 'react-icons/fa'
+import { MainLayout } from '../../layouts/MainLayout'
+import { Input } from '../../components'
 
-export const DashBoard: React.FC = () => {
+import { Container } from './styles'
+
+export const DashBoard = () => {
   return (
-    <Layout title="Dashboard">
-      <ListaClientesFidelizados />
-    </Layout>
+    <MainLayout title="DashBoard">
+      <Container>
+        <header>
+          <div>
+            <Input type='text' startIcon={FaSearch}/>
+          </div>
+        </header>
+      </Container>
+    </MainLayout>
   )
 }
