@@ -35,7 +35,7 @@ export const Tabs = ({ fixedContent, titleFixedContent }: TabsProps) => {
       <header>
         {/* tab fixa */}
         <Tab selected={activeTab === -1} onClick={() => setActiveTab(-1)}>
-          <span>{tabFixedTitle}</span>
+          <p>{tabFixedTitle}</p>
         </Tab>
         {/* tab fixa */}
 
@@ -44,7 +44,7 @@ export const Tabs = ({ fixedContent, titleFixedContent }: TabsProps) => {
             <Close onClick={() => handleCloseOnClick(index)}>
               <FiX />
             </Close>
-            <span>{tab.title}</span>
+            <p>{capitalize(tab.title)}</p>
           </Tab>
         ))}
 

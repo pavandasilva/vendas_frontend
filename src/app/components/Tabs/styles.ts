@@ -33,7 +33,7 @@ export const Tab = styled.div<TabProps>`
   border-top-left-radius: 4px;
   border-top-right-radius: 4px;
   height: 35px;
-  width: 175px;
+  width: 200px;
   padding: 15px;
   border: 1px solid ${props => props.theme.colors.border};
   border-bottom-color: ${props => props.theme.colors.backgroundLight};
@@ -41,7 +41,13 @@ export const Tab = styled.div<TabProps>`
   color: ${props => props.selected ? props.theme.colors.primaryText : props.theme.colors.secondaryText};
   cursor: pointer;
   margin-left: 4px;
-  overflow: hidden;
+
+
+  > p {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
 
   &:first-of-type {
     width: 110px;
