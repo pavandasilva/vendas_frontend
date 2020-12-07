@@ -22,21 +22,35 @@ export const Tabs = ({ fixedContent, titleFixedContent }: TabsProps) => {
       setTabFixedTitle(capitalize(pathname.split('/')[1]))
     }
 
-    setActiveTab(0)
+    setActiveTab(-1)
   }, [pathname, setActiveTab])
 
   return (
     <Container>
       <header>
         {/* tab fixa */}
-        <Tab selected={activeTab === 0}>
+        <Tab selected={activeTab === -1}>
           <span>{tabFixedTitle}</span>
         </Tab>
         {/* tab fixa */}
+
+        { tabs?.map((tab, index) => (
+          <Tab key={index} selected={activeTab === index}>
+            <span>{tab.title}</span>
+          </Tab>
+        ))}
+
       </header>
 
       <TabContent>
-        { activeTab === 0 && fixedContent }
+        {/*  conteúdo da tab fixa */}
+        { activeTab === -1 && fixedContent }
+        {/*  conteúdo da tab fixa */}
+
+        { tabs?.map((tab, index) => (
+          // eslint-disable-next-line eqeqeq
+          index == activeTab && tab.content
+        ))}
       </TabContent>
     </Container>
   )
