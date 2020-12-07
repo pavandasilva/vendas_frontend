@@ -28,6 +28,7 @@ export const DashBoard = () => {
 
   const handleFilterOnChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(event.target.value)
+    setCurrentPage(0)
   }, [])
 
   const handleAtenderOnClick = useCallback((cliente: Cliente) => {
