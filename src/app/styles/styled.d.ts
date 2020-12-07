@@ -15,6 +15,7 @@ declare module 'styled-components' {
       info: string,
       danger: string,
       sucess: string,
+      buttonPrimary: string
     }
   }
 }

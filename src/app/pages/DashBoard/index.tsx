@@ -1,48 +1,20 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import { FaSearch } from 'react-icons/fa'
 import { MainLayout } from '../../layouts/MainLayout'
-import { Input } from '../../components'
+import { ButtonTable, Input } from '../../components'
 import ReactTable, { Column } from 'react-table-6'
-import { Container, Content } from './styles'
+import { Container, Content, Actions } from './styles'
 import useClientesFidelizados from '../../hooks/useClientesFidelizados'
-import { useHistory } from 'react-router-dom'
+/* import { useHistory } from 'react-router-dom' */
 import { useTabs } from '../../hooks/contexts'
 import { Cliente } from '../../../domain/clientes/models'
-
-import 'react-table-6/react-table.css'
 import capitalize from 'capitalize-pt-br'
 
 const perPage = 10
 
-const columns: Column[] = [
-  {
-    Header: '#',
-    accessor: 'id',
-    minWidth: 15
-  },
-  {
-    Header: 'Razão Social',
-    accessor: 'razao_social',
-    Cell: ({ value }) => capitalize(value)
-  },
-  {
-    Header: 'UF',
-    accessor: 'uf',
-    minWidth: 15,
-    Cell: ({ value }) => value.toString().toUpperCase()
-  },
-  {
-    Header: 'Cidade',
-    accessor: 'cidade',
-    Cell: ({ value }) => capitalize(value)
-  },
-  {
-    Header: 'Ações'
-  }
-]
-
 export const DashBoard = () => {
-  const history = useHistory()
+  /*  const history = useHistory() */
+
   const [search, setSearch] = useState('')
   const [currentPage, setCurrentPage] = useState(0)
   const { addTab } = useTabs()
@@ -63,12 +35,12 @@ export const DashBoard = () => {
 
     }
 
-    /* addTab({
+    addTab({
       index: cliente.id as number,
       title: `${cliente.id} - ${cliente.nome_fantasia}`,
-      content: <Atendimento cliente={cliente}/>
-    }) */
-  }, [])
+      content: <div>Ola</div>
+    })
+  }, [addTab])
 
   const handleOnPageChange = useCallback((page: number) => {
     if (!clientesFidelizados?.metadata?.count) {
@@ -78,14 +50,52 @@ export const DashBoard = () => {
     setCurrentPage(page)
   }, [clientesFidelizados])
 
-  const handleClickNovoCLiente = useCallback(() => {
+  /*   const handleClickNovoCLiente = useCallback(() => {
     history.push('/cadastro-cliente')
   }, [history])
 
   const handleOnSortedChange = (state: any, instance: any) => {
     console.log('state', state)
     console.log('instance', instance)
-  }
+  } */
+
+  const columns: Column[] = useMemo(() => [
+    {
+      Header: '#',
+      accessor: 'id',
+      minWidth: 15
+    },
+    {
+      Header: 'Razão Social',
+      accessor: 'razao_social',
+      Cell: ({ value }) => capitalize(value)
+    },
+    {
+      Header: 'UF',
+      accessor: 'uf',
+      minWidth: 15,
+      Cell: ({ value }) => value.toString().toUpperCase()
+    },
+    {
+      Header: 'Cidade',
+      accessor: 'cidade',
+      Cell: ({ value }) => capitalize(value)
+    },
+    {
+      Header: 'Ações',
+      minWidth: 25,
+      // eslint-disable-next-line react/display-name
+      Cell: ({ row }) => {
+        const cliente = row._original as Cliente
+        return (
+          <Actions>
+            <ButtonTable type="button" typeButton='primary' onClick={() => handleAtenderOnClick(cliente)}>Atender</ButtonTable>
+            <ButtonTable type="button" typeButton='secondary'>Editar</ButtonTable>
+          </Actions>
+        )
+      }
+    }
+  ], [handleAtenderOnClick])
 
   return (
     <MainLayout title="DashBoard">
@@ -105,7 +115,7 @@ export const DashBoard = () => {
             onPageChange={handleOnPageChange}
             manual
             loading={!clientesFidelizados?.data}
-            onSortedChange={handleOnSortedChange}
+            /*  onSortedChange={handleOnSortedChange} */
             sortable={false}
             nextText="Próximo"
             previousText="Anterior"

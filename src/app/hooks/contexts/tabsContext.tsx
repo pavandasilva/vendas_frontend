@@ -40,7 +40,7 @@ export const TabsProvider: React.FC = ({ children }) => {
 
   const removeTab = useCallback((index: number) => {
     setTabs(tabs => tabs.filter((tab, i) => i !== index))
-    setActiveTab(index - 1)
+    setActiveTab(-1)
   }, [])
 
   return (

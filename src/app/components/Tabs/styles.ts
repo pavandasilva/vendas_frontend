@@ -10,7 +10,6 @@ export const Container = styled.div`
     left: 15px;
     z-index: 10;
   }
-
 `
 
 export const TabContent = styled.div`
@@ -30,6 +29,7 @@ export const Tab = styled.div<TabProps>`
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
   border-top-left-radius: 4px;
   border-top-right-radius: 4px;
   height: 35px;
@@ -41,7 +41,7 @@ export const Tab = styled.div<TabProps>`
   color: ${props => props.selected ? props.theme.colors.primaryText : props.theme.colors.secondaryText};
   cursor: pointer;
   margin-left: 4px;
-
+  overflow: hidden;
 
   &:first-of-type {
     width: 110px;
@@ -63,4 +63,27 @@ export const Tab = styled.div<TabProps>`
     }
   `}
 
+`
+
+export const Close = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  right: 2px;
+  top: 2px;
+  height: 18px;
+  width: 18px;
+  transition: all 0.4s;
+
+  > svg {
+    width: 16px;
+    height: 16px;
+    fill: red !important;
+  }
+
+  &:hover {
+    background-color: ${props => props.theme.colors.borderLight};
+    border-radius: 50%;
+  }
 `

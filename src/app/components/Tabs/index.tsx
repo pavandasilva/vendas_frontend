@@ -1,9 +1,10 @@
 import capitalize from 'capitalize-pt-br'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
+import { FiX } from 'react-icons/fi'
 import { useLocation } from 'react-router-dom'
 import { useTabs } from '../../hooks/contexts'
 
-import { Container, TabContent, Tab } from './styles'
+import { Container, TabContent, Tab, Close } from './styles'
 
 interface TabsProps {
   fixedContent?: React.ReactNode,
@@ -25,17 +26,24 @@ export const Tabs = ({ fixedContent, titleFixedContent }: TabsProps) => {
     setActiveTab(-1)
   }, [pathname, setActiveTab])
 
+  const handleCloseOnClick = useCallback((index: number) => {
+    removeTab(index)
+  }, [removeTab])
+
   return (
     <Container>
       <header>
         {/* tab fixa */}
-        <Tab selected={activeTab === -1}>
+        <Tab selected={activeTab === -1} onClick={() => setActiveTab(-1)}>
           <span>{tabFixedTitle}</span>
         </Tab>
         {/* tab fixa */}
 
         { tabs?.map((tab, index) => (
-          <Tab key={index} selected={activeTab === index}>
+          <Tab key={index} selected={activeTab === index} onClick={() => setActiveTab(index)}>
+            <Close onClick={() => handleCloseOnClick(index)}>
+              <FiX />
+            </Close>
             <span>{tab.title}</span>
           </Tab>
         ))}

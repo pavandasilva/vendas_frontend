@@ -11,6 +11,7 @@ export const lightTheme = {
     borderLight: '#ebebeb',
     info: '#007BFF',
     danger: '#dc3545',
-    sucess: '#1A5C3C'
+    sucess: '#1A5C3C',
+    buttonPrimary: '#505050'
   }
 }

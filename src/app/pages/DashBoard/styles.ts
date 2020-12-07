@@ -24,3 +24,12 @@ export const Content = styled.div`
 
 
 `
+
+export const Actions = styled.div`
+  display: flex;
+  flex-direction: row;
+
+  & + button + button {
+    background-color: red !important;
+  }
+`
