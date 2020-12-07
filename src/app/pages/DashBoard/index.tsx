@@ -11,7 +11,7 @@ export const DashBoard = () => {
       <Container>
         <header>
           <div>
-            <Input type='text' startIcon={FaSearch}/>
+            <Input type='text' startIcon={FaSearch} error="test"/>
           </div>
         </header>
       </Container>

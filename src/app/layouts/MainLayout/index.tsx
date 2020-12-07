@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react'
-import { SideMenu, NavBar } from '../../components'
+import { SideMenu, NavBar, Tabs } from '../../components'
 import { Container, Content } from './styles'
 
 interface MainLayoutProps {
@@ -13,9 +13,7 @@ export const MainLayout = ({ title, children }: MainLayoutProps) => {
       <SideMenu />
       <Content>
         <NavBar />
-        <div>
-          { children }
-        </div>
+        <Tabs titleFixedContent={title} fixedContent={children}/>
       </Content>
     </Container>
   )

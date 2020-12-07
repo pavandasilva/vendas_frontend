@@ -9,7 +9,7 @@ export const lightTheme = {
     secondaryText: '#828282',
     border: '#ced4da',
     borderLight: '#ebebeb',
-    info: '#007bff ',
+    info: '#007BFF',
     danger: '#dc3545',
     sucess: '#1A5C3C'
   }

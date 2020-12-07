@@ -1,4 +1,5 @@
 import styled, { css } from 'styled-components'
+import { transparentize } from 'polished'
 
 interface InputContainerProps {
   isActive: boolean;
@@ -71,19 +72,31 @@ export const Container = styled.div<InputContainerProps>`
     padding: 0px 26px 0px 20px;
     z-index: 5;
 
+
     ${props => {
-      let color = props.theme.colors.border
+      let color
+      let borderColor = 'transparent'
 
       if (props.error) {
         color = props.theme.colors.danger
+        borderColor = transparentize(0.9, props.theme.colors.danger)
       } else if (props.isActive) {
         color = props.theme.colors.info
+        borderColor = transparentize(0.7, props.theme.colors.info)
+      } else {
+        color = props.theme.colors.border
       }
 
+      console.log(color)
+
       return css`
-        border: 1px solid ${color}
+        border: 1px solid ${color};
+        box-shadow: 0px 0px 0px 3px ${borderColor};
       `
     }};
+
+
+
 
     border-left: none;
 
@@ -117,6 +130,7 @@ export const IconError = styled.div<IconError>`
   display: flex;
   right: 7px;
   z-index: 8;
+  width: 20px !important;
 
   > svg {
     fill: ${props => props.theme.colors.danger} !important;
@@ -130,7 +144,7 @@ export const ToolTip = styled.div`
   z-index: 8;
   display: box;
   max-width: 100%;
-  padding: 5px 10px;
+  padding: 7px 10px;
   margin-top: 5px;
   font-size: 10px;
   line-height: 1.5;
