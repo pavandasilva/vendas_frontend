@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo, useState } from 'react'
-import { FaSearch } from 'react-icons/fa'
+import { FaSearch, FaUser } from 'react-icons/fa'
 import { MainLayout } from '../../layouts/MainLayout'
-import { ButtonTable, Input } from '../../components'
+import { Atendimento, ButtonTable, Input } from '../../components'
 import ReactTable, { Column } from 'react-table-6'
 import { Container, Content, Actions } from './styles'
 import useClientesFidelizados from '../../hooks/useClientesFidelizados'
@@ -9,6 +9,7 @@ import useClientesFidelizados from '../../hooks/useClientesFidelizados'
 import { useTabs } from '../../hooks/contexts'
 import { Cliente } from '../../../domain/clientes/models'
 import capitalize from 'capitalize-pt-br'
+import Button from '../../components/Button'
 
 const perPage = 10
 
@@ -39,7 +40,7 @@ export const DashBoard = () => {
     addTab({
       index: cliente.id as number,
       title: `${cliente.id} - ${cliente.nome_fantasia}`,
-      content: <div>Ola</div>
+      content: <Atendimento cliente={cliente}/>
     })
   }, [addTab])
 
@@ -104,6 +105,9 @@ export const DashBoard = () => {
         <header>
           <div>
             <Input type='text' startIcon={FaSearch} onChange={handleFilterOnChange}/>
+          </div>
+          <div>
+            <Button startIcon={FaUser} type="button">Novo cliente</Button>
           </div>
         </header>
         <Content>

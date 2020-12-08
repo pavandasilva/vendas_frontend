@@ -19,7 +19,7 @@ export const Container = styled.button<ContainerProps>`
   font-size: 12px;
 
   & + button {
-    margin-left: 7px;
+    margin-left: 5px;
   }
 
   svg {

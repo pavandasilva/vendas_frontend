@@ -26,6 +26,7 @@ export default createGlobalStyle`
     display: flex;
     flex-direction: column;
     border: 1px solid ${props => props.theme.colors.border};
+    border-radius: 4px;
   }
 
   .ReactTable .rt-table {
@@ -44,10 +45,6 @@ export default createGlobalStyle`
     flex-direction: column;
     user-select: none;
   }
-
-
-
-
 
   .ReactTable .rt-thead.-header {
     box-shadow: 0 2px 15px 0 rgba(0, 0, 0, 0.05);
@@ -318,7 +315,7 @@ export default createGlobalStyle`
   }
 
   .ReactTable .-pagination .-btn[disabled] {
-    opacity: .7;
+    opacity: .3;
     cursor: default
   }
 
