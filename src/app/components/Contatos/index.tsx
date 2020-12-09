@@ -2,9 +2,12 @@ import capitalize from 'capitalize-pt-br'
 import React, { useMemo, useState } from 'react'
 import { FaSearch, FaUser } from 'react-icons/fa'
 import ReactTable, { Column } from 'react-table-6'
-import { Input, Button, ButtonTable } from '..'
+import { Input, Button, ButtonTable, CheckBox } from '..'
 import { Contato } from '../../../domain/clientes/models'
 import { useCadastroCliente } from '../../hooks'
+import { FormRow } from '../../styles/global'
+import { CadastroContato } from '../CadastroContato'
+import { Modal } from '../Modal'
 import { Container, Actions, Header } from './styles'
 
 const rowsPerPage = 10
@@ -13,6 +16,7 @@ export const Contatos = () => {
   const { data: cliente } = useCadastroCliente()
   const [search, setSearch] = useState('')
   const [currentPage, setCurrentPage] = useState(0)
+  const [showModalContato, setShowModalContato] = useState(false)
 
   const columns: Column[] = useMemo(() => [
     {
@@ -33,25 +37,25 @@ export const Contatos = () => {
     {
       Header: 'status',
       accessor: 'status',
-      minWidth: 15,
+      minWidth: 20,
       Cell: ({ value }) => capitalize(value)
     },
     {
       Header: 'fiscal',
       accessor: 'fiscal',
-      minWidth: 15,
+      minWidth: 20,
       Cell: ({ value }) => capitalize(value)
     },
     {
       Header: 'comercial',
       accessor: 'comercial',
-      minWidth: 15,
+      minWidth: 20,
       Cell: ({ value }) => capitalize(value)
     },
     {
       Header: 'financeiro',
       accessor: 'financeiro',
-      minWidth: 15,
+      minWidth: 20,
       Cell: ({ value }) => capitalize(value)
     },
     {
@@ -73,45 +77,45 @@ export const Contatos = () => {
 
   }
 
-  const handleNovoContatoOnClick = () => {
-
-  }
-
   const handleOnPageChange = () => {
 
   }
 
   return (
-    <Container>
-      <Header>
-        <div>
-          <Input type='text' startIcon={FaSearch} onChange={handleFilterOnChange}/>
-        </div>
-        <div>
-          <Button mode="primary"startIcon={FaUser} type="button" onClick={handleNovoContatoOnClick}>Novo contato</Button>
-        </div>
-      </Header>
+    <>
+      <Container>
+        <Header>
+          <div>
+            <Input type='text' startIcon={FaSearch} onChange={handleFilterOnChange}/>
+          </div>
+          <div>
+            <Button mode="primary"startIcon={FaUser} type="button" onClick={() => setShowModalContato(true)}>Novo contato</Button>
+          </div>
+        </Header>
 
-      <ReactTable
-        columns={columns}
-        data={cliente?.contatos}
-        pageSize={rowsPerPage}
-        page={currentPage}
-        pages={cliente?.contatos?.length && Math.ceil(cliente?.contatos?.length / rowsPerPage)}
-        onPageChange={handleOnPageChange}
-        manual
-        loading={false}
-        /*  onSortedChange={handleOnSortedChange} */
-        sortable={false}
-        nextText="Próximo"
-        previousText="Anterior"
-        pageText="Página"
-        ofText= "de"
-        showPageSizeOptions= { false }
-        loadingText="carregando..."
-        noDataText="Nenhum contato encontrado"
-      />
-
-    </Container>
+        <ReactTable
+          columns={columns}
+          data={cliente?.contatos}
+          pageSize={rowsPerPage}
+          page={currentPage}
+          pages={cliente?.contatos?.length && Math.ceil(cliente?.contatos?.length / rowsPerPage)}
+          onPageChange={handleOnPageChange}
+          manual
+          loading={false}
+          /*  onSortedChange={handleOnSortedChange} */
+          sortable={false}
+          nextText="Próximo"
+          previousText="Anterior"
+          pageText="Página"
+          ofText= "de"
+          showPageSizeOptions= { false }
+          loadingText="carregando..."
+          noDataText="Nenhum contato encontrado"
+        />
+      </Container>
+      { showModalContato && <Modal title="Cadastro de Contato" showButtonSave close={() => setShowModalContato(false)}>
+        <CadastroContato />
+      </Modal> }
+    </>
   )
 }

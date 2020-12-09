@@ -93,7 +93,7 @@ export const Input = ({ startIcon: StartIcon, title, error, onChange, width, ...
 
   return (
     <Wrapper className="wrapper-input" width={width}>
-      {(!!title || hasContent) && <Label isActive={isActive || (!isActive && hasContent)}>{title}</Label> }
+      {(!!title || (hasContent && !!title)) && <Label isActive={isActive || (!isActive && hasContent)}>{title}</Label> }
       <Container isActive={isActive} error={inputError} onClick={handleContainerOnClick} hasStartIcon={!!StartIcon}>
         {StartIcon && <div><StartIcon /></div>}
         <input ref={inputEl} onFocus={onFocus} onBlur={onBlur} {...rest} onChange={handleOnChange}/>

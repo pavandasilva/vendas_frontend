@@ -5,7 +5,7 @@ import { Container } from './styles'
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   startIcon?: IconType;
   children?: ReactNode;
-  mode: 'primary' | 'secondary';
+  mode: 'primary' | 'secondary' | 'confirm' | 'cancel';
   active?: boolean
 }
 

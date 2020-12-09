@@ -38,7 +38,7 @@ export const Actions = styled.div`
 `
 
 export const Header = styled.div`
-  margin-top: 40px;
+  margin-top: 15px;
   display: flex;
   flex-direction: row;
   margin-bottom: 15px;
