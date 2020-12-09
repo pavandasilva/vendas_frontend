@@ -13,7 +13,7 @@ export const Container = styled.div`
     justify-content: flex-start;
     height: 45px;
 
-    div {
+    > div {
       display: flex;
       width: 300px;
 

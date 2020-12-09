@@ -1,8 +1,6 @@
-import { CurrentTab } from '../app/hooks/contexts/tabCadastroClienteContext'
+import { CurrentTab } from '../app/contexts/tabCadastroClienteContext'
 
 export const getTabCadastroClienteToRedirect = (error: any) : CurrentTab => {
-  console.log('getTabCadastroClienteToRedirect', error)
-
   if (
     !!error?.cnpj ||
     !!error?.ie ||

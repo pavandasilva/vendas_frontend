@@ -47,10 +47,11 @@ export const Tab = styled.div<TabProps>`
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
+
   }
 
   &:first-of-type {
-    width: 110px;
+    width: 150px;
     margin-left: 0px;
     background-color: ${props => props.selected ? props.theme.colors.backgroundLight : props.theme.colors.secondary};
     color: ${props => props.selected ? props.theme.colors.primaryText : props.theme.colors.backgroundLight}

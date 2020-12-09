@@ -9,6 +9,7 @@ export const Container = styled.div`
   height: 100vh;
   background-color: ${props => props.theme.colors.primary};
   width: 70px;
+  z-index: 40;
 
   img {
     margin-top: 15px;

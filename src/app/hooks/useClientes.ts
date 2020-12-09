@@ -1,7 +1,7 @@
 import { toast } from 'react-toastify'
+import { useUsuario } from '.'
 import { makeCadastrarCliente } from '../../domain/clientes/factories/makeCadastrarCliente'
 import { Cliente } from '../../domain/clientes/models/cliente'
-import { useUsuario } from './contexts/usuarioContext'
 
 const cadastrarCliente = makeCadastrarCliente()
 

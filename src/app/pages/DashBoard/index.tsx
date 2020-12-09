@@ -1,20 +1,21 @@
 import React, { useCallback, useMemo, useState } from 'react'
 import { FaSearch, FaUser } from 'react-icons/fa'
 import { MainLayout } from '../../layouts/MainLayout'
-import { Atendimento, ButtonTable, Input } from '../../components'
+import { Atendimento, Button, ButtonTable, Input } from '../../components'
 import ReactTable, { Column } from 'react-table-6'
 import { Container, Content, Actions } from './styles'
 import useClientesFidelizados from '../../hooks/useClientesFidelizados'
 /* import { useHistory } from 'react-router-dom' */
-import { useTabs } from '../../hooks/contexts'
+
 import { Cliente } from '../../../domain/clientes/models'
 import capitalize from 'capitalize-pt-br'
-import Button from '../../components/Button'
+import { useHistory } from 'react-router-dom'
+import { useTabs } from '../../hooks'
 
 const perPage = 10
 
 export const DashBoard = () => {
-  /*  const history = useHistory() */
+  const history = useHistory()
 
   const [search, setSearch] = useState('')
   const [currentPage, setCurrentPage] = useState(0)
@@ -99,15 +100,19 @@ export const DashBoard = () => {
     }
   ], [handleAtenderOnClick])
 
+  const handleNovoClienteOnClick = useCallback(() => {
+    history.push('/cadastro-cliente')
+  }, [history])
+
   return (
-    <MainLayout title="DashBoard">
+    <MainLayout title="Dashboard">
       <Container>
         <header>
           <div>
             <Input type='text' startIcon={FaSearch} onChange={handleFilterOnChange}/>
           </div>
           <div>
-            <Button startIcon={FaUser} type="button">Novo cliente</Button>
+            <Button mode="primary"startIcon={FaUser} type="button" onClick={handleNovoClienteOnClick}>Novo cliente</Button>
           </div>
         </header>
         <Content>

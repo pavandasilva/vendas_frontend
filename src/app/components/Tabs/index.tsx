@@ -2,7 +2,7 @@ import capitalize from 'capitalize-pt-br'
 import React, { useCallback, useEffect, useState } from 'react'
 import { FiX } from 'react-icons/fi'
 import { useLocation } from 'react-router-dom'
-import { useTabs } from '../../hooks/contexts'
+import { useTabs } from '../../hooks'
 
 import { Container, TabContent, Tab, Close } from './styles'
 
@@ -17,14 +17,9 @@ export const Tabs = ({ fixedContent, titleFixedContent }: TabsProps) => {
   const { pathname } = useLocation()
 
   useEffect(() => {
-    if (pathname === '/') {
-      setTabFixedTitle('Dashboard')
-    } else {
-      setTabFixedTitle(capitalize(pathname.split('/')[1]))
-    }
-
+    setTabFixedTitle(titleFixedContent)
     setActiveTab(-1)
-  }, [pathname, setActiveTab])
+  }, [pathname, setActiveTab, titleFixedContent])
 
   const handleCloseOnClick = useCallback((index: number) => {
     removeTab(index)

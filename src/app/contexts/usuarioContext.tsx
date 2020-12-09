@@ -1,23 +1,13 @@
-import React, { createContext, useState, useContext } from 'react'
+import React, { createContext, useState } from 'react'
 import jwt_decode from 'jwt-decode'
-import { Usuario } from '../../../domain/usuarios/models/usuario'
+import { Usuario } from '../../domain/usuarios/models/usuario'
 
-interface UsuarioContextState {
+export interface UsuarioContextProps {
   data?: Usuario
   setData(usuario: Usuario): void
 }
 
-export const UsuarioContext = createContext<UsuarioContextState>({} as UsuarioContextState)
-
-export const useUsuario = (): UsuarioContextState => {
-  const context = useContext(UsuarioContext)
-
-  if (!context) {
-    throw new Error('useUsuario deve ser usado com UsuarioProvider')
-  }
-
-  return context
-}
+export const UsuarioContext = createContext<UsuarioContextProps>({} as UsuarioContextProps)
 
 export const UsuarioProvider: React.FC = ({ children }) => {
   const [usuario, setUsuario] = useState<Usuario>(() => {

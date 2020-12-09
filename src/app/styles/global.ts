@@ -1,6 +1,6 @@
-import { createGlobalStyle } from 'styled-components'
+import styled, { createGlobalStyle } from 'styled-components'
 
-export default createGlobalStyle`
+export const GlobalStyle = createGlobalStyle`
   * {
     margin: 0;
     padding: 0;
@@ -469,5 +469,22 @@ export default createGlobalStyle`
   .rt-td {
     display: flex;
     align-items: center;
+  }
+`
+
+interface FormRowProps {
+  width?: string
+}
+
+export const FormRow = styled.div<FormRowProps>`
+  display: flex;
+  flex-direction: row;
+  width: ${props => props.width ? props.width : '100%'};
+  height: 60px;
+
+  & > div {
+    & + div {
+      margin-left: 7px;
+    }
   }
 `

@@ -1,4 +1,4 @@
-import React, { createContext, useCallback, useState, useContext } from 'react'
+import React, { createContext, useCallback, useState } from 'react'
 
 interface Tab {
   title: string,
@@ -6,7 +6,7 @@ interface Tab {
   content: React.ReactNode
 }
 
-interface TabsContextState {
+export interface TabsContextProps {
   tabs?: Tab[]
   addTab(tab: Tab): void,
   removeTab(index: number): void,
@@ -14,17 +14,7 @@ interface TabsContextState {
   setActiveTab(index: number): void
 }
 
-const TabsContext = createContext<TabsContextState>({} as TabsContextState)
-
-export const useTabs = (): TabsContextState => {
-  const context = useContext(TabsContext)
-
-  if (!context) {
-    throw new Error('useTabs deve ser utilizado como TabsProvider')
-  }
-
-  return context
-}
+export const TabsContext = createContext<TabsContextProps>({} as TabsContextProps)
 
 export const TabsProvider: React.FC = ({ children }) => {
   const [activeTab, setActiveTab] = useState(-1)

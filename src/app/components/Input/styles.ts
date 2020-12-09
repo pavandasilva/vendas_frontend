@@ -7,6 +7,20 @@ interface InputContainerProps {
   hasStartIcon?: boolean;
 }
 
+interface WrapperProps {
+  width?: string;
+}
+
+export const Wrapper = styled.div<WrapperProps>`
+  display: flex;
+  flex: ${props => props.width ? props.width : 1} ;
+  flex-direction: column;
+  width: ${props => props.width ? props.width : '100%'} ;
+  justify-content: flex-start;
+  align-items: flex-start;
+  margin: 0px;
+`
+
 export const Label = styled.span<InputContainerProps>`
   display: flex;
   align-self: flex-start;
@@ -72,7 +86,6 @@ export const Container = styled.div<InputContainerProps>`
     padding: 0px 26px 0px 20px;
     z-index: 5;
 
-
     ${props => {
       let color
       let borderColor = 'transparent'
@@ -87,18 +100,13 @@ export const Container = styled.div<InputContainerProps>`
         color = props.theme.colors.border
       }
 
-      console.log(color)
-
       return css`
         border: 1px solid ${color};
         box-shadow: 0px 0px 0px 3px ${borderColor};
       `
     }};
 
-
-
-
-    border-left: none;
+    border-left: ${props => props.hasStartIcon && 'none'} ;
 
     color: ${props =>
       props.isActive

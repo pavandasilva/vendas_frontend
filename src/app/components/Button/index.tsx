@@ -4,11 +4,11 @@ import { Container } from './styles'
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   startIcon?: IconType;
-  children?: ReactNode
+  children?: ReactNode;
+  mode: 'primary' | 'secondary';
+  active?: boolean
 }
 
-const Button = ({ startIcon: Icon, children, ...rest }: ButtonProps) => {
-  return <Container {...rest}>{Icon && <Icon/>}{children && children}</Container>
+export const Button = ({ startIcon: Icon, children, mode, active, ...rest }: ButtonProps) => {
+  return (<Container {...rest} mode={mode} active={active}>{Icon && <Icon/>}{children && children}</Container>)
 }
-
-export default Button

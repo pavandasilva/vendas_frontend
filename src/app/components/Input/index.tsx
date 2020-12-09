@@ -9,17 +9,19 @@ import React, {
 
 import { FaEye, FaInfoCircle } from 'react-icons/fa'
 import { IconType } from 'react-icons'
-import { Container, IconPassword, Label, IconError, ToolTip } from './styles'
+import { Wrapper, Container, IconPassword, Label, IconError, ToolTip } from './styles'
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   startIcon?: IconType;
   title?: string;
   error?: string;
-  onChange?: (e: ChangeEvent<HTMLInputElement>) => void
+  onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
+  width?: string;
 }
 
-export const Input = ({ startIcon: StartIcon, title, error, onChange, ...rest }: InputProps) => {
+export const Input = ({ startIcon: StartIcon, title, error, onChange, width, ...rest }: InputProps) => {
   const [isActive, setIsActive] = useState(false)
+  const [hasContent, setHasContent] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
   const [memoPlaceholder, setMemoPlaceHolder] = useState('')
   const [inputError, setInputError] = useState('')
@@ -73,6 +75,12 @@ export const Input = ({ startIcon: StartIcon, title, error, onChange, ...rest }:
   const handleOnChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     setInputError('')
     onChange && onChange(e)
+
+    if (e?.currentTarget?.value?.length) {
+      setHasContent(true)
+    } else {
+      setHasContent(false)
+    }
   }, [onChange])
 
   const handleOnMouseOver = useCallback(() => {
@@ -84,10 +92,10 @@ export const Input = ({ startIcon: StartIcon, title, error, onChange, ...rest }:
   }, [])
 
   return (
-    <>
-      <Label isActive={isActive}>{title}</Label>
-      <Container isActive={isActive} error={inputError} onClick={handleContainerOnClick}>
-        <div>{StartIcon && <StartIcon />}</div>
+    <Wrapper className="wrapper-input" width={width}>
+      {(!!title || hasContent) && <Label isActive={isActive || (!isActive && hasContent)}>{title}</Label> }
+      <Container isActive={isActive} error={inputError} onClick={handleContainerOnClick} hasStartIcon={!!StartIcon}>
+        {StartIcon && <div><StartIcon /></div>}
         <input ref={inputEl} onFocus={onFocus} onBlur={onBlur} {...rest} onChange={handleOnChange}/>
         {rest.type === 'password' && (
 
@@ -107,6 +115,6 @@ export const Input = ({ startIcon: StartIcon, title, error, onChange, ...rest }:
         )}
         {showToolTip && <ToolTip><span>{error}</span></ToolTip>}
       </Container>
-    </>
+    </Wrapper>
   )
 }

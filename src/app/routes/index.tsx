@@ -1,11 +1,18 @@
 import React from 'react'
 import { Switch } from 'react-router-dom'
-import { DashBoard } from '../pages'
+import { CadastroClienteProvider } from '../contexts'
+import { DashBoard, CadastroCliente } from '../pages'
+
 import { Route } from './route'
 
 export const Routes: React.FC = () => (
   <Switch>
     <Route exact path="/" component={DashBoard} isPrivate />
+
+    <CadastroClienteProvider>
+      <Route path="/cadastro-cliente" component={CadastroCliente} isPrivate />
+    </CadastroClienteProvider>
+
     {/*     <Route path="/demo" component={Demo} isPrivate />
     <Route path="/login" component={Login} />
     <Route path="/atendimentos" component={Atendimentos} isPrivate />

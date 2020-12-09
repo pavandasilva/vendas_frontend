@@ -1,6 +1,6 @@
 import useSWR from 'swr'
 import { makeTrazerClientesFidelizados } from '../../domain/clientes/factories/makeTrazerClientesFidelizados'
-import { useUsuario } from './contexts/usuarioContext'
+import { useUsuario } from '../hooks'
 
 const trazerClientesFidelizados = makeTrazerClientesFidelizados()
 
