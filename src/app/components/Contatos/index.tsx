@@ -1,25 +1,38 @@
+/* eslint-disable react/display-name */
 import capitalize from 'capitalize-pt-br'
+import { FaWhatsapp, FaPhone, FaSearch, FaUser, FaCheck } from 'react-icons/fa'
 import { produce } from 'immer'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
-import { FaSearch, FaUser, FaCheck } from 'react-icons/fa'
+
 import ReactTable, { Column } from 'react-table-6'
-import { Input, Button, ButtonTable } from '..'
-import { Contato } from '../../../domain/clientes/models'
-import { useCadastroCliente } from '../../hooks'
+import { Input, Button, ButtonTable, CadastroContato, CadastroTelefone } from '..'
+import { Contato, Telefone } from '../../../domain/clientes/models'
+import { useCadastroCliente, useCadastroTelefone } from '../../hooks'
 import { useCadastroContato } from '../../hooks/useCadastroContato'
-import { CadastroContato } from '../CadastroContato'
+import { StatusText } from '../../styles/global'
+
 import { Modal } from '../Modal'
-import { Container, Actions, Header, TableCenterContent } from './styles'
+import { Container, Actions, Header, TableCenterContent, ListaTelefones } from './styles'
+import { useTheme } from 'styled-components'
 
 const rowsPerPage = 5
 
 export const Contatos = () => {
   const { data: cliente, setData: setCliente } = useCadastroCliente()
   const { data: contato, resetData: resetContato } = useCadastroContato()
+  const { data: telefone, resetData: resetTelefone } = useCadastroTelefone()
+  const theme = useTheme()
   const [currentPage] = useState(0)
   const [showModalContato, setShowModalContato] = useState(false)
+  const [showModalTelefone, setShowModalTelefone] = useState(false)
   const [searchValue, setSearchValue] = useState('')
   const [contatos, setContatos] = useState<Contato[]>([] as Contato[])
+  const [contatoIndexSelected, setContatoIndexSelected] = useState(-1)
+
+  const handleAdicionarContatoOnClick = useCallback((contatoListindex: number) => {
+    setContatoIndexSelected(contatoListindex)
+    setShowModalTelefone(true)
+  }, [])
 
   useEffect(() => {
     setContatos(cliente?.contatos as Contato [])
@@ -42,11 +55,6 @@ export const Contatos = () => {
 
   const columns: Column[] = useMemo(() => [
     {
-      Header: '#',
-      accessor: 'id',
-      minWidth: 15
-    },
-    {
       Header: 'Nome',
       accessor: 'nome',
       Cell: ({ value }) => capitalize(value)
@@ -62,7 +70,7 @@ export const Contatos = () => {
       minWidth: 20,
       // eslint-disable-next-line react/display-name
       Cell: ({ value }) => {
-        return <TableCenterContent><strong>{capitalize(value)}</strong></TableCenterContent>
+        return <TableCenterContent><StatusText status={value}>{capitalize(value)}</StatusText></TableCenterContent>
       }
     },
     {
@@ -95,13 +103,26 @@ export const Contatos = () => {
       minWidth: 20,
       Cell: ({ value }) => {
         if (value === 's') {
-          return <FaCheck />
+          return <TableCenterContent><FaCheck /></TableCenterContent>
         } else {
           return ''
         }
       }
     },
     {
+      Header: 'Telefones',
+      minWidth: 25,
+      // eslint-disable-next-line react/display-name
+      Cell: ({ original, index }) => {
+        return (
+          <Actions>
+            <ButtonTable type="button" typeButton='primary' onClick={() => handleAdicionarContatoOnClick(index)}>Adicionar</ButtonTable>
+          </Actions>
+        )
+      }
+    },
+    {
+
       Header: 'Ações',
       minWidth: 25,
       // eslint-disable-next-line react/display-name
@@ -112,8 +133,31 @@ export const Contatos = () => {
           </Actions>
         )
       }
+    },
+    {
+      expander: true,
+      Header: () => <strong>Detalhes</strong>,
+      width: 70,
+      Expander: ({ isExpanded, ...rest }) => {
+        // test your condition for Sub-Component here
+        // I am using the presence of no comments
+        if (rest?.original?.telefones?.length === 0) {
+          return null
+        } else {
+          return (
+            <div>
+              {isExpanded
+                ? <ButtonTable type="button" typeButton="primary">Ocultar</ButtonTable>
+                : <ButtonTable type="button" typeButton="primary">Exibir</ButtonTable>
+              }
+            </div>
+          )
+        }
+      }
+
     }
-  ], [])
+
+  ], [handleAdicionarContatoOnClick])
 
   const handleOnPageChange = () => {
 
@@ -133,6 +177,28 @@ export const Contatos = () => {
     setCliente(newCliente)
     resetContato()
   }, [cliente, contato, resetContato, setCliente])
+
+  const handleModalTelefoneOnSave = useCallback(() => {
+    const oldContato = contatos[contatoIndexSelected]
+
+    const newContato = produce(oldContato, draftState => {
+      draftState?.telefones?.push(telefone as Telefone)
+    })
+
+    setContatos(oldContatos => {
+      const newContatos = produce(oldContatos, draftState => { draftState[contatoIndexSelected] = newContato as Contato })
+
+      const newCliente = produce(cliente, draftState => {
+        draftState.contatos = newContatos
+      })
+
+      setCliente(newCliente)
+
+      return newContatos as unknown as Contato[]
+    })
+
+    resetTelefone()
+  }, [cliente, contatoIndexSelected, contatos, resetTelefone, setCliente, telefone])
 
   return (
     <>
@@ -164,11 +230,47 @@ export const Contatos = () => {
           showPageSizeOptions= { false }
           loadingText="carregando..."
           noDataText="Nenhum contato encontrado"
+          SubComponent={({ original }) => {
+            const telefones = original?.telefones as Telefone []
+            return (
+              <ListaTelefones>
+                <ul>
+                  { telefones?.map((telefone, index) => (
+                    <li key={index}>
+                      {telefone.whatsapp === 's' ? <FaWhatsapp color={theme.colors.sucess}/> : <FaPhone color={theme.colors.primary}/> }
+                      {`(${telefone.ddd}) ${telefone.numero}`}
+                    </li>
+                  ))}
+
+                  {/*  { telefones?.map((telefone, index) => (
+              <li key={index}>{telefone.whatsapp === 's' ?  <FaWhatsapp/> : <FaPhoneSquareAlt/> }
+
+              </li>
+            )} */}
+                </ul>
+
+              </ListaTelefones>
+            )
+          }}
         />
       </Container>
-      { showModalContato && <Modal title="Cadastro de Contato" close={() => setShowModalContato(false)} onSave={handleModalCadastroOnSave} showButtonSave>
+      { showModalContato && <Modal
+        title="Cadastro de contato"
+        close={() => setShowModalContato(false)}
+        onSave={handleModalCadastroOnSave}
+        showButtonSave
+      >
         <CadastroContato/>
       </Modal> }
+
+      {showModalTelefone && <Modal
+        title="Cadastro de telefone"
+        close={() => setShowModalTelefone(false)}
+        onSave={handleModalTelefoneOnSave}
+        showButtonSave
+      >
+        <CadastroTelefone/>
+      </Modal>}
     </>
   )
 }

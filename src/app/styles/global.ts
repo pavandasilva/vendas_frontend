@@ -481,10 +481,21 @@ export const FormRow = styled.div<FormRowProps>`
   flex-direction: row;
   width: ${props => props.width ? props.width : '100%'};
   height: 60px;
+  flex-wrap: wrap;
 
   & > div {
     & + div {
       margin-left: 7px;
     }
   }
+
+`
+
+interface StatusTextProps {
+  status?: 'ativo' | 'inativo'
+}
+
+export const StatusText = styled.span<StatusTextProps>`
+  color: ${props => props.status === 'ativo' ? props.theme.colors.info : props.theme.colors.danger};
+  font-weight: 600;
 `

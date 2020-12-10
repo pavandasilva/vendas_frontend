@@ -20,7 +20,6 @@ export const BoxModal = styled.div`
   margin: -16px auto 0;
   position: relative;
   transform: translateY(-50%);
-  max-height: calc(100% - 96px);
   background-color: rgba(0, 0, 0, 0.07) ;
   background-color: ${props => props.theme.colors.backgroundLight} ;
   position: relative;

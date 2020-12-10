@@ -9,7 +9,7 @@ export const Container = styled.button<ContainerProps>`
   border: none;
   border-radius: 4px;
   background-color: ${props => props.typeButton === 'primary' ? props.theme.colors.primary : props.theme.colors.danger};
-  width: 50px;
+  min-width: 50px;
   padding: 4px 2px;
   display: flex;
   justify-content: center;

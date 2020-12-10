@@ -34,7 +34,7 @@ export const Actions = styled.div`
   justify-content: center;
   align-items: center;
 
-  color: ${props => props.theme.colors.sucess}
+  color: ${props => props.theme.colors.sucess};
 
   & + button + button {
     background-color: red !important;
@@ -68,4 +68,46 @@ export const TableCenterContent = styled.div`
   svg {
     fill: ${props => props.theme.colors.sucess}
   }
+`
+export const ListaTelefones = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  flex-direction: row;
+  min-height: 70px;
+  text-decoration: none;
+  list-style: none;
+ //  background-color: ${props => props.theme.colors.backgroundLight};
+  width: 100%;
+  padding: 15px 15px 15px;
+
+  strong {
+    margin-right: 15px;
+  }
+
+  ul {
+    text-decoration: none;
+    list-style: none;
+
+    li {
+      width:120;
+      padding: 0px 5px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      font-weight: 600;
+
+      svg {
+        margin-right: 10px;
+        width: 18px;
+        height: auto;
+      }
+
+      & + li {
+        margin-top: 7px;
+      }
+    }
+  }
+
+
+
 `

@@ -8,7 +8,6 @@ import { Container } from './styles'
 
 export const CadastroContato = () => {
   const { data: contato, setData: setContato } = useCadastroContato()
-
   const handleInputOnChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     let value = e.target.value
 

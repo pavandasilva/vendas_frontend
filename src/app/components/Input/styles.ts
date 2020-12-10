@@ -13,9 +13,8 @@ interface WrapperProps {
 
 export const Wrapper = styled.div<WrapperProps>`
   display: flex;
-  flex: ${props => props.width ? props.width : 1} ;
+  flex: ${props => props.width ? props.width : 1};
   flex-direction: column;
-  width: ${props => props.width ? props.width : '100%'} ;
   justify-content: flex-start;
   align-items: flex-start;
   margin: 0px;
@@ -85,6 +84,7 @@ export const Container = styled.div<InputContainerProps>`
     border-top-right-radius: 4px;
     padding: 0px 26px 0px 20px;
     z-index: 5;
+    width: 100%;
 
     ${props => {
       let color
