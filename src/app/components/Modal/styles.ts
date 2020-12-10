@@ -27,24 +27,7 @@ export const BoxModal = styled.div`
   padding-bottom: 70px;
 
   & > div {
-    padding: 15px;
-  }
-
-  & > footer {
-    display: flex;
-    justify-content: flex-end;
-    bottom: 0px;
-    padding: 30px 15px;
-    display: flex;
-    align-items: center;
-    height: 70px;
-    border-top: 1px solid ${props => props.theme.colors.borderLight};
-    position: absolute;
-    width: 100%;
-
-    > button + button {
-      margin-left: 10px;
-    }
+    padding: 0px 15px;
   }
 `
 
@@ -85,5 +68,21 @@ export const Header = styled.div`
         color: ${props => props.theme.colors.primaryText};
       }
     }
+  }
+`
+export const ContainerFooter = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  bottom: 0px;
+  padding: 30px 15px;
+  display: flex;
+  align-items: center;
+  height: 70px;
+  border-top: 1px solid ${props => props.theme.colors.borderLight};
+  position: absolute;
+  width: 100%;
+
+  > button + button {
+    margin-left: 10px;
   }
 `

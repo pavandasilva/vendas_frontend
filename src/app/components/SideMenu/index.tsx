@@ -21,7 +21,7 @@ export const SideMenu = () => {
     <Container>
       <img src={Logo} alt="route66" />
       <Nav>
-        <li><FaHome size={28} onClick={handleDashBoardOnClick}/></li>
+        <li onClick={handleDashBoardOnClick}><FaHome size={28} /></li>
         <li><FaAmbulance size={28}/></li>
         <li><FaAmbulance size={28}/></li>
         <li><FaAmbulance size={28}/></li>

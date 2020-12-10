@@ -24,12 +24,6 @@ export const Container = styled.button<ContainerProps>`
     margin-right: 5px;
   }
 
-  ${props => props.active && css`
-    background-color: ${props.theme.colors.primary};
-    color: #FFF !important;
-  `}
-
-
   background-color: ${props => {
     if (props.mode === 'primary') {
       return props.theme.colors.background
@@ -54,16 +48,25 @@ export const Container = styled.button<ContainerProps>`
 
   &:hover {
     background-color: ${props => {
-    if (props.mode === 'primary') {
-      return darken(0.04, props.theme.colors.primaryText)
-    } else if (props.mode === 'confirm') {
-      return darken(0.04, props.theme.colors.primary)
-    } else if (props.mode === 'cancel') {
-      return darken(0.04, props.theme.colors.primaryText)
-    } else {
-      return darken(0.04, props.theme.colors.primary)
-    }
-  }};
+      if (props.mode === 'primary') {
+        return darken(0.04, props.theme.colors.background)
+      } else if (props.mode === 'confirm') {
+        return darken(0.04, props.theme.colors.primary)
+      } else if (props.mode === 'cancel') {
+        return darken(0.04, props.theme.colors.primaryText)
+      } else {
+        return darken(0.04, props.theme.colors.primary)
+      }
+    }};
+
+    ${props => props.mode === 'secondary' && css`
+      color: #FFF
+    `}
   }
+
+  ${props => props.active && css`
+    background-color: ${props.theme.colors.primary};
+    color: #FFF !important;
+  `}
 
 `

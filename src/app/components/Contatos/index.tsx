@@ -1,22 +1,44 @@
 import capitalize from 'capitalize-pt-br'
-import React, { useMemo, useState } from 'react'
+import { produce } from 'immer'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { FaSearch, FaUser } from 'react-icons/fa'
 import ReactTable, { Column } from 'react-table-6'
-import { Input, Button, ButtonTable, CheckBox } from '..'
+import { Input, Button, ButtonTable } from '..'
 import { Contato } from '../../../domain/clientes/models'
 import { useCadastroCliente } from '../../hooks'
-import { FormRow } from '../../styles/global'
+import { useCadastroContato } from '../../hooks/useCadastroContato'
 import { CadastroContato } from '../CadastroContato'
 import { Modal } from '../Modal'
 import { Container, Actions, Header } from './styles'
 
-const rowsPerPage = 10
+const rowsPerPage = 5
 
 export const Contatos = () => {
-  const { data: cliente } = useCadastroCliente()
-  const [search, setSearch] = useState('')
-  const [currentPage, setCurrentPage] = useState(0)
+  const { data: cliente, setData: setCliente } = useCadastroCliente()
+  const { data: contato, resetData: resetContato } = useCadastroContato()
+  const [currentPage] = useState(0)
   const [showModalContato, setShowModalContato] = useState(false)
+  const [searchValue, setSearchValue] = useState('')
+  const [contatos, setContatos] = useState<Contato[]>([] as Contato[])
+
+  useEffect(() => {
+    setContatos(cliente?.contatos as Contato [])
+  }, [cliente])
+
+  useEffect(() => {
+    const newContatos = cliente?.contatos?.filter(contato => {
+      if (contato?.email?.includes(searchValue)) {
+        return true
+      }
+      if (contato?.nome?.includes(searchValue)) {
+        return true
+      } else {
+        return false
+      }
+    })
+
+    setContatos(newContatos as Contato[])
+  }, [searchValue, cliente])
 
   const columns: Column[] = useMemo(() => [
     {
@@ -63,7 +85,6 @@ export const Contatos = () => {
       minWidth: 25,
       // eslint-disable-next-line react/display-name
       Cell: ({ row }) => {
-        const contato = row._original as Contato
         return (
           <Actions>
             <ButtonTable type="button" typeButton='secondary'>Editar</ButtonTable>
@@ -73,20 +94,31 @@ export const Contatos = () => {
     }
   ], [])
 
-  const handleFilterOnChange = () => {
-
-  }
-
   const handleOnPageChange = () => {
 
   }
+
+  const handleModalCadastroOnSave = useCallback(() => {
+    if (!contato) {
+      return
+    }
+
+    setShowModalContato(false)
+
+    const newCliente = produce(cliente, draftState => {
+      draftState?.contatos?.push(contato as Contato)
+    })
+
+    setCliente(newCliente)
+    resetContato()
+  }, [cliente, contato, resetContato, setCliente])
 
   return (
     <>
       <Container>
         <Header>
           <div>
-            <Input type='text' startIcon={FaSearch} onChange={handleFilterOnChange}/>
+            <Input type='text' startIcon={FaSearch} onChange={(e) => setSearchValue(e.currentTarget.value)}/>
           </div>
           <div>
             <Button mode="primary"startIcon={FaUser} type="button" onClick={() => setShowModalContato(true)}>Novo contato</Button>
@@ -95,10 +127,10 @@ export const Contatos = () => {
 
         <ReactTable
           columns={columns}
-          data={cliente?.contatos}
+          data={contatos}
           pageSize={rowsPerPage}
           page={currentPage}
-          pages={cliente?.contatos?.length && Math.ceil(cliente?.contatos?.length / rowsPerPage)}
+          pages={contatos?.length && Math.ceil(contatos?.length / rowsPerPage)}
           onPageChange={handleOnPageChange}
           manual
           loading={false}
@@ -113,8 +145,8 @@ export const Contatos = () => {
           noDataText="Nenhum contato encontrado"
         />
       </Container>
-      { showModalContato && <Modal title="Cadastro de Contato" showButtonSave close={() => setShowModalContato(false)}>
-        <CadastroContato />
+      { showModalContato && <Modal title="Cadastro de Contato" close={() => setShowModalContato(false)} onSave={handleModalCadastroOnSave} showButtonSave>
+        <CadastroContato/>
       </Modal> }
     </>
   )
