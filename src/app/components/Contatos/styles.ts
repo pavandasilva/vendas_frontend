@@ -30,6 +30,11 @@ export const Container = styled.div`
 export const Actions = styled.div`
   display: flex;
   flex-direction: row;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+
+  color: ${props => props.theme.colors.sucess}
 
   & + button + button {
     background-color: red !important;
@@ -53,4 +58,14 @@ export const Header = styled.div`
     justify-content: flex-end;
   }
 
+`
+export const TableCenterContent = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+
+  svg {
+    fill: ${props => props.theme.colors.sucess}
+  }
 `

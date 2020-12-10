@@ -1,7 +1,7 @@
 import capitalize from 'capitalize-pt-br'
 import { produce } from 'immer'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
-import { FaSearch, FaUser } from 'react-icons/fa'
+import { FaSearch, FaUser, FaCheck } from 'react-icons/fa'
 import ReactTable, { Column } from 'react-table-6'
 import { Input, Button, ButtonTable } from '..'
 import { Contato } from '../../../domain/clientes/models'
@@ -9,7 +9,7 @@ import { useCadastroCliente } from '../../hooks'
 import { useCadastroContato } from '../../hooks/useCadastroContato'
 import { CadastroContato } from '../CadastroContato'
 import { Modal } from '../Modal'
-import { Container, Actions, Header } from './styles'
+import { Container, Actions, Header, TableCenterContent } from './styles'
 
 const rowsPerPage = 5
 
@@ -57,28 +57,49 @@ export const Contatos = () => {
       Cell: ({ value }) => value.toString().toLowerCase()
     },
     {
-      Header: 'status',
+      Header: 'Status',
       accessor: 'status',
       minWidth: 20,
-      Cell: ({ value }) => capitalize(value)
+      // eslint-disable-next-line react/display-name
+      Cell: ({ value }) => {
+        return <TableCenterContent><strong>{capitalize(value)}</strong></TableCenterContent>
+      }
     },
     {
-      Header: 'fiscal',
+      Header: 'Fiscal',
       accessor: 'fiscal',
       minWidth: 20,
-      Cell: ({ value }) => capitalize(value)
+      Cell: ({ value }) => {
+        if (value === 's') {
+          return <TableCenterContent><FaCheck /></TableCenterContent>
+        } else {
+          return ''
+        }
+      }
     },
     {
-      Header: 'comercial',
+      Header: 'Comercial',
       accessor: 'comercial',
       minWidth: 20,
-      Cell: ({ value }) => capitalize(value)
+      Cell: ({ value }) => {
+        if (value === 's') {
+          return <TableCenterContent><FaCheck /></TableCenterContent>
+        } else {
+          return ''
+        }
+      }
     },
     {
-      Header: 'financeiro',
+      Header: 'Financeiro',
       accessor: 'financeiro',
       minWidth: 20,
-      Cell: ({ value }) => capitalize(value)
+      Cell: ({ value }) => {
+        if (value === 's') {
+          return <FaCheck />
+        } else {
+          return ''
+        }
+      }
     },
     {
       Header: 'Ações',
