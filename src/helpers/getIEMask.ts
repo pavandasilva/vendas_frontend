@@ -1,4 +1,32 @@
-export const getIEMask = (uf: string): string => {
+export type IEType =
+  'ie-AC' |
+  'ie-AL' |
+  'ie-AP' |
+  'ie-BA' |
+  'ie-CE' |
+  'ie-DF' |
+  'ie-ES' |
+  'ie-GO' |
+  'ie-MA' |
+  'ie-MT' |
+  'ie-MS' |
+  'ie-MG' |
+  'ie-PA' |
+  'ie-PB' |
+  'ie-PR' |
+  'ie-PE' |
+  'ie-PI' |
+  'ie-RJ' |
+  'ie-RN' |
+  'ie-RS' |
+  'ie-RO' |
+  'ie-RR' |
+  'ie-SP' |
+  'ie-SC' |
+  'ie-SE' |
+  'ie-TO'
+
+export const getIEMask = (uf: IEType): string => {
   let mask = ''
 
   if (!uf) {
@@ -6,84 +34,86 @@ export const getIEMask = (uf: string): string => {
   }
 
   switch (uf) {
-    case 'AC':
+    case 'ie-AC':
       mask = '99.999.999/999-99'
       break
-    case 'AL':
+    case 'ie-AL':
       mask = '999999999'
       break
-    case 'AP':
+    case 'ie-AP':
       mask = '999999999'
       break
-    case 'BA':
+    case 'ie-BA':
       mask = '999999-99'
       break
-    case 'CE':
+    case 'ie-CE':
       mask = '99999999-9'
       break
-    case 'DF':
+    case 'ie-DF':
       mask = '99999999999-99'
       break
-    case 'ES':
+    case 'ie-ES':
       mask = '99999999-9'
       break
-    case 'GO':
+    case 'ie-GO':
       mask = '99.999.999-9'
       break
-    case 'MA':
+    case 'ie-MA':
       mask = '99999999-9'
       break
-    case 'MT':
+    case 'ie-MT':
       mask = '9999999999-9'
       break
-    case 'MS':
+    case 'ie-MS':
       mask = '99999999-9'
       break
-    case 'MG':
+    case 'ie-MG':
       mask = '999.999.999/9999'
       break
-    case 'PA':
+    case 'ie-PA':
       mask = '99-999999-9'
       break
-    case 'PB':
+    case 'ie-PB':
       mask = '99999999-9'
       break
-    case 'PR':
+    case 'ie-PR':
       mask = '999.99999-99'
       break
-    case 'PE':
+    case 'ie-PE':
       mask = '9999999-99'
       break
-    case 'PI':
+    case 'ie-PI':
       mask = '99999999-9'
       break
-    case 'RJ':
+    case 'ie-RJ':
       mask = '99.999.99-9'
       break
-    case 'RN':
+    case 'ie-RN':
       mask = '99.999.999-9'
       break
-    case 'RS':
+    case 'ie-RS':
       mask = '999/9999999'
       break
-    case 'RO':
+    case 'ie-RO':
       mask = '9999999999999-9'
       break
-    case 'RR':
+    case 'ie-RR':
       mask = '99999999-9'
       break
-    case 'SP':
+    case 'ie-SP':
       mask = '999.999.999.999'
       break
-    case 'SC':
+    case 'ie-SC':
       mask = '999.999.999'
       break
-    case 'SE':
+    case 'ie-SE':
       mask = '99999999-9'
       break
-    case 'TO':
+    case 'ie-TO':
       mask = '9999999999-9'
       break
+    default:
+      mask = ''
   }
 
   return mask

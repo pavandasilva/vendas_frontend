@@ -1,5 +1,6 @@
 import React, { ChangeEvent, useCallback, useState } from 'react'
 import { Input } from '../'
+import { IEType } from '../../../helpers/getIEMask'
 import { useCadastroCliente } from '../../hooks'
 import { FormRow } from '../../styles/global'
 import { CheckBox } from '../CheckBox'
@@ -104,9 +105,10 @@ export const Dados = () => {
             name="cnpj"
             title="CNPJ"
             value={cliente?.cnpj}
-            placeholder='CNPJ'
+            placeholder={controlFormPessoa === 'pf' ? 'CPF' : 'CNPJ'}
             onChange={handleInputChange}
             error={clienteError?.cnpj}
+            type={controlFormPessoa === 'pf' ? 'cpf' : 'cnpj'}
           />
 
           <Input
@@ -116,6 +118,7 @@ export const Dados = () => {
             placeholder='Inscrição estadual'
             onChange={handleInputChange}
             error={clienteError?.ie}
+            type={`ie-${cliente.uf}` as IEType}
           />
 
         </FormRow>

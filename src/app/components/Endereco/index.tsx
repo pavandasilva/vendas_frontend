@@ -41,6 +41,7 @@ export const Endereco = () => {
           placeholder='CEP'
           onChange={handleInputChange}
           error={clienteError?.cep}
+          type="cep"
         />
 
         <Input

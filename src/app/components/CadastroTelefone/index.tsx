@@ -34,7 +34,7 @@ export const CadastroTelefone = () => {
           name="ddd"
           title="DDD"
           startIcon={FaSlackHash}
-          type="text"
+          type="ddd"
           placeholder="DDD"
           value={telefone?.ddd}
           onChange={handleInputOnChange}
@@ -45,7 +45,7 @@ export const CadastroTelefone = () => {
           name="numero"
           title="Telefone"
           startIcon={FaPhone}
-          type="text"
+          type="telefone"
           placeholder="Telefone"
           value={telefone?.numero}
           onChange={handleInputOnChange}
