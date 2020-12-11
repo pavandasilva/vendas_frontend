@@ -1,11 +1,18 @@
+import capitalize from 'capitalize-pt-br'
 import React, { ChangeEvent, useCallback, useState } from 'react'
 import { Input } from '../'
+import { makeTrazerDadosCNPJ } from '../../../domain/clientes/factories/makeTrazerDadosCNPJ'
+import { Cliente } from '../../../domain/clientes/models'
 import { IEType } from '../../../helpers/getIEMask'
+import { removerAcento } from '../../../helpers/removerAcentos'
 import { useCadastroCliente } from '../../hooks'
 import { FormRow } from '../../styles/global'
 import { CheckBox } from '../CheckBox'
 import { RadioButton } from '../RadioButton'
+import EstadosMunicipios from '../../assets/jsons/estados_municipios.json'
 import { Container, RadioButtons } from './styles'
+
+const trazerDadosCNPJ = makeTrazerDadosCNPJ()
 
 export const Dados = () => {
   const {
@@ -39,6 +46,47 @@ export const Dados = () => {
     setCliente(newCliente)
     setClienteError(newError)
   }, [cliente, clienteError, setCliente, setClienteError])
+
+  const handleInputCNPJ = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
+    handleInputChange(e)
+    let cidade = ''
+    const cnpj = e.currentTarget.value.replace(/[^\w\s]/gi, '').replace(/_/g, '')
+
+    if (cnpj.length === 14) {
+      const response = await trazerDadosCNPJ.execute('bf2cc265e3073aab06df3484f56f603e7c409b55e01cddc0bfde6781624c8494', cnpj)
+
+      if (response.data) {
+        const [estado] = EstadosMunicipios.estados.filter(estado => estado.sigla === response.data.uf)
+
+        if (estado) {
+          const filtered: string[] = estado.cidades.filter(cidade => {
+            return removerAcento(cidade).toLowerCase() === removerAcento(response.data.municipio).toLowerCase()
+          })
+
+          if (filtered[0]) {
+            cidade = filtered[0]
+          }
+        }
+
+        const newCliente: Cliente = {
+          ...cliente,
+          endereco: capitalize(response.data.logradouro),
+          uf: response.data.uf,
+          cidade,
+          bairro: capitalize(response.data.bairro),
+          cep: response.data.cep,
+          cnpj,
+          razao_social: capitalize(response.data.nome),
+          nome_fantasia: capitalize(response.data.fantasia),
+          email: response.data.email,
+          complemento: capitalize(response.data.complemento),
+          numero: response.data.numero
+        }
+
+        setCliente(newCliente)
+      }
+    }
+  }, [cliente, handleInputChange, setCliente])
 
   return (
     <Container>
@@ -106,15 +154,16 @@ export const Dados = () => {
             title="CNPJ"
             value={cliente?.cnpj}
             placeholder={controlFormPessoa === 'pf' ? 'CPF' : 'CNPJ'}
-            onChange={handleInputChange}
+            onChange={handleInputCNPJ}
             error={clienteError?.cnpj}
             type={controlFormPessoa === 'pf' ? 'cpf' : 'cnpj'}
           />
 
           <Input
+            disabled = {controlFormIsIsento}
             name="ie"
             title="Inscrição estadual"
-            value={cliente?.ie}
+            value={controlFormIsIsento ? 'isento' : cliente?.ie}
             placeholder='Inscrição estadual'
             onChange={handleInputChange}
             error={clienteError?.ie}
@@ -145,10 +194,10 @@ export const Dados = () => {
           <Input
             name="email"
             title="E-mail principal"
-            value={cliente?.nome_fantasia}
+            value={cliente?.email}
             placeholder='E-mail principal'
             onChange={handleInputChange}
-            error={clienteError?.nome_fantasia}
+            error={clienteError?.email}
           />
           <Input
             name="email_nfe"

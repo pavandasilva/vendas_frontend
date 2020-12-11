@@ -1,4 +1,4 @@
-import { CurrentTab } from '../app/contexts/tabCadastroClienteContext'
+import { CurrentTab } from '../app/contexts'
 
 export const getTabCadastroClienteToRedirect = (error: any) : CurrentTab => {
   if (

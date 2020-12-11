@@ -39,32 +39,7 @@ export const Container = styled.div<InputContainerProps>`
   border-radius: 4px;
   transition: all 0.3s;
 
-  div:first-of-type {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 38px;
-    height: 100%;
-    background-color: ${props => props.theme.colors.background};
-    border-bottom-left-radius: 4px;
-    border-top-left-radius: 4px;
-    transition: all 0.3s;
-    border: solid 1px ${props => props.theme.colors.border};
 
-    ${props => {
-      let color = props.theme.colors.border
-
-      if (props.error) {
-        color = props.theme.colors.danger
-      } else if (props.isActive) {
-        color = props.theme.colors.info
-      }
-
-      return css`
-        border-right: solid 1px ${color};
-      `
-    }};
-  }
 
   svg:first-of-type {
     fill: ${props => props.theme.colors.primaryText};
@@ -159,4 +134,31 @@ export const ToolTip = styled.div`
   color: ${props => props.theme.colors.backgroundLight};
   background-color: ${props => props.theme.colors.danger};
   border-radius: 4px;
+`
+
+export const Icon = styled.div<InputContainerProps>`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 38px;
+  height: 100%;
+  background-color: ${props => props.theme.colors.background};
+  border-bottom-left-radius: 4px;
+  border-top-left-radius: 4px;
+  transition: all 0.3s;
+  border: solid 1px ${props => props.theme.colors.border};
+
+  ${props => {
+    let color = props.theme.colors.border
+
+    if (props.error) {
+      color = props.theme.colors.danger
+    } else if (props.isActive) {
+      color = props.theme.colors.info
+    }
+
+    return css`
+      border-right: solid 1px ${color};
+    `
+  }};
 `

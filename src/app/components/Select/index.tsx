@@ -14,8 +14,12 @@ export const Select = ({ children, width, title, ...rest }: SelectProps) => {
   const selectRef = useRef<HTMLSelectElement>({} as HTMLSelectElement)
 
   useEffect(() => {
+    console.log(selectRef?.current.value)
+
     if (selectRef?.current?.value?.length > 0) {
       setIsChanged(true)
+    } else {
+      setIsChanged(false)
     }
   }, [selectRef.current.value])
 
@@ -23,7 +27,7 @@ export const Select = ({ children, width, title, ...rest }: SelectProps) => {
     <Wrapper width={width}>
       {!!title && <Label isChanged={isChanged}>{title}</Label> }
       <Container isActive={isActive}>
-        <select ref={selectRef} {...rest}>
+        <select {...rest} ref={selectRef} >
           { children }
         </select>
       </Container>

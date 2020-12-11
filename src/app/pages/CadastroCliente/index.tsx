@@ -1,38 +1,35 @@
 import React, { useCallback, useState } from 'react'
 import { FaSave } from 'react-icons/fa'
+import { makeCadastrarCliente } from '../../../domain/clientes/factories/makeCadastrarCliente'
+import { getTabCadastroClienteToRedirect } from '../../../helpers'
 import { Button, Contatos, Dados, Endereco } from '../../components'
-import { CadastroContatoProvider, CadastroTelefoneProvider } from '../../contexts'
+import { CadastroContatoProvider, CadastroTelefoneProvider, CurrentTab } from '../../contexts'
+import { useCadastroCliente } from '../../hooks'
 import { MainLayout } from '../../layouts/MainLayout'
 
 import { Container, Content } from './styles'
 
-interface ControllerMenu {
-  showDados: boolean
-  showEndereco: boolean
-  showContatos: boolean
-}
+const cadastrarCliente = makeCadastrarCliente()
 
 export const CadastroCliente: React.FC = () => {
-  const [controlllerMenu, setControllerMenu] = useState<ControllerMenu>({
-    showDados: true,
-    showEndereco: false,
-    showContatos: false
-  })
+  const { data: cliente, setDataError: setClienteError, currentTab, setCurrentTab } = useCadastroCliente()
 
   const handleMenuOnClick = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
-    const buttonName = e.currentTarget.name as keyof ControllerMenu
+    setCurrentTab(e.currentTarget.name as CurrentTab)
+  }, [setCurrentTab])
 
-    setControllerMenu(currState => {
-      let newState: ControllerMenu = {
-        showContatos: false,
-        showEndereco: false,
-        showDados: false
+  const handleSalvarOnClick = async () => {
+    try {
+      await cadastrarCliente.execute({ body: cliente })
+    } catch (error) {
+      if (error.type === 'validate') {
+        setClienteError(error.data)
+
+        const tabToRedirect = getTabCadastroClienteToRedirect(error.data)
+        setCurrentTab(tabToRedirect)
       }
-
-      newState[buttonName] = true
-      return newState
-    })
-  }, [])
+    }
+  }
 
   return (
     <CadastroContatoProvider>
@@ -41,18 +38,18 @@ export const CadastroCliente: React.FC = () => {
           <Container>
             <header>
               <div>
-                <Button name="showDados" mode="secondary" active={controlllerMenu.showDados} onClick={handleMenuOnClick}>Dados</Button>
-                <Button name="showEndereco" mode="secondary" active={controlllerMenu.showEndereco} onClick={handleMenuOnClick}>Endereço</Button>
-                <Button name="showContatos" mode="secondary" active={controlllerMenu.showContatos} onClick={handleMenuOnClick}>Contatos</Button>
+                <Button name="dados" mode="secondary" active={currentTab === 'dados'} onClick={handleMenuOnClick}>Dados</Button>
+                <Button name="endereco" mode="secondary" active={currentTab === 'endereco'} onClick={handleMenuOnClick}>Endereço</Button>
+                <Button name="contatos" mode="secondary" active={currentTab === 'contatos'} onClick={handleMenuOnClick}>Contatos</Button>
               </div>
               <div>
-                <Button mode="primary" startIcon={FaSave}>Salvar</Button>
+                <Button mode="primary" startIcon={FaSave} onClick={handleSalvarOnClick}>Salvar</Button>
               </div>
             </header>
             <Content>
-              { controlllerMenu?.showDados && <Dados />}
-              { controlllerMenu?.showEndereco && <Endereco />}
-              { controlllerMenu?.showContatos && <Contatos />}
+              { currentTab === 'dados' && <Dados />}
+              { currentTab === 'endereco' && <Endereco />}
+              { currentTab === 'contatos' && <Contatos />}
             </Content>
           </Container>
         </MainLayout>

@@ -23,11 +23,14 @@ const initialState: Cliente = {
   contatos: []
 }
 
+export type CurrentTab = 'dados' | 'endereco' | 'contatos'
 export interface CadastroClienteContextProps {
   data: Cliente
   setData: (cliente: Cliente) => void
   dataError: any,
   setDataError: (error: any) => void
+  currentTab:CurrentTab
+  setCurrentTab: (currentTab: CurrentTab) => void
 }
 
 interface CadastroClienteProviderProps {
@@ -39,6 +42,7 @@ export const CadastroClienteContext = createContext<CadastroClienteContextProps>
 export const CadastroClienteProvider = ({ children }: CadastroClienteProviderProps) => {
   const [cliente, setCliente] = useState<Cliente>(initialState)
   const [error, setError] = useState({})
+  const [currentTab, setCurrentTab] = useState<CurrentTab>('dados')
 
   const setData = useCallback((cliente: Cliente) => {
     setCliente(cliente)
@@ -49,7 +53,14 @@ export const CadastroClienteProvider = ({ children }: CadastroClienteProviderPro
   }, [])
 
   return (
-    <CadastroClienteContext.Provider value={{ data: cliente, setData, dataError: error, setDataError }}>
+    <CadastroClienteContext.Provider value={{
+      data: cliente,
+      setData,
+      dataError: error,
+      setDataError,
+      currentTab,
+      setCurrentTab
+    }}>
       { children }
     </CadastroClienteContext.Provider>
   )

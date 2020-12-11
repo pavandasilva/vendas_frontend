@@ -3,13 +3,14 @@ import React, {
   InputHTMLAttributes,
   useCallback,
   useEffect,
+  useRef,
   useState
 } from 'react'
 
 import { FaEye, FaInfoCircle } from 'react-icons/fa'
-import InputMask from 'react-input-mask'
+import InputMask, { ReactInputMask } from 'react-input-mask'
 import { IconType } from 'react-icons'
-import { Wrapper, Container, IconPassword, Label, IconError, ToolTip } from './styles'
+import { Wrapper, Container, IconPassword, Label, IconError, ToolTip, Icon } from './styles'
 import { getIEMask, IEType } from '../../../helpers/getIEMask'
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
@@ -31,7 +32,7 @@ export const Input = ({ startIcon: StartIcon, title, error, onChange, width, typ
   const [inputError, setInputError] = useState('')
   const [showToolTip, setShowToolTip] = useState(false)
   const [mask, setMask] = useState('')
-  /*   const inputEl = useRef((undefined as unknown) as Props) */
+  const inputEl = useRef<ReactInputMask>({} as ReactInputMask)
 
   useEffect(() => {
     if (isIeType(typeProp as string)) {
@@ -57,17 +58,15 @@ export const Input = ({ startIcon: StartIcon, title, error, onChange, width, typ
     setInputError(error as string)
   }, [error])
 
-  /*  useEffect(() => {
-    if (isActive) {
-      inputEl?.current?.setAttribute('placeholder', '')
+  useEffect(() => {
+    const value = inputEl?.current?.props?.value?.toString().replace(/[^\w\s]/gi, '').replace(/_/g, '')
+
+    if (value && value.length > 0) {
+      setHasContent(true)
     } else {
-      inputEl?.current?.setAttribute('placeholder', memoPlaceholder)
+      setHasContent(false)
     }
-  }, [isActive, memoPlaceholder])
- */
-  /*   const handleContainerOnClick = useCallback(() => {
-    inputEl?.current?.focus()
-  }, []) */
+  }, [inputEl.current.props])
 
   const onFocus = useCallback(() => {
     setIsActive(true)
@@ -91,17 +90,6 @@ export const Input = ({ startIcon: StartIcon, title, error, onChange, width, typ
     })
   }, [])
 
-  const handleOnChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
-    setInputError('')
-    onChange && onChange(e)
-
-    if (e?.currentTarget?.value?.length) {
-      setHasContent(true)
-    } else {
-      setHasContent(false)
-    }
-  }, [onChange])
-
   const handleOnMouseOver = useCallback(() => {
     setShowToolTip(true)
   }, [])
@@ -114,12 +102,13 @@ export const Input = ({ startIcon: StartIcon, title, error, onChange, width, typ
     <Wrapper className="wrapper-input" width={width}>
       {(!!title || (hasContent && !!title)) && <Label isActive={isActive || (!isActive && hasContent)}>{title}</Label> }
       <Container isActive={isActive} error={inputError} /* onClick={handleContainerOnClick} */ hasStartIcon={!!StartIcon}>
-        {StartIcon && <div><StartIcon /></div>}
+        {StartIcon && <Icon isActive={isActive} error={inputError} /* onClick={handleContainerOnClick} */ hasStartIcon={!!StartIcon}><StartIcon /></Icon>}
         <InputMask
+          ref={inputEl}
           { ...rest}
           onFocus={onFocus}
           onBlur={onBlur}
-          onChange={handleOnChange}
+          onChange={onChange}
           type={type}
           mask={mask}
         />
