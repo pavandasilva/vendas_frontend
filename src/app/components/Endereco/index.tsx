@@ -2,6 +2,8 @@ import React, { ChangeEvent, useCallback } from 'react'
 import { Input } from '..'
 import { useCadastroCliente } from '../../hooks'
 import { FormRow } from '../../styles/global'
+import { Select } from '../Select'
+import EstadosMunicipios from '../../assets/jsons/estados_municipios.json'
 import { Container } from './styles'
 
 export const Endereco = () => {
@@ -29,6 +31,17 @@ export const Endereco = () => {
     setCliente(newCliente)
     setClienteError(newError)
   }, [cliente, clienteError, setCliente, setClienteError])
+
+  const handleSelectChange = useCallback((e: ChangeEvent<HTMLSelectElement>) => {
+    let value = e.target.value
+
+    const newCliente = {
+      ...cliente,
+      [e.target.name]: value
+    }
+
+    setCliente(newCliente)
+  }, [cliente, setCliente])
 
   return (
     <Container>
@@ -65,15 +78,16 @@ export const Endereco = () => {
 
       </FormRow>
       <FormRow>
-        <Input
-          width='1'
-          name="estado"
-          title="Estado"
+        <Select
+          width='2'
+          name="uf"
+          onChange={handleSelectChange}
           value={cliente?.uf}
-          placeholder='Estado'
-          onChange={handleInputChange}
-          error={clienteError?.uf}
-        />
+          title="Estado"
+        >
+          <option value="" disabled selected>Estado</option>
+          { EstadosMunicipios.estados.map(estado => <option key={estado.sigla} value={estado.sigla}>{estado.nome}</option>)}
+        </Select>
 
         <Input
           width='5'
