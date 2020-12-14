@@ -21,6 +21,7 @@ export const Container = styled.header`
     height: 100%;
     justify-content: flex-end;
     background-color: transparent;
+    position: relative;
 
     ul {
       list-style-type: none;
@@ -37,10 +38,6 @@ export const Container = styled.header`
         span {
           margin-left: 10px;
           color: ${props => props.theme.colors.primaryText};
-        }
-
-        &:hover {
-          opacity: 0.7;
         }
       }
     }
@@ -66,4 +63,8 @@ export const Hamburger = styled.div`
   }
 
   transition: all 0.4s;
+`
+export const Content = styled.div`
+  display: flex;
+  align-items: center;
 `

@@ -5,6 +5,7 @@ import { Usuario } from '../../domain/usuarios/models/usuario'
 export interface UsuarioContextProps {
   data?: Usuario
   setData(token: string): void
+  logout(): void
 }
 
 export const UsuarioContext = createContext<UsuarioContextProps>({} as UsuarioContextProps)
@@ -28,12 +29,18 @@ export const UsuarioProvider: React.FC = ({ children }) => {
       dataUsuario.token = token
       setUsuario(dataUsuario)
     } catch (error) {
-      console.log(error)
+      setUsuario({} as Usuario)
     }
   }
 
+  const logout = () => {
+    console.log('logout')
+    localStorage.removeItem(`@${process.env.REACT_APP_NAME}:token`)
+    setUsuario({} as Usuario)
+  }
+
   return (
-    <UsuarioContext.Provider value={{ data: usuario, setData }} >
+    <UsuarioContext.Provider value={{ data: usuario, setData, logout }} >
       {children}
     </UsuarioContext.Provider>
   )

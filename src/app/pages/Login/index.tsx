@@ -1,5 +1,5 @@
 import React, { ChangeEvent, FormEvent, useCallback, useState } from 'react'
-import { ToastContainer, toast } from 'react-toastify'
+import { toast } from 'react-toastify'
 import { FaEnvelope, FaLock } from 'react-icons/fa'
 import { Link, useHistory } from 'react-router-dom'
 import { Input, Button } from '../../components'
@@ -14,7 +14,11 @@ export const Login = () => {
   const [email, setEmail] = useState('')
   const [error, setError] = useState<any>({})
   const [password, setPassword] = useState('')
-  const [autoLogin, setAutoLogin] = useState(false)
+  const [autoLogin, setAutoLogin] = useState<boolean>(() => {
+    const value = localStorage.getItem(`@${process.env.REACT_APP_NAME}:autologin`)
+    return value === 'true'
+  })
+
   const [requesting, setRequesting] = useState(false)
   const routerHistory = useHistory()
   const { setData: setTokenUsuario } = useUsuario()
@@ -36,6 +40,9 @@ export const Login = () => {
 
           if (autoLogin) {
             localStorage.setItem(`@${process.env.REACT_APP_NAME}:token`, token)
+          } else {
+            localStorage.removeItem(`@${process.env.REACT_APP_NAME}:autologin`)
+            localStorage.removeItem(`@${process.env.REACT_APP_NAME}:token`)
           }
 
           routerHistory.push('/')
@@ -93,7 +100,7 @@ export const Login = () => {
               onChange={handleInputOnChange}
               startIcon={FaLock}
               title="Senha"
-              placeholder="senha"
+              placeholder="Senha"
               error={error?.password}
             />
             <RememberMe>

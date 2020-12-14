@@ -1,8 +1,28 @@
-import React from 'react'
+import React, { useMemo, useState } from 'react'
 import { Avatar } from '../'
-import { Container, Hamburger } from './styles'
+import { useUsuario } from '../../hooks'
+import { PopOver, ItemPopOver } from '../PopOver'
+import { Container, Hamburger, Content } from './styles'
 
 export const NavBar = () => {
+  const { logout } = useUsuario()
+  const [showPopOver, setShowPopOver] = useState(false)
+
+  const popoverItens = useMemo<ItemPopOver[]>(() => [
+    {
+      onClick: () => setShowPopOver(false),
+      title: 'Perfil'
+    },
+    {
+      onClick: () => {
+        setShowPopOver(false)
+        logout()
+      },
+      title: 'Sair'
+    }
+
+  ], [logout])
+
   return (
     <Container>
       <Hamburger>
@@ -15,8 +35,12 @@ export const NavBar = () => {
       <aside>
         <ul>
           <li>
-            <Avatar size={30}/>
-            <span>Larissa Souza Fermino</span>
+            <Content onClick={() => setShowPopOver((oldState) => !oldState)}>
+              <Avatar size={30}/>
+              <span>Larissa Souza Fermino</span>
+            </Content>
+
+            { showPopOver && <PopOver items={popoverItens} sepLastItem/> }
           </li>
         </ul>
       </aside>
