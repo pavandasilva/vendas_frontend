@@ -5,6 +5,7 @@ export const Container = styled.div`
   display: flex;
   flex-direction: column;
   padding-bottom: 50px;
+  transition: all .3s ease;
 
   header {
     border-top-left-radius: 4px;

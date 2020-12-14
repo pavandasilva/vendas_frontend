@@ -4,7 +4,7 @@ import { Usuario } from '../../domain/usuarios/models/usuario'
 
 export interface UsuarioContextProps {
   data?: Usuario
-  setData(usuario: Usuario): void
+  setData(token: string): void
 }
 
 export const UsuarioContext = createContext<UsuarioContextProps>({} as UsuarioContextProps)
@@ -22,39 +22,18 @@ export const UsuarioProvider: React.FC = ({ children }) => {
     return {} as Usuario
   })
 
-  /* const login = async (email: string, password: string, rememberPassword = false) => {
-    const logar = makeLogar()
-
+  const setData = (token: string) => {
     try {
-      const token = await logar.execute({ email, password })
-
-      if (token) {
-        const nUsuario = jwt_decode(token) as Usuario
-        nUsuario.token = token
-        setUsuario(nUsuario)
-        history.push('/')
-        localStorage.setItem(`@${process.env.REACT_APP_NAME}:rememberPassword`, rememberPassword.toString())
-        localStorage.setItem(`@${process.env.REACT_APP_NAME}:token`, token)
-      } else {
-        setUsuario({} as Usuario)
-      }
+      const dataUsuario = jwt_decode(token) as Usuario
+      dataUsuario.token = token
+      setUsuario(dataUsuario)
     } catch (error) {
-      if (error.type === 'validate') {
-        throw new AppError(error)
-      }
-
-      toast.error('Falha no login, verifique seus dados')
+      console.log(error)
     }
-  } */
-
-  /* const logout = async () => {
-    setUsuario({} as Usuario)
-    localStorage.removeItem(`@${process.env.REACT_APP_NAME}:token`)
-    setUsuario({} as Usuario)
-  } */
+  }
 
   return (
-    <UsuarioContext.Provider value={{ data: usuario, setData: setUsuario }} >
+    <UsuarioContext.Provider value={{ data: usuario, setData }} >
       {children}
     </UsuarioContext.Provider>
   )

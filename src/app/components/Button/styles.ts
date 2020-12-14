@@ -18,7 +18,7 @@ export const Container = styled.button<ContainerProps>`
   height: 36px;
   border-radius: 4px;
   padding: 0px 5px;
-  transition: all .4s;
+  transition: all .3s;
 
   svg {
     margin-right: 5px;
@@ -69,4 +69,10 @@ export const Container = styled.button<ContainerProps>`
     color: #FFF !important;
   `}
 
+  &:disabled {
+    border: 1px solid ${props => props.theme.colors.background};
+    background-color: ${props => props.theme.colors.borderLight};
+    color: ${props => props.theme.colors.primaryText};
+    cursor: wait;
+  }
 `

@@ -96,6 +96,9 @@ interface InputIconPasswordProps {
 
 export const IconPassword = styled.div<InputIconPasswordProps>`
   cursor: pointer;
+  position: absolute;
+  right: 15px;
+  z-index: 8;
 
   > svg {
     fill: ${props =>

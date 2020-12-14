@@ -1,6 +1,6 @@
 /* eslint-disable react/display-name */
 import capitalize from 'capitalize-pt-br'
-import { FaWhatsapp, FaPhone, FaUser, FaCheck, FaInfo } from 'react-icons/fa'
+import { FaWhatsapp, FaPhone, FaUser, FaCheck } from 'react-icons/fa'
 import { produce } from 'immer'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import ReactTable, { Column } from 'react-table-6'

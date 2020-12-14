@@ -27,7 +27,7 @@ const isIeType = (type: string): boolean => type?.includes('ie-')
 export const Input = ({ startIcon: StartIcon, title, error, onChange, width, type: typeProp, ...rest }: InputProps) => {
   const [isActive, setIsActive] = useState(false)
   const [hasContent, setHasContent] = useState(false)
-  const [type] = useState('text')
+  const [type, setType] = useState('text')
   const [showPassword, setShowPassword] = useState(false)
   const [inputError, setInputError] = useState('')
   const [showToolTip, setShowToolTip] = useState(false)
@@ -50,6 +50,8 @@ export const Input = ({ startIcon: StartIcon, title, error, onChange, width, typ
         setMask('9999-9999')
       } else if (typeProp === 'celular') {
         setMask('99999-9999')
+      } else if (typeProp === 'password') {
+        setType('password')
       }
     }
   }, [typeProp])
@@ -68,26 +70,18 @@ export const Input = ({ startIcon: StartIcon, title, error, onChange, width, typ
     }
   }, [inputEl.current.props])
 
+  useEffect(() => {
+    if (typeProp === 'password') {
+      setType(showPassword ? 'text' : 'password')
+    }
+  }, [showPassword, typeProp])
+
   const onFocus = useCallback(() => {
     setIsActive(true)
   }, [])
 
   const onBlur = useCallback(() => {
     setIsActive(false)
-  }, [])
-
-  const handleIconPasswordOnClick = useCallback(() => {
-    setShowPassword(sp => {
-      const show = !sp
-
-      /*    if (show) {
-        inputEl.current.setAttribute('type', 'text')
-      } else {
-        inputEl.current.setAttribute('type', 'password')
-      } */
-
-      return show
-    })
   }, [])
 
   const handleOnMouseOver = useCallback(() => {
@@ -113,11 +107,11 @@ export const Input = ({ startIcon: StartIcon, title, error, onChange, width, typ
           mask={mask}
         />
 
-        {type === 'password' && (
+        {typeProp === 'password' && (
 
           <IconPassword
             showPassword={showPassword}
-            onClick={handleIconPasswordOnClick}
+            onClick={() => setShowPassword(sp => !sp)}
           >
             <FaEye />
           </IconPassword>

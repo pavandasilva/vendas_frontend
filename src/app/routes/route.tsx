@@ -1,5 +1,6 @@
 import React, { ComponentType } from 'react'
 import { Route as ReactRoute, Redirect, RouteProps } from 'react-router-dom'
+import { useUsuario } from '../hooks'
 /* import { useUsuario } from '../contexts' */
 
 interface PrivateRouteProps extends RouteProps{
@@ -12,10 +13,8 @@ export function Route ({
   isPrivate = false,
   ...rest
 }: PrivateRouteProps) {
-/*   const { data } = useUsuario() */
-  // const signed = !!data?.id
-
-  const signed = true
+  const { data: dataUsuario } = useUsuario()
+  const signed = !!dataUsuario?.id
 
   return (
     <ReactRoute {...rest}
