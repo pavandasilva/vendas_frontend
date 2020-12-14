@@ -2,11 +2,9 @@ import capitalize from 'capitalize-pt-br'
 import React, { useCallback, useEffect, useState } from 'react'
 import { FiX } from 'react-icons/fi'
 import { useLocation } from 'react-router-dom'
-import { makeCadastrarCliente } from '../../../domain/clientes/factories/makeCadastrarCliente'
 import { useTabs } from '../../hooks'
 import { Container, TabContent, Tab, Close } from './styles'
 
-const cadastrarCliente = makeCadastrarCliente()
 interface TabsProps {
   fixedContent?: React.ReactNode,
   titleFixedContent: string

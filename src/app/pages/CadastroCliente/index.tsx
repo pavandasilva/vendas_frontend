@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback } from 'react'
 import { FaSave } from 'react-icons/fa'
 import { makeCadastrarCliente } from '../../../domain/clientes/factories/makeCadastrarCliente'
 import { getTabCadastroClienteToRedirect } from '../../../helpers'
@@ -38,9 +38,21 @@ export const CadastroCliente: React.FC = () => {
           <Container>
             <header>
               <div>
-                <Button name="dados" mode="secondary" active={currentTab === 'dados'} onClick={handleMenuOnClick}>Dados</Button>
-                <Button name="endereco" mode="secondary" active={currentTab === 'endereco'} onClick={handleMenuOnClick}>Endereço</Button>
-                <Button name="contatos" mode="secondary" active={currentTab === 'contatos'} onClick={handleMenuOnClick}>Contatos</Button>
+                <Button
+                  name="dados"
+                  mode="secondary"
+                  active={currentTab === 'dados'}
+                  onClick={handleMenuOnClick}>Dados</Button>
+                <Button
+                  name="endereco"
+                  mode="secondary"
+                  active={currentTab === 'endereco'}
+                  onClick={handleMenuOnClick}>Endereço</Button>
+                <Button
+                  name="contatos"
+                  mode="secondary"
+                  active={currentTab === 'contatos'}
+                  onClick={handleMenuOnClick}>Contatos</Button>
               </div>
               <div>
                 <Button mode="primary" startIcon={FaSave} onClick={handleSalvarOnClick}>Salvar</Button>
