@@ -176,8 +176,7 @@ export const GlobalStyle = createGlobalStyle`
     flex: 1 0 0;
     white-space: nowrap;
     text-overflow: ellipsis;
-    padding: 7px 5px;
-    overflow: hidden;
+    padding: 3px;
     -webkit-transition: .3s ease;
     transition: .3s ease;
     transition-property: width, min-width, padding, opacity;

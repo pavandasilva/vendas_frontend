@@ -40,7 +40,7 @@ export const NavBar = () => {
               <span>Larissa Souza Fermino</span>
             </Content>
 
-            { showPopOver && <PopOver items={popoverItens} sepLastItem/> }
+            { showPopOver && <PopOver items={popoverItens} sepLastItem onClose={() => setShowPopOver(false)}/> }
           </li>
         </ul>
       </aside>

@@ -25,8 +25,8 @@ export const schema = yup.object().shape({
     .of(
       yup.object().shape({
         id: yup.string(),
-        nome: yup.string(),
-        email: yup.string(),
+        nome: yup.string().required(),
+        email: yup.string().email().required(),
         fiscal: yup.mixed().oneOf(['s', 'n']),
         comercial: yup.mixed().oneOf(['s', 'n']),
         financeiro: yup.mixed().oneOf(['s', 'n']),

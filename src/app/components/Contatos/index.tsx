@@ -10,13 +10,13 @@ import { useCadastroCliente, useCadastroTelefone } from '../../hooks'
 import { useCadastroContato } from '../../hooks/useCadastroContato'
 import { StatusText } from '../../styles/global'
 import { Modal } from '../Modal'
-import { Container, Actions, Header, TableCenterContent, ListaTelefones, Content, ToolTip, Error } from './styles'
+import { Container, Actions, Header, TableCenterContent, ListaTelefones, Content, ToolTip, Error, TableCollumn } from './styles'
 import { useTheme } from 'styled-components'
 
-const rowsPerPage = 5
+const rowsPerPage = 10
 
 export const Contatos = () => {
-  const { data: cliente, setData: setCliente, dataError: clienteError } = useCadastroCliente()
+  const { data: cliente, setData: setCliente, dataError: clienteError, setDataError: setClienteError } = useCadastroCliente()
   const { data: contato, resetData: resetContato } = useCadastroContato()
   const { data: telefone, resetData: resetTelefone } = useCadastroTelefone()
   const theme = useTheme()
@@ -26,6 +26,39 @@ export const Contatos = () => {
   const [searchValue] = useState('')
   const [contatos, setContatos] = useState<Contato[]>([] as Contato[])
   const [contatoIndexSelected, setContatoIndexSelected] = useState(-1)
+  const [contatosError, setContatosError] = useState({} as any)
+
+  useEffect(() => {
+    console.log(clienteError)
+
+    if (!Object.keys(clienteError).length) {
+      return
+    }
+
+    let contatosError: { [x: string]: any }[] = []
+
+    Object.keys(clienteError).filter((keyName, key) => {
+      if (keyName.includes('contatos[')) {
+        contatosError.push(clienteError[keyName])
+      }
+    })
+    let obj: any = {}
+
+    contatosError.map(error => {
+      let e = error.split('.', 1)[0]?.split(']', 1)[0]?.split('[')[1]
+      const filtered = contatosError.filter(value => {
+        return value.includes(`[${e}]`)
+      })
+
+      filtered.map(str => {
+        const property = str.split('].', 2)[1].split(' ', 1)[0]
+        const [, data] = str.split(`[${e}].`, 2)
+        obj[e] = { ...obj[e], [property]: data }
+      })
+    })
+
+    setContatosError(obj)
+  }, [clienteError])
 
   const handleAdicionarContatoOnClick = useCallback((contatoListindex: number) => {
     setContatoIndexSelected(contatoListindex)
@@ -55,12 +88,22 @@ export const Contatos = () => {
     {
       Header: 'Nome',
       accessor: 'nome',
-      Cell: ({ value }) => capitalize(value)
+      Cell: ({ value, index }) => (
+        <TableCollumn hasError={!!contatosError[index]?.nome}>
+          <span>{capitalize(value)}</span>
+          {contatosError[index]?.nome && <ToolTip>{contatosError[index]?.nome}</ToolTip>}
+        </TableCollumn>
+      )
     },
     {
       Header: 'E-mail',
       accessor: 'email',
-      Cell: ({ value }) => value.toString().toLowerCase()
+      Cell: ({ value, index }) => (
+        <TableCollumn hasError={!!contatosError[index]?.email}>
+          <span>{value.toString().toLowerCase()}</span>
+          {contatosError[index]?.email && <ToolTip>{contatosError[index]?.email}</ToolTip>}
+        </TableCollumn>
+      )
     },
     {
       Header: 'Status',
@@ -155,11 +198,7 @@ export const Contatos = () => {
 
     }
 
-  ], [handleAdicionarContatoOnClick])
-
-  const handleOnPageChange = () => {
-
-  }
+  ], [contatosError, handleAdicionarContatoOnClick])
 
   const handleModalCadastroOnSave = useCallback(() => {
     if (!contato) {
@@ -198,6 +237,11 @@ export const Contatos = () => {
     resetTelefone()
   }, [cliente, contatoIndexSelected, contatos, resetTelefone, setCliente, telefone])
 
+  const handleNovoContatoOnClick = () => {
+    setShowModalContato(true)
+    setClienteError({})
+  }
+
   return (
     <>
       <Container>
@@ -206,18 +250,17 @@ export const Contatos = () => {
             <Input type='text' startIcon={FaSearch} onChange={(e) => setSearchValue(e.currentTarget.value)}/>
           </div> */}
           <div>
-            <Button mode="primary"startIcon={FaUser} type="button" onClick={() => setShowModalContato(true)}>Novo contato</Button>
+            <Button mode="primary"startIcon={FaUser} type="button" onClick={handleNovoContatoOnClick}>Novo contato</Button>
           </div>
         </Header>
 
-        <Content error={!!clienteError.contatos}>
+        <Content error={!!clienteError.contatos} indexesHasError={Object.keys(contatosError)}>
           <ReactTable
             columns={columns}
             data={contatos}
             pageSize={rowsPerPage}
             page={currentPage}
             pages={contatos?.length && Math.ceil(contatos?.length / rowsPerPage)}
-            onPageChange={handleOnPageChange}
             manual
             loading={false}
             /*  onSortedChange={handleOnSortedChange} */
@@ -240,14 +283,7 @@ export const Contatos = () => {
                         {`(${telefone.ddd}) ${telefone.numero}`}
                       </li>
                     ))}
-
-                    {/*  { telefones?.map((telefone, index) => (
-              <li key={index}>{telefone.whatsapp === 's' ?  <FaWhatsapp/> : <FaPhoneSquareAlt/> }
-
-              </li>
-            )} */}
                   </ul>
-
                 </ListaTelefones>
               )
             }}
@@ -262,6 +298,7 @@ export const Contatos = () => {
         close={() => setShowModalContato(false)}
         onSave={handleModalCadastroOnSave}
         showButtonSave
+        buttonSaveText="Adicionar"
       >
         <CadastroContato/>
       </Modal> }

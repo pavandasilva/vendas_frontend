@@ -1,4 +1,5 @@
 import styled, { css } from 'styled-components'
+import { transparentize } from 'polished'
 
 export const Container = styled.div`
   display: flex;
@@ -106,18 +107,35 @@ export const ListaTelefones = styled.div`
 
 interface ContentProps {
   error?: boolean
+  indexesHasError: string[]
+
 }
 
 export const Content = styled.div<ContentProps>`
   position: relative;
   transition: all 0.4s;
 
-  ${props => props.error && css`
+  /* .ReactTable .rt-tbody{
+    .rt-tr-group {
+
+      ${props => props.indexesHasError.map(index => {
+        const tableIndex = parseInt(index) + 1
+        return css`
+          &:nth-of-type(${tableIndex}) {
+          border: 1px solid ${props.theme.colors.danger};
+          box-shadow: 0px 0px 0px 3px ${transparentize(0.9, props.theme.colors.danger)};
+        }
+        `
+      })}
+    }
+  } */
+
+ /*  ${props => props.error && css`
     .ReactTable {
       border: 1px solid ${props => props.theme.colors.danger};
       position: relative;
     }`
-  }
+  } */
 `
 
 interface IconError {
@@ -139,16 +157,19 @@ export const IconError = styled.div<IconError>`
 `
 
 export const ToolTip = styled.div`
+  position: absolute;
   display: box;
-  max-width: 100%;
   padding: 7px 10px;
-  margin-top: 5px;
   font-size: 10px;
   line-height: 1.5;
   color: ${props => props.theme.colors.backgroundLight};
   background-color: ${props => props.theme.colors.danger};
   border-radius: 4px;
   align-items: center;
+  top: 70%;
+  left: 2px;
+  z-index: 8;
+
 `
 
 export const Error = styled.div`
@@ -158,4 +179,23 @@ export const Error = styled.div`
   flex-direction:column;
   width: 100%;
   height: 40px;
+`
+export const ColunaNome = styled.div`
+  display: flex;
+  align-items: center;
+  position: relative;
+  width: 100%;
+  height: 100%;
+`
+
+interface TableCollumn {
+  hasError?: boolean
+}
+
+export const TableCollumn = styled.div<TableCollumn>`
+  border: 1px solid ${props => props.hasError ? props.theme.colors.danger : 'transparent'};
+  height: 100%;
+  width: 100%;
+  box-shadow: 0px 0px 0px 3px ${props => props.hasError ? transparentize(0.9, props.theme.colors.danger) : 'none'};
+  position: relative;
 `

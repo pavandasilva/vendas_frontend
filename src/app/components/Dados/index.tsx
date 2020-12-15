@@ -53,34 +53,50 @@ export const Dados = () => {
     const cnpj = e.currentTarget.value.replace(/[^\w\s]/gi, '').replace(/_/g, '')
 
     if (cnpj.length === 14) {
-      const response = await trazerDadosCNPJ.execute('bf2cc265e3073aab06df3484f56f603e7c409b55e01cddc0bfde6781624c8494', cnpj)
+      try {
+        const response = await trazerDadosCNPJ.execute('bf2cc265e3073aab06df3484f56f603e7c409b55e01cddc0bfde6781624c8494', cnpj)
 
-      if (response.data) {
-        const [estado] = EstadosMunicipios.estados.filter(estado => estado.sigla === response.data.uf)
+        if (response?.data) {
+          const [estado] = EstadosMunicipios.estados.filter(estado => estado.sigla === response.data.uf)
 
-        if (estado) {
-          const filtered: string[] = estado.cidades.filter(cidade => {
-            return removerAcento(cidade).toLowerCase() === removerAcento(response.data.municipio).toLowerCase()
-          })
+          if (estado) {
+            const filtered: string[] = estado.cidades.filter(cidade => {
+              return removerAcento(cidade).toLowerCase() === removerAcento(response.data.municipio).toLowerCase()
+            })
 
-          if (filtered[0]) {
-            cidade = filtered[0]
+            if (filtered[0]) {
+              cidade = filtered[0]
+            }
           }
-        }
 
+          const newCliente: Cliente = {
+            ...cliente,
+            endereco: capitalize(response.data.logradouro),
+            uf: response.data.uf,
+            cidade,
+            bairro: capitalize(response.data.bairro),
+            cep: response.data.cep,
+            cnpj,
+            razao_social: capitalize(response.data.nome),
+            nome_fantasia: capitalize(response.data.fantasia),
+            email: response.data.email,
+            complemento: capitalize(response.data.complemento),
+            numero: response.data.numero
+          }
+
+          setCliente(newCliente)
+        } else {
+          const newCliente: Cliente = {
+            ...cliente,
+            cnpj
+          }
+
+          setCliente(newCliente)
+        }
+      } catch (error) {
         const newCliente: Cliente = {
           ...cliente,
-          endereco: capitalize(response.data.logradouro),
-          uf: response.data.uf,
-          cidade,
-          bairro: capitalize(response.data.bairro),
-          cep: response.data.cep,
-          cnpj,
-          razao_social: capitalize(response.data.nome),
-          nome_fantasia: capitalize(response.data.fantasia),
-          email: response.data.email,
-          complemento: capitalize(response.data.complemento),
-          numero: response.data.numero
+          cnpj
         }
 
         setCliente(newCliente)

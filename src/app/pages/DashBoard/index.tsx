@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo, useState } from 'react'
 import { FaSearch, FaUser } from 'react-icons/fa'
 import { MainLayout } from '../../layouts/MainLayout'
-import { Atendimento, Button, ButtonTable, Input } from '../../components'
+import { Atendimento, Button, ButtonTable, Input, Spinner } from '../../components'
 import ReactTable, { Column } from 'react-table-6'
 import { Container, Content, Actions } from './styles'
 import useClientesFidelizados from '../../hooks/useClientesFidelizados'
@@ -134,7 +134,6 @@ export const DashBoard = () => {
             showPageSizeOptions= { false }
             loadingText="carregando..."
             noDataText="Nenhum cliente encontrado"
-
           />
         </Content>
       </Container>

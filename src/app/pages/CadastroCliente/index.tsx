@@ -1,18 +1,19 @@
 import React, { useCallback } from 'react'
 import { FaSave } from 'react-icons/fa'
+import { toast } from 'react-toastify'
 import { makeCadastrarCliente } from '../../../domain/clientes/factories/makeCadastrarCliente'
 import { getTabCadastroClienteToRedirect } from '../../../helpers'
 import { Button, Contatos, Dados, Endereco } from '../../components'
 import { CadastroContatoProvider, CadastroTelefoneProvider, CurrentTab } from '../../contexts'
-import { useCadastroCliente } from '../../hooks'
+import { useCadastroCliente, useUsuario } from '../../hooks'
 import { MainLayout } from '../../layouts/MainLayout'
-
 import { Container, Content } from './styles'
 
 const cadastrarCliente = makeCadastrarCliente()
 
 export const CadastroCliente: React.FC = () => {
   const { data: cliente, setDataError: setClienteError, currentTab, setCurrentTab } = useCadastroCliente()
+  const { data: usuario } = useUsuario()
 
   const handleMenuOnClick = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
     setCurrentTab(e.currentTarget.name as CurrentTab)
@@ -20,13 +21,15 @@ export const CadastroCliente: React.FC = () => {
 
   const handleSalvarOnClick = async () => {
     try {
-      await cadastrarCliente.execute({ body: cliente })
+      await cadastrarCliente.execute({ body: cliente, token: usuario?.token })
     } catch (error) {
       if (error.type === 'validate') {
         setClienteError(error.data)
 
         const tabToRedirect = getTabCadastroClienteToRedirect(error.data)
         setCurrentTab(tabToRedirect)
+      } else {
+        toast.error(error.message)
       }
     }
   }
