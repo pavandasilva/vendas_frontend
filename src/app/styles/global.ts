@@ -1,5 +1,5 @@
-import styled, { createGlobalStyle, keyframes } from 'styled-components'
-import { shade, darken, lighten } from 'polished'
+import styled, { createGlobalStyle } from 'styled-components'
+import { lighten } from 'polished'
 
 export const GlobalStyle = createGlobalStyle`
   * {

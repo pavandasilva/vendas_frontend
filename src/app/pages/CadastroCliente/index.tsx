@@ -38,8 +38,6 @@ export const CadastroCliente = () => {
   useEffect(() => {
     if (dataMode === 'edit') {
       setCliente(state as Cliente)
-
-      console.log(state)
     }
   }, [dataMode, setCliente, state])
 
@@ -50,10 +48,10 @@ export const CadastroCliente = () => {
   const handleSalvarOnClick = async () => {
     const { isConfirmed } = await Swal.fire({
       title: 'Confirmação!',
-      text: 'Salvar os dados do cliente?',
+      text: `${dataMode === 'create' ? 'Salvar novo cliente?' : `Atualizar os dados do cliente ${cliente.id}?`}`,
       showCloseButton: true,
       showCancelButton: true,
-      confirmButtonText: 'Salvar',
+      confirmButtonText: dataMode === 'create' ? 'Salvar' : 'Atualizar',
       cancelButtonText: 'Cancelar',
       icon: 'question'
     })
@@ -71,7 +69,7 @@ export const CadastroCliente = () => {
       if (response) {
         Swal.fire(
           'Sucesso!',
-          'Os dados do cliente foram salvos',
+          `${dataMode === 'create' ? 'Cliente criado com sucesso' : `Os dados do cliente - ${cliente.id} foram atualizados`}`,
           'success'
         )
       }
