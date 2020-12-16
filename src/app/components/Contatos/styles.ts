@@ -180,19 +180,14 @@ export const Error = styled.div`
   width: 100%;
   height: 40px;
 `
-export const ColunaNome = styled.div`
-  display: flex;
-  align-items: center;
-  position: relative;
-  width: 100%;
-  height: 100%;
-`
 
 interface TableCollumn {
   hasError?: boolean
 }
 
 export const TableCollumn = styled.div<TableCollumn>`
+  display: flex;
+  align-items: center;
   border: 1px solid ${props => props.hasError ? props.theme.colors.danger : 'transparent'};
   height: 100%;
   width: 100%;

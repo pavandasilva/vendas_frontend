@@ -1,4 +1,5 @@
-import styled, { createGlobalStyle } from 'styled-components'
+import styled, { createGlobalStyle, keyframes } from 'styled-components'
+import { shade, darken, lighten } from 'polished'
 
 export const GlobalStyle = createGlobalStyle`
   * {
@@ -174,7 +175,6 @@ export const GlobalStyle = createGlobalStyle`
   .ReactTable .rt-th,
   .ReactTable .rt-td {
     flex: 1 0 0;
-    white-space: nowrap;
     text-overflow: ellipsis;
     padding: 3px;
     -webkit-transition: .3s ease;
@@ -930,8 +930,85 @@ export const GlobalStyle = createGlobalStyle`
   .Toastify__slide-exit--bottom-center {
     animation-name: Toastify__slideOutDown;
   }
-`
 
+  .swal2-popup {
+    display: none;
+    position: relative;
+    box-sizing: border-box;
+    flex-direction: column;
+    justify-content: center;
+    width: 32em;
+    max-width: 100%;
+    padding: 1.25em;
+    border: none;
+    border-radius: 4px;
+    background: ${props => props.theme.colors.backgroundLight};
+    font-family: inherit;
+    font-size: 14px;
+  }
+
+  .swal2-title {
+    position: relative;
+    max-width: 100%;
+    margin: 0 0 .4em;
+    padding: 0;
+    color: ${props => props.theme.colors.primaryText};
+    font-size: 16px;
+    font-weight: 600;
+    text-align: center;
+    text-transform: none;
+    word-wrap: break-word;
+  }
+
+  .swal2-styled.swal2-confirm {
+    border: 0;
+    border-radius: 4px;
+    background: initial;
+    background-color: ${props => props.theme.colors.primary};
+    color: #fff;
+    font-size: 14px;
+  }
+
+
+  .swal2-styled.swal2-cancel {
+    border: 0;
+    border-radius: 4px;
+    background: initial;
+    background-color: ${props => props.theme.colors.backgroundLight};
+    color: ${props => props.theme.colors.primaryText};
+    font-size: 14px;
+    border: none;
+  }
+
+  .swal2-icon.swal2-error {
+    border-color: ${props => lighten(0.2, props.theme.colors.danger)};
+    color: ${props => lighten(0.1, props.theme.colors.danger)};
+  }
+
+  .swal2-icon.swal2-error [class^=swal2-x-mark-line] {
+    background-color: ${props => lighten(0.1, props.theme.colors.danger)};
+  }
+
+  .swal2-icon.swal2-question {
+    border-color: ${props => lighten(0.4, props.theme.colors.info)};
+    color: ${props => lighten(0.2, props.theme.colors.info)}
+  }
+
+  .swal2-icon.swal2-warning {
+    border-color: ${props => lighten(0.08, props.theme.colors.warning)};
+    color: ${props => lighten(0.04, props.theme.colors.warning)};
+  }
+
+  .swal2-close{
+    transition: all 0.3s;
+  }
+
+  .swal2-close:hover {
+    transform: none;
+    background: 0 0;
+    color: ${props => props.theme.colors.primaryText};
+}
+`
 interface FormRowProps {
   width?: string
 }

@@ -67,4 +67,5 @@ export const Hamburger = styled.div`
 export const Content = styled.div`
   display: flex;
   align-items: center;
+  letter-spacing: 0.075em;
 `

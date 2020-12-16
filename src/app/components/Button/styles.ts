@@ -19,6 +19,7 @@ export const Container = styled.button<ContainerProps>`
   border-radius: 4px;
   padding: 0px 5px;
   transition: all .3s;
+  user-select: none;
 
   svg {
     margin-right: 5px;

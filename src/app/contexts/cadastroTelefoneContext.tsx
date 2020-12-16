@@ -9,7 +9,7 @@ export interface CadastroTelefoneContextProps {
 
 const initialValues: Telefone = {
   ddd: '',
-  numero: '',
+  telefone: '',
   ramal: '',
   whatsapp: 'n'
 }

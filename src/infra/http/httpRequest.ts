@@ -70,6 +70,8 @@ export class HttpRequestImpl implements HttpRequest {
     } catch (error) {
       const result = {
         error: {
+          data: error.response.data.dataError,
+          type: error.response.data.type,
           message: error.response.data.message || error.message,
           status: error.response?.status
         }

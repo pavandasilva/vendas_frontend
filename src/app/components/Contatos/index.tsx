@@ -265,13 +265,10 @@ export const Contatos = () => {
             loading={false}
             /*  onSortedChange={handleOnSortedChange} */
             sortable={false}
-            nextText="Próximo"
-            previousText="Anterior"
-            pageText="Página"
-            ofText= "de"
             showPageSizeOptions= { false }
             loadingText="carregando..."
             noDataText="Nenhum contato encontrado"
+            showPagination={false}
             SubComponent={({ original }) => {
               const telefones = original?.telefones as Telefone []
               return (
@@ -280,7 +277,7 @@ export const Contatos = () => {
                     { telefones?.map((telefone, index) => (
                       <li key={index}>
                         {telefone.whatsapp === 's' ? <FaWhatsapp color={theme.colors.sucess}/> : <FaPhone color={theme.colors.primary}/> }
-                        {`(${telefone.ddd}) ${telefone.numero}`}
+                        {`(${telefone.ddd}) ${telefone.telefone}`}
                       </li>
                     ))}
                   </ul>

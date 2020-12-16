@@ -16,7 +16,8 @@ export const Endereco = () => {
     data: cliente,
     setData: setCliente,
     dataError: clienteError,
-    setDataError: setClienteError
+    setDataError: setClienteError,
+    dataMode
   } = useCadastroCliente()
 
   useEffect(() => {
@@ -25,7 +26,7 @@ export const Endereco = () => {
     }
 
     const [estado] = EstadosMunicipios.estados.filter(estado => estado.sigla === cliente.uf)
-    setControlCidades(estado.cidades)
+    setControlCidades(estado?.cidades)
   }, [cliente.uf])
 
   const handleInputChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
@@ -95,6 +96,7 @@ export const Endereco = () => {
           onChange={handleCepInputChange}
           error={clienteError?.cep}
           type="cep"
+          disabled= { dataMode === 'edit'}
         />
 
         <Input
@@ -105,6 +107,7 @@ export const Endereco = () => {
           placeholder='Endereço'
           onChange={handleInputChange}
           error={clienteError?.endereco}
+          disabled= { dataMode === 'edit'}
         />
         <Input
           width='1'
@@ -114,6 +117,7 @@ export const Endereco = () => {
           placeholder='Número'
           onChange={handleInputChange}
           error={clienteError?.numero}
+          disabled= { dataMode === 'edit'}
         />
 
       </FormRow>
@@ -124,9 +128,11 @@ export const Endereco = () => {
           onChange={handleSelectChange}
           value={cliente?.uf}
           title="Estado"
+          disabled= { dataMode === 'edit'}
+          defaultValue=""
         >
           <option value="" disabled selected>Estado</option>
-          { EstadosMunicipios.estados.map(estado => <option key={estado.sigla} value={estado.sigla}>{estado.nome}</option>)}
+          { EstadosMunicipios?.estados?.map(estado => <option key={estado.sigla} value={estado.sigla}>{estado.nome}</option>)}
         </Select>
 
         <Select
@@ -135,9 +141,10 @@ export const Endereco = () => {
           onChange={handleSelectChange}
           value={cliente?.cidade}
           title="Cidade"
+          disabled= { dataMode === 'edit'}
         >
           <option value="" disabled selected>Cidade</option>
-          { controlCidades.map(cidade => <option key={cidade} value={cidade}>{cidade}</option>)}
+          { controlCidades?.map(cidade => <option key={cidade} value={cidade}>{cidade}</option>)}
         </Select>
         <Input
           width='7'
@@ -147,6 +154,7 @@ export const Endereco = () => {
           placeholder='Bairro'
           onChange={handleInputChange}
           error={clienteError?.bairro}
+          disabled= { dataMode === 'edit'}
         />
       </FormRow>
       <FormRow>
@@ -158,6 +166,7 @@ export const Endereco = () => {
           placeholder='Complemento do endereço'
           onChange={handleInputChange}
           error={clienteError?.complemento}
+          disabled= { dataMode === 'edit'}
         />
         <Input
           width='3'
@@ -167,6 +176,7 @@ export const Endereco = () => {
           placeholder='Região'
           onChange={handleInputChange}
           error={clienteError?.regiao}
+          disabled= { dataMode === 'edit'}
         />
       </FormRow>
     </Container>

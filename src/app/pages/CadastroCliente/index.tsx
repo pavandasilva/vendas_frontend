@@ -1,8 +1,10 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useEffect } from 'react'
+import Swal from 'sweetalert2'
 import { FaSave } from 'react-icons/fa'
-import { toast } from 'react-toastify'
+import { useLocation } from 'react-router-dom'
 import { makeCadastrarCliente } from '../../../domain/clientes/factories/makeCadastrarCliente'
-import { getTabCadastroClienteToRedirect } from '../../../helpers'
+import { Cliente } from '../../../domain/clientes/models'
+import { getTabCadastroClienteToRedirect, deleteEmptyPropsFromObject } from '../../../helpers'
 import { Button, Contatos, Dados, Endereco } from '../../components'
 import { CadastroContatoProvider, CadastroTelefoneProvider, CurrentTab } from '../../contexts'
 import { useCadastroCliente, useUsuario } from '../../hooks'
@@ -11,17 +13,68 @@ import { Container, Content } from './styles'
 
 const cadastrarCliente = makeCadastrarCliente()
 
-export const CadastroCliente: React.FC = () => {
-  const { data: cliente, setDataError: setClienteError, currentTab, setCurrentTab } = useCadastroCliente()
+export const CadastroCliente = () => {
+  const {
+    data: cliente,
+    setData: setCliente,
+    setDataError: setClienteError,
+    currentTab,
+    setCurrentTab,
+    dataMode,
+    setDataMode
+  } = useCadastroCliente()
+
   const { data: usuario } = useUsuario()
+  const { state, pathname } = useLocation()
+
+  useEffect(() => {
+    if (pathname === '/cadastro-cliente') {
+      setDataMode('create')
+    } else {
+      setDataMode('edit')
+    }
+  }, [cliente, pathname, setCliente, setDataMode])
+
+  useEffect(() => {
+    if (dataMode === 'edit') {
+      setCliente(state as Cliente)
+
+      console.log(state)
+    }
+  }, [dataMode, setCliente, state])
 
   const handleMenuOnClick = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
     setCurrentTab(e.currentTarget.name as CurrentTab)
   }, [setCurrentTab])
 
   const handleSalvarOnClick = async () => {
+    const { isConfirmed } = await Swal.fire({
+      title: 'Confirmação!',
+      text: 'Salvar os dados do cliente?',
+      showCloseButton: true,
+      showCancelButton: true,
+      confirmButtonText: 'Salvar',
+      cancelButtonText: 'Cancelar',
+      icon: 'question'
+    })
+
+    if (!isConfirmed) {
+      return
+    }
+
     try {
-      await cadastrarCliente.execute({ body: cliente, token: usuario?.token })
+      const response = await cadastrarCliente.execute({
+        body: deleteEmptyPropsFromObject(cliente),
+        token: usuario?.token
+      })
+
+      if (response) {
+        Swal.fire(
+          'Sucesso!',
+          'Os dados do cliente foram salvos',
+          'success'
+        )
+      }
     } catch (error) {
       if (error.type === 'validate') {
         setClienteError(error.data)
@@ -29,7 +82,14 @@ export const CadastroCliente: React.FC = () => {
         const tabToRedirect = getTabCadastroClienteToRedirect(error.data)
         setCurrentTab(tabToRedirect)
       } else {
-        toast.error(error.message)
+        Swal.fire({
+          position: 'top-end',
+          icon: 'error',
+          title: error.message || 'Erro desconhecido',
+          showConfirmButton: false,
+          timer: 3500,
+          timerProgressBar: true
+        })
       }
     }
   }
@@ -37,7 +97,7 @@ export const CadastroCliente: React.FC = () => {
   return (
     <CadastroContatoProvider>
       <CadastroTelefoneProvider>
-        <MainLayout title="Cadastro de cliente">
+        <MainLayout title={dataMode === 'create' ? 'Cadastro de cliente' : `Edição Cliente - ${cliente.id}`}>
           <Container>
             <header>
               <div>

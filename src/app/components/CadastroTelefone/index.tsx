@@ -42,12 +42,12 @@ export const CadastroTelefone = () => {
 
         <Input
           width="3"
-          name="numero"
+          name="telefone"
           title="Telefone"
           startIcon={FaPhone}
           type="telefone"
           placeholder="Telefone"
-          value={telefone?.numero}
+          value={telefone?.telefone}
           onChange={handleInputOnChange}
         />
       </FormRow>

@@ -10,6 +10,7 @@ export const lightTheme = {
     border: '#ced4da',
     borderLight: '#ebebeb',
     info: '#007BFF',
+    warning: '#f8bb86',
     danger: '#dc3545',
     sucess: '#1A5C3C',
     buttonPrimary: '#505050'

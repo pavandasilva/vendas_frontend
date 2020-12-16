@@ -1,12 +1,10 @@
 import React, { useCallback, useMemo, useState } from 'react'
 import { FaSearch, FaUser } from 'react-icons/fa'
 import { MainLayout } from '../../layouts/MainLayout'
-import { Atendimento, Button, ButtonTable, Input, Spinner } from '../../components'
+import { Atendimento, Button, ButtonTable, Input } from '../../components'
 import ReactTable, { Column } from 'react-table-6'
 import { Container, Content, Actions } from './styles'
 import useClientesFidelizados from '../../hooks/useClientesFidelizados'
-/* import { useHistory } from 'react-router-dom' */
-
 import { Cliente } from '../../../domain/clientes/models'
 import capitalize from 'capitalize-pt-br'
 import { useHistory } from 'react-router-dom'
@@ -45,6 +43,18 @@ export const DashBoard = () => {
     })
   }, [addTab])
 
+  const handleEditarClienteOnClick = useCallback((cliente: Cliente) => {
+    /*  history.push({
+      pathname: `/edicao-cliente?id=${cliente.id}`,
+      state: cliente
+    }) */
+
+    history.push({
+      pathname: '/edicao-cliente',
+      state: cliente
+    })
+  }, [history])
+
   const handleOnPageChange = useCallback((page: number) => {
     if (!clientesFidelizados?.metadata?.count) {
       return
@@ -52,15 +62,6 @@ export const DashBoard = () => {
 
     setCurrentPage(page)
   }, [clientesFidelizados])
-
-  /*   const handleClickNovoCLiente = useCallback(() => {
-    history.push('/cadastro-cliente')
-  }, [history])
-
-  const handleOnSortedChange = (state: any, instance: any) => {
-    console.log('state', state)
-    console.log('instance', instance)
-  } */
 
   const columns: Column[] = useMemo(() => [
     {
@@ -92,13 +93,25 @@ export const DashBoard = () => {
         const cliente = row._original as Cliente
         return (
           <Actions>
-            <ButtonTable type="button" typeButton='primary' onClick={() => handleAtenderOnClick(cliente)}>Atender</ButtonTable>
-            <ButtonTable type="button" typeButton='secondary'>Editar</ButtonTable>
+            <ButtonTable
+              type="button"
+              typeButton='primary'
+              onClick={() => handleAtenderOnClick(cliente)}
+            >
+              Atender
+            </ButtonTable>
+            <ButtonTable
+              type="button"
+              typeButton='secondary'
+              onClick={() => handleEditarClienteOnClick(cliente)}
+            >
+              Editar
+            </ButtonTable>
           </Actions>
         )
       }
     }
-  ], [handleAtenderOnClick])
+  ], [handleAtenderOnClick, handleEditarClienteOnClick])
 
   const handleNovoClienteOnClick = useCallback(() => {
     history.push('/cadastro-cliente')

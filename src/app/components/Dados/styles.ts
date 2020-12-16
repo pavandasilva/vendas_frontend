@@ -46,6 +46,8 @@ export const RadioButtons = styled.div`
   flex-direction: row;
   width: 100%;
   margin-top: 15px;
+  letter-spacing: 0.075em;
+  user-select: none;
 
   & > div  {
     width: 50%;

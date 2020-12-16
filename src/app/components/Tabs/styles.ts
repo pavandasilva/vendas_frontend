@@ -33,7 +33,7 @@ export const Tab = styled.div<TabProps>`
   border-top-left-radius: 4px;
   border-top-right-radius: 4px;
   height: 35px;
-  width: 200px;
+  width: 210px;
   padding: 15px;
   border: 1px solid ${props => props.theme.colors.border};
   border-bottom-color: ${props => props.theme.colors.backgroundLight};
@@ -41,6 +41,8 @@ export const Tab = styled.div<TabProps>`
   color: ${props => props.selected ? props.theme.colors.primaryText : props.theme.colors.secondaryText};
   cursor: pointer;
   margin-left: 4px;
+  letter-spacing: 0.075em;
+  user-select: none;
 
 
   > p {
@@ -51,7 +53,7 @@ export const Tab = styled.div<TabProps>`
   }
 
   &:first-of-type {
-    width: 150px;
+    width: 170px;
     margin-left: 0px;
     background-color: ${props => props.selected ? props.theme.colors.backgroundLight : props.theme.colors.secondary};
     color: ${props => props.selected ? props.theme.colors.primaryText : props.theme.colors.backgroundLight}

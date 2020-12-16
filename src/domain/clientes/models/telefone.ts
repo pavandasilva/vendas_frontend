@@ -1,6 +1,6 @@
 export interface Telefone {
   ddd?: string;
-  numero?: string;
+  telefone?: string;
   ramal?: string;
   whatsapp: 's' | 'n';
 }

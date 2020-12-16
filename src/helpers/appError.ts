@@ -1,5 +1,3 @@
-import { ObjectSchemaConstructor } from "yup"
-
 export interface AppErrorData {
   type?: 'auth' | 'api' | 'validate'
   message: string

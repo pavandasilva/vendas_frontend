@@ -9,8 +9,7 @@ export const Container = styled.div`
   position: fixed;
   z-index:999;
   border-radius: 4px;
-  background-color: rgba(0, 0, 0, 0.85);
-
+  background-color: rgba(0,0,0,.4);
 `
 export const BoxModal = styled.div`
   border-radius: 4px;

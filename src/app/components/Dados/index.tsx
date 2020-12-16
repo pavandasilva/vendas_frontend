@@ -19,11 +19,11 @@ export const Dados = () => {
     data: cliente,
     setData: setCliente,
     dataError: clienteError,
-    setDataError: setClienteError
+    setDataError: setClienteError,
+    dataMode
   } = useCadastroCliente()
 
   const [controlFormPessoa, setControlFormPessoa] = useState<'pj' | 'pf'>('pj')
-  const [controlFormIsIsento, setControlFormIsIsento] = useState(false)
 
   const handleInputChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     let value = e.target.value
@@ -54,7 +54,10 @@ export const Dados = () => {
 
     if (cnpj.length === 14) {
       try {
-        const response = await trazerDadosCNPJ.execute('bf2cc265e3073aab06df3484f56f603e7c409b55e01cddc0bfde6781624c8494', cnpj)
+        const response = await trazerDadosCNPJ.execute(
+          'bf2cc265e3073aab06df3484f56f603e7c409b55e01cddc0bfde6781624c8494'
+          , cnpj
+        )
 
         if (response?.data) {
           const [estado] = EstadosMunicipios.estados.filter(estado => estado.sigla === response.data.uf)
@@ -104,6 +107,15 @@ export const Dados = () => {
     }
   }, [cliente, handleInputChange, setCliente])
 
+  const handleIsIsentoOnChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const newClienteState: Cliente = {
+      ...cliente,
+      ie: 'isento'
+    }
+
+    setCliente(newClienteState)
+  }, [cliente, setCliente])
+
   return (
     <Container>
       <section>
@@ -119,6 +131,7 @@ export const Dados = () => {
                 value="pj"
                 onChange={() => setControlFormPessoa('pj')}
                 title="Pessoa jurídica"
+                disabled= {dataMode === 'edit'}
               />
               <RadioButton
                 name="pf"
@@ -126,6 +139,7 @@ export const Dados = () => {
                 value="pf"
                 onChange={() => setControlFormPessoa('pf')}
                 title="Pessoa física"
+                disabled= {dataMode === 'edit'}
               />
             </FormRow>
           </div>
@@ -139,24 +153,28 @@ export const Dados = () => {
                 onChange={handleInputChange}
                 checked={cliente?.is_cliente_final === 's'}
                 title="Cliente final"
+                disabled= {dataMode === 'edit'}
               />
               <CheckBox
                 name="is_isento"
-                checked={controlFormIsIsento}
-                onChange={() => setControlFormIsIsento(v => !v)}
+                checked={cliente?.ie === 'isento'}
+                onChange={handleIsIsentoOnChange}
                 title="Isento"
+                disabled= {dataMode === 'edit'}
               />
               <CheckBox
                 name="is_orgao_estadual"
                 checked={cliente?.is_orgao_estadual === 's'}
                 onChange={handleInputChange}
                 title="Órgão estadual"
+                disabled= {dataMode === 'edit'}
               />
               <CheckBox
                 name="is_revenda"
                 checked={cliente?.is_revenda === 's'}
                 onChange={handleInputChange}
                 title="Revenda"
+                disabled= {dataMode === 'edit'}
               />
             </FormRow>
           </div>
@@ -173,17 +191,18 @@ export const Dados = () => {
             onChange={handleInputCNPJ}
             error={clienteError?.cnpj}
             type={controlFormPessoa === 'pf' ? 'cpf' : 'cnpj'}
+            disabled= {dataMode === 'edit'}
           />
 
           <Input
-            disabled = {controlFormIsIsento}
+            disabled = {cliente?.ie === 'isento' || dataMode === 'edit'}
             name="ie"
             title="Inscrição estadual"
-            value={controlFormIsIsento ? 'isento' : cliente?.ie}
+            value={cliente?.ie}
             placeholder='Inscrição estadual'
             onChange={handleInputChange}
             error={clienteError?.ie}
-            type={`ie-${cliente.uf}` as IEType}
+            type={cliente?.uf ? `ie-${cliente?.uf}` as IEType : 'text'}
           />
 
         </FormRow>
@@ -195,6 +214,7 @@ export const Dados = () => {
             placeholder='Nome fantasia'
             onChange={handleInputChange}
             error={clienteError?.nome_fantasia}
+            disabled= {dataMode === 'edit'}
           />
 
           <Input
@@ -204,6 +224,7 @@ export const Dados = () => {
             placeholder='Razão social'
             onChange={handleInputChange}
             error={clienteError?.razao_social}
+            disabled= {dataMode === 'edit'}
           />
         </FormRow>
         <FormRow>
@@ -214,6 +235,7 @@ export const Dados = () => {
             placeholder='E-mail principal'
             onChange={handleInputChange}
             error={clienteError?.email}
+            disabled= {dataMode === 'edit'}
           />
           <Input
             name="email_nfe"
@@ -222,6 +244,7 @@ export const Dados = () => {
             placeholder='E-mail nota fiscal eletrônica'
             onChange={handleInputChange}
             error={clienteError?.email_nfe}
+            disabled= {dataMode === 'edit'}
           />
           <Input
             name="email_nfe2"
@@ -230,6 +253,7 @@ export const Dados = () => {
             placeholder='E-mail nota fiscal eletrônica'
             onChange={handleInputChange}
             error={clienteError?.email_nfe2}
+            disabled= {dataMode === 'edit'}
           />
         </FormRow>
       </section>

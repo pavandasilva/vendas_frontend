@@ -37,7 +37,7 @@ export const Container = styled.div`
           color: ${props => props.theme.colors.danger};
         }
       }
-      span {
+      & > span {
         font-weight: 300;
         font-size: 14px;
         line-height: 16px;
@@ -45,7 +45,7 @@ export const Container = styled.div`
         color: ${props => props.theme.colors.primaryText};
       }
 
-      img {
+      & > img {
         width: 70px;
         height: auto;
       }
@@ -79,6 +79,7 @@ export const RememberMe = styled.section`
   span {
     margin-left: 15px;
   }
+
   a {
     display: flex;
     flex: 1;

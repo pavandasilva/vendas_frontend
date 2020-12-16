@@ -24,6 +24,7 @@ const initialState: Cliente = {
 }
 
 export type CurrentTab = 'dados' | 'endereco' | 'contatos'
+type Mode = 'edit' | 'create'
 export interface CadastroClienteContextProps {
   data: Cliente
   setData: (cliente: Cliente) => void
@@ -31,6 +32,8 @@ export interface CadastroClienteContextProps {
   setDataError: (error: any) => void
   currentTab:CurrentTab
   setCurrentTab: (currentTab: CurrentTab) => void
+  dataMode: Mode
+  setDataMode: (mode: Mode) => void
 }
 
 interface CadastroClienteProviderProps {
@@ -43,6 +46,7 @@ export const CadastroClienteProvider = ({ children }: CadastroClienteProviderPro
   const [cliente, setCliente] = useState<Cliente>(initialState)
   const [error, setError] = useState({})
   const [currentTab, setCurrentTab] = useState<CurrentTab>('dados')
+  const [mode, setMode] = useState<Mode>('create')
 
   const setData = useCallback((cliente: Cliente) => {
     setCliente(cliente)
@@ -52,6 +56,10 @@ export const CadastroClienteProvider = ({ children }: CadastroClienteProviderPro
     setError(error)
   }, [])
 
+  const setDataMode = useCallback((mode: Mode) => {
+    setMode(mode)
+  }, [])
+
   return (
     <CadastroClienteContext.Provider value={{
       data: cliente,
@@ -59,7 +67,9 @@ export const CadastroClienteProvider = ({ children }: CadastroClienteProviderPro
       dataError: error,
       setDataError,
       currentTab,
-      setCurrentTab
+      setCurrentTab,
+      dataMode: mode,
+      setDataMode
     }}>
       { children }
     </CadastroClienteContext.Provider>

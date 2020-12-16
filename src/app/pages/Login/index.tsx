@@ -1,5 +1,5 @@
 import React, { ChangeEvent, FormEvent, useCallback, useState } from 'react'
-import { toast } from 'react-toastify'
+import Swal from 'sweetalert2'
 import { FaEnvelope, FaLock } from 'react-icons/fa'
 import { Link, useHistory } from 'react-router-dom'
 import { Input, Button } from '../../components'
@@ -51,7 +51,14 @@ export const Login = () => {
         if (error.type === 'validate') {
           setError(error?.data)
         } else {
-          toast.error(error.message || 'Erro desconhecido')
+          Swal.fire({
+            position: 'top-end',
+            icon: 'error',
+            title: error.message || 'Erro desconhecido',
+            showConfirmButton: false,
+            timer: 3500,
+            timerProgressBar: true
+          })
         }
       } finally {
         setRequesting(false)
@@ -110,10 +117,10 @@ export const Login = () => {
                   checked={autoLogin}
                   onChange={handleCheckOnChange}
                 />
-                <span>Manter-me logado</span>
+                <span>Manter conectado</span>
               </div>
 
-              <Link to="/lembrar-password">Esqueceu a senha? </Link>
+              <Link to="/esqueceu-senha">Esqueceu a senha? </Link>
             </RememberMe>
           </Inputs>
           <Button type="submit" showSpinner={requesting} mode="confirm">

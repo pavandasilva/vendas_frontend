@@ -11,6 +11,8 @@ export const Routes: React.FC = () => (
 
     <CadastroClienteProvider>
       <Route path="/cadastro-cliente" component={CadastroCliente} isPrivate />
+      <Route path="/edicao-cliente" component={CadastroCliente} isPrivate />
+
     </CadastroClienteProvider>
 
     {/*     <Route path="/demo" component={Demo} isPrivate />

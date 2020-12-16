@@ -1,4 +1,6 @@
 import React, { useMemo, useState } from 'react'
+import { useTheme } from 'styled-components'
+import Swal from 'sweetalert2'
 import { Avatar } from '../'
 import { useUsuario } from '../../hooks'
 import { PopOver, ItemPopOver } from '../PopOver'
@@ -7,6 +9,7 @@ import { Container, Hamburger, Content } from './styles'
 export const NavBar = () => {
   const { logout } = useUsuario()
   const [showPopOver, setShowPopOver] = useState(false)
+  const { colors } = useTheme()
 
   const popoverItens = useMemo<ItemPopOver[]>(() => [
     {
@@ -14,14 +17,28 @@ export const NavBar = () => {
       title: 'Perfil'
     },
     {
-      onClick: () => {
+      onClick: async () => {
         setShowPopOver(false)
-        logout()
+
+        const { isConfirmed } = await Swal.fire({
+          title: 'Desconectar da aplicação?',
+          icon: 'warning',
+          focusCancel: true,
+          showCancelButton: true,
+          showCloseButton: true,
+          cancelButtonText: 'Cancelar',
+          confirmButtonText: 'Desconectar',
+          confirmButtonColor: colors.danger
+        })
+
+        if (isConfirmed) {
+          logout()
+        }
       },
       title: 'Sair'
     }
 
-  ], [logout])
+  ], [colors.danger, logout])
 
   return (
     <Container>
