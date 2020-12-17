@@ -8,7 +8,7 @@ import useClientesFidelizados from '../../hooks/useClientesFidelizados'
 import { Cliente } from '../../../domain/clientes/models'
 import capitalize from 'capitalize-pt-br'
 import { useHistory } from 'react-router-dom'
-import { useTabs } from '../../hooks'
+import { useCadastroCliente, useTabs } from '../../hooks'
 
 const perPage = 10
 
@@ -17,6 +17,7 @@ export const DashBoard = () => {
 
   const [search, setSearch] = useState('')
   const [currentPage, setCurrentPage] = useState(0)
+  const { setCurrentTab, setDataMode: setClienteDataMode } = useCadastroCliente()
   const { addTab } = useTabs()
 
   const { data: clientesFidelizados } = useClientesFidelizados({
@@ -44,16 +45,13 @@ export const DashBoard = () => {
   }, [addTab])
 
   const handleEditarClienteOnClick = useCallback((cliente: Cliente) => {
-    /*  history.push({
-      pathname: `/edicao-cliente?id=${cliente.id}`,
-      state: cliente
-    }) */
+    setCurrentTab('contatos')
+    setClienteDataMode('edit')
 
     history.push({
-      pathname: '/edicao-cliente',
-      state: cliente
+      pathname: `/edicao-cliente/${cliente.id}`
     })
-  }, [history])
+  }, [history, setClienteDataMode, setCurrentTab])
 
   const handleOnPageChange = useCallback((page: number) => {
     if (!clientesFidelizados?.metadata?.count) {
@@ -115,7 +113,8 @@ export const DashBoard = () => {
 
   const handleNovoClienteOnClick = useCallback(() => {
     history.push('/cadastro-cliente')
-  }, [history])
+    setClienteDataMode('create')
+  }, [history, setClienteDataMode])
 
   return (
     <MainLayout title="Dashboard">

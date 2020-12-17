@@ -29,8 +29,6 @@ export const Contatos = () => {
   const [contatosError, setContatosError] = useState({} as any)
 
   useEffect(() => {
-    console.log(clienteError)
-
     if (!Object.keys(clienteError).length) {
       return
     }

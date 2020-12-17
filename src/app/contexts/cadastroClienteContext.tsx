@@ -34,6 +34,7 @@ export interface CadastroClienteContextProps {
   setCurrentTab: (currentTab: CurrentTab) => void
   dataMode: Mode
   setDataMode: (mode: Mode) => void
+  resetData: () => void
 }
 
 interface CadastroClienteProviderProps {
@@ -60,6 +61,10 @@ export const CadastroClienteProvider = ({ children }: CadastroClienteProviderPro
     setMode(mode)
   }, [])
 
+  const resetData = useCallback(() => {
+    setCliente(initialState)
+  }, [])
+
   return (
     <CadastroClienteContext.Provider value={{
       data: cliente,
@@ -69,7 +74,8 @@ export const CadastroClienteProvider = ({ children }: CadastroClienteProviderPro
       currentTab,
       setCurrentTab,
       dataMode: mode,
-      setDataMode
+      setDataMode,
+      resetData
     }}>
       { children }
     </CadastroClienteContext.Provider>

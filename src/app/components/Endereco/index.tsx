@@ -25,7 +25,8 @@ export const Endereco = () => {
       return
     }
 
-    const [estado] = EstadosMunicipios.estados.filter(estado => estado.sigla === cliente.uf)
+    const [estado] = EstadosMunicipios.estados.filter(estado => estado.sigla === cliente.uf?.toUpperCase())
+
     setControlCidades(estado?.cidades)
   }, [cliente.uf])
 
@@ -126,7 +127,7 @@ export const Endereco = () => {
           width='2'
           name="uf"
           onChange={handleSelectChange}
-          value={cliente?.uf}
+          value={cliente?.uf?.toUpperCase()}
           title="Estado"
           disabled= { dataMode === 'edit'}
           defaultValue=""
@@ -139,12 +140,12 @@ export const Endereco = () => {
           name="cidade"
           width='4'
           onChange={handleSelectChange}
-          value={cliente?.cidade}
+          value={dataMode === 'edit' ? '' : cliente?.cidade}
           title="Cidade"
           disabled= { dataMode === 'edit'}
         >
-          <option value="" disabled selected>Cidade</option>
-          { controlCidades?.map(cidade => <option key={cidade} value={cidade}>{cidade}</option>)}
+          <option value="" disabled selected>{ dataMode === 'edit' ? cliente?.cidade : 'Cidade'} </option>
+          { dataMode === 'create' && controlCidades?.map(cidade => <option key={cidade} value={cidade}>{cidade}</option>)}
         </Select>
         <Input
           width='7'

@@ -6,15 +6,13 @@ import { Route } from './route'
 
 export const Routes: React.FC = () => (
   <Switch>
-    <Route exact path="/" component={DashBoard} isPrivate />
-    <Route path="/login" component={Login} />
-
     <CadastroClienteProvider>
+      <Route exact path="/" component={DashBoard} isPrivate />
       <Route path="/cadastro-cliente" component={CadastroCliente} isPrivate />
-      <Route path="/edicao-cliente" component={CadastroCliente} isPrivate />
-
+      <Route path="/edicao-cliente/:id" component={CadastroCliente} isPrivate />
     </CadastroClienteProvider>
 
+    <Route path="/login" component={Login} />
     {/*     <Route path="/demo" component={Demo} isPrivate />
     <Route path="/atendimentos" component={Atendimentos} isPrivate />
     <Route path="/desempenho" component={Desempenho} isPrivate />

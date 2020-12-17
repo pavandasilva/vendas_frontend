@@ -39,8 +39,6 @@ export const Container = styled.div<InputContainerProps>`
   border-radius: 4px;
   transition: all 0.3s;
 
-
-
   svg:first-of-type {
     fill: ${props => props.theme.colors.primaryText};
     width: 14px;

@@ -21,7 +21,7 @@ export const NavBar = () => {
         setShowPopOver(false)
 
         const { isConfirmed } = await Swal.fire({
-          title: 'Desconectar da aplicação?',
+          text: 'Desconectar da aplicação?',
           icon: 'warning',
           focusCancel: true,
           showCancelButton: true,

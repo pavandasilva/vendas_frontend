@@ -22,6 +22,13 @@ export const GlobalStyle = createGlobalStyle`
     border: none;
   }
 
+  h2 {
+    color: ${props => props.theme.colors.primaryText};
+    font-size: 16px;
+    letter-spacing: 0.075em;
+    font-weight: normal;
+  }
+
   .ReactTable {
     position: relative;
     display: flex;
@@ -1007,7 +1014,25 @@ export const GlobalStyle = createGlobalStyle`
     transform: none;
     background: 0 0;
     color: ${props => props.theme.colors.primaryText};
+  }
+
+  .swal2-input {
+    height: 2.625em;
+    padding: 0 .75em;
 }
+
+  .swal2-input {
+    box-sizing: border-box;
+    width: 100%;
+    transition: all .3s;
+    border: 1px solid ${props => props.theme.colors.border};
+    border-radius: 4px;
+    background: ${props => props.theme.colors.backgroundLight};
+    box-shadow: none;
+    color: inherit;
+    font-size: 1.125em;
+    height: 36px !important;
+  }
 `
 interface FormRowProps {
   width?: string

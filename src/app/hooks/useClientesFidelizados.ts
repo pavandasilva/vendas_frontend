@@ -1,3 +1,4 @@
+import { useHistory } from 'react-router-dom'
 import useSWR from 'swr'
 import { makeTrazerClientesFidelizados } from '../../domain/clientes/factories/makeTrazerClientesFidelizados'
 import { useUsuario } from '../hooks'
@@ -12,7 +13,8 @@ interface ExecClientesFidelizados {
 }
 
 export default function useClientesFidelizados ({ funcionarioId, perPage, currentPage, search }: ExecClientesFidelizados) {
-  const { data: clienteData } = useUsuario()
+  const { data: usuarioData } = useUsuario()
+  const history = useHistory()
 
   const { data, error } = useSWR(JSON.stringify({
     useCase: 'useClientesFidelizados',
@@ -21,15 +23,18 @@ export default function useClientesFidelizados ({ funcionarioId, perPage, curren
     currentPage,
     search
   }), () => trazerClientesFidelizados.execute(
-    funcionarioId || clienteData?.funcionario_id as unknown as number,
-    clienteData?.token as string,
+    funcionarioId || usuarioData?.funcionario_id as unknown as number,
+    usuarioData?.token as string,
     perPage,
     (currentPage - 1) * perPage,
     search || ''
   ), {
-    dedupingInterval: 60000,
-    refreshInterval: 10000
+    dedupingInterval: 60000
   })
+
+  if (error?.type === 'auth') {
+    history.push('/login')
+  }
 
   return { data, error }
 }
