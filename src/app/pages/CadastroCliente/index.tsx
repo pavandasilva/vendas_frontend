@@ -64,8 +64,7 @@ export const CadastroCliente = () => {
     executeUseCase<PostParams>(
       cadastrarCliente,
       {
-        body: deleteEmptyPropsFromObject(cliente),
-        token: 'usuarioData?.token'
+        body: deleteEmptyPropsFromObject(cliente)
       },
       sucessMessage,
       questionMessage,

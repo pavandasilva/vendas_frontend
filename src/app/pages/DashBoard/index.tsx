@@ -33,14 +33,10 @@ export const DashBoard = () => {
   }, [])
 
   const handleAtenderOnClick = useCallback((cliente: Cliente) => {
-    if (!cliente?.id) {
-
-    }
-
     addTab({
       index: cliente.id as number,
       title: `${cliente.id} - ${cliente.nome_fantasia}`,
-      content: <Atendimento cliente={cliente}/>
+      content: <Atendimento key={cliente.id} cliente={cliente}/>
     })
   }, [addTab])
 

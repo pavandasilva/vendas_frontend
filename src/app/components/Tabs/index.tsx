@@ -13,12 +13,10 @@ interface TabsProps {
 export const Tabs = ({ fixedContent, titleFixedContent }: TabsProps) => {
   const [tabFixedTitle, setTabFixedTitle] = useState('')
   const { activeTab, setActiveTab, tabs, removeTab } = useTabs()
-  const { pathname } = useLocation()
 
   useEffect(() => {
     setTabFixedTitle(titleFixedContent)
-    setActiveTab(-1)
-  }, [pathname, setActiveTab, titleFixedContent])
+  }, [setActiveTab, titleFixedContent])
 
   const handleCloseOnClick = useCallback((index: number) => {
     removeTab(index)
@@ -48,7 +46,6 @@ export const Tabs = ({ fixedContent, titleFixedContent }: TabsProps) => {
         {/*  conteúdo da tab fixa */}
         { activeTab === -1 && fixedContent }
         {/*  conteúdo da tab fixa */}
-
         { tabs?.map((tab, index) => (
           // eslint-disable-next-line eqeqeq
           index == activeTab && tab.content

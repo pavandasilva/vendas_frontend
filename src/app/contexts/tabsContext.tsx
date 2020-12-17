@@ -1,4 +1,4 @@
-import React, { createContext, useCallback, useState } from 'react'
+import React, { createContext, useCallback, useEffect, useState } from 'react'
 
 interface Tab {
   title: string,
@@ -11,7 +11,7 @@ export interface TabsContextProps {
   addTab(tab: Tab): void,
   removeTab(index: number): void,
   activeTab: number,
-  setActiveTab(index: number): void
+  setActiveTab(index: number): void,
 }
 
 export const TabsContext = createContext<TabsContextProps>({} as TabsContextProps)
@@ -20,13 +20,20 @@ export const TabsProvider: React.FC = ({ children }) => {
   const [activeTab, setActiveTab] = useState(-1)
   const [tabs, setTabs] = useState([] as Tab[])
 
-  const addTab = (tab: Tab) => {
-    setTabs(tabs => {
-      return [...tabs, tab]
-    })
+  useEffect(() => {
+    setActiveTab(tabs.length - 1)
+  }, [tabs.length])
 
-    setActiveTab(tabs.length)
-  }
+  const addTab = useCallback((tab: Tab) => {
+    setTabs(oldState => {
+      const newState = [
+        ...oldState,
+        tab
+      ]
+
+      return newState
+    })
+  }, [])
 
   const removeTab = useCallback((index: number) => {
     setTabs(tabs => tabs.filter((tab, i) => i !== index))
