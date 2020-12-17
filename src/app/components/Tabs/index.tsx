@@ -1,7 +1,6 @@
 import capitalize from 'capitalize-pt-br'
 import React, { useCallback, useEffect, useState } from 'react'
 import { FiX } from 'react-icons/fi'
-import { useLocation } from 'react-router-dom'
 import { useTabs } from '../../hooks'
 import { Container, TabContent, Tab, Close } from './styles'
 
