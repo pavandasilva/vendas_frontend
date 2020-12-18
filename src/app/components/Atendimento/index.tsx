@@ -1,8 +1,9 @@
-import React, { useState } from 'react'
-import { Geral, Pedidos, Financeiro, PedidoEmAndamento } from '..'
+import React from 'react'
+import { Geral, MenuAtendimento, PedidoEmAndamento } from '..'
 import { Cliente } from '../../../domain/clientes/models'
 import { useAtendimentoCliente } from '../../hooks/useAtendimentoCliente'
-import { MenuCLiente } from '../MenuCliente'
+import { Financeiro } from '../Financeiro'
+import { Pedidos } from '../Pedidos'
 
 import { Container, Main } from './styles'
 
@@ -11,17 +12,17 @@ interface AtendimentoProps {
 }
 
 export const Atendimento = ({ cliente }: AtendimentoProps) => {
-  const { currentTab } = useAtendimentoCliente()
+  const { currentTabs } = useAtendimentoCliente()
 
   return (
     <Container>
       <Main>
-        { currentTab === 'geral' && <Geral /> }
-        { currentTab === 'pedidos' && <Pedidos /> }
-        { currentTab === 'financeiro' && <Financeiro /> }
-        { currentTab === 'pedidoEmAndamento' && <PedidoEmAndamento /> }
+        {currentTabs[cliente?.id as number] === 'geral' && <Geral /> }
+        {currentTabs[cliente?.id as number] === 'pedidos' && <Pedidos /> }
+        {currentTabs[cliente?.id as number] === 'financeiro' && <Financeiro /> }
+        {currentTabs[cliente?.id as number] === 'pedidoEmAndamento' && <PedidoEmAndamento /> }
       </Main>
-      <MenuCLiente />
+      <MenuAtendimento cliente={cliente}/>
     </Container>
   )
 }

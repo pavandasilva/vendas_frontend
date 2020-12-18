@@ -1,12 +1,15 @@
-import React, { createContext, ReactNode, useState } from 'react'
+import React, { createContext, ReactNode, useCallback, useState } from 'react'
 
 type AtendimentoCurrentTab = 'geral' | 'pedidos' | 'financeiro' | 'pedidoEmAndamento'
 
-export interface AtendimentoClienteContextProps {
-  currentTab: AtendimentoCurrentTab,
-  setCurrentTab(currentTab: AtendimentoCurrentTab): void
+type CurrentTabs = {
+  [index: number]: AtendimentoCurrentTab
 }
 
+export interface AtendimentoClienteContextProps {
+  currentTabs: CurrentTabs
+  setCurrentTab: (clienteId: number, currentTab: AtendimentoCurrentTab) => void
+}
 interface AtendimentoClienteProviderProps {
   children: ReactNode
 }
@@ -14,11 +17,15 @@ interface AtendimentoClienteProviderProps {
 export const AtendimentoClienteContext = createContext<AtendimentoClienteContextProps>({} as AtendimentoClienteContextProps)
 
 export const AtendimentoClienteProvider = ({ children }: AtendimentoClienteProviderProps) => {
-  const [currentTab, setCurrentTab] = useState<AtendimentoCurrentTab>('geral')
+  const [state, setState] = useState<CurrentTabs>({} as CurrentTabs)
+
+  const setCurrentTab = useCallback((clienteId: number, currentTab: AtendimentoCurrentTab) => {
+    setState(oldState => ({ ...oldState, [clienteId]: currentTab }))
+  }, [])
 
   return (
     <AtendimentoClienteContext.Provider value={{
-      currentTab,
+      currentTabs: state,
       setCurrentTab
     }}>
       { children }
