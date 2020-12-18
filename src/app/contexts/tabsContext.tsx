@@ -25,6 +25,13 @@ export const TabsProvider: React.FC = ({ children }) => {
   }, [tabs.length])
 
   const addTab = useCallback((tab: Tab) => {
+    const finded = tabs.findIndex((t) => t.index === tab.index)
+
+    if (finded > -1) {
+      setActiveTab(finded)
+      return
+    }
+
     setTabs(oldState => {
       const newState = [
         ...oldState,
@@ -33,7 +40,7 @@ export const TabsProvider: React.FC = ({ children }) => {
 
       return newState
     })
-  }, [])
+  }, [tabs])
 
   const removeTab = useCallback((index: number) => {
     setTabs(tabs => tabs.filter((tab, i) => i !== index))
