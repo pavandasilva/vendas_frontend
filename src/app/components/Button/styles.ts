@@ -17,7 +17,7 @@ export const Container = styled.button<ContainerProps>`
   min-width: 117px;
   height: 36px;
   border-radius: 4px;
-  padding: 0px 5px;
+  padding: 0px 15px;
   transition: all .3s;
   user-select: none;
 

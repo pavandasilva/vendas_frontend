@@ -18,9 +18,9 @@ export const Atendimento = ({ cliente }: AtendimentoProps) => {
     <Container>
       <Main>
         {currentTabs[cliente?.id as number] === 'geral' && <Geral /> }
-        {currentTabs[cliente?.id as number] === 'pedidos' && <Pedidos /> }
+        {currentTabs[cliente?.id as number] === 'pedidos' && <Pedidos cliente={cliente}/> }
         {currentTabs[cliente?.id as number] === 'financeiro' && <Financeiro /> }
-        {currentTabs[cliente?.id as number] === 'pedidoEmAndamento' && <PedidoEmAndamento /> }
+        {currentTabs[cliente?.id as number] === 'pedidoEmAndamento' && <PedidoEmAndamento cliente={cliente}/> }
       </Main>
       <MenuAtendimento cliente={cliente}/>
     </Container>

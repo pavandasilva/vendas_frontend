@@ -1,18 +1,23 @@
 import React from 'react'
-import { SideBarProvider, UsuarioProvider, TabsProvider } from '.'
+import { SideBarProvider, UsuarioProvider, TabsProvider, AtendimentoClienteProvider } from '.'
 import { TabCadastroClienteProvider } from './tabCadastroClienteContext'
+import { OrcamentoTabsProvider } from './tabsOrcamentoContext'
 
 export const Providers: React.FC = ({ children }) => {
   return (
-    <TabCadastroClienteProvider>
-      <SideBarProvider>
-        <UsuarioProvider>
-          <TabsProvider>
-            {children}
-          </TabsProvider>
-        </UsuarioProvider>
-      </SideBarProvider>
-    </TabCadastroClienteProvider>
+    <AtendimentoClienteProvider>
+      <OrcamentoTabsProvider>
+        <TabCadastroClienteProvider>
+          <SideBarProvider>
+            <UsuarioProvider>
+              <TabsProvider>
+                {children}
+              </TabsProvider>
+            </UsuarioProvider>
+          </SideBarProvider>
+        </TabCadastroClienteProvider>
+      </OrcamentoTabsProvider>
+    </AtendimentoClienteProvider>
 
   )
 }

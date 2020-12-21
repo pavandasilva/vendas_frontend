@@ -36,7 +36,7 @@ export const DashBoard = () => {
 
   const handleAtenderOnClick = useCallback((cliente: Cliente) => {
     addTab({
-      index: cliente.id as number,
+      clienteId: cliente.id as number,
       title: `${cliente.id} - ${cliente.nome_fantasia}`,
       content: <Atendimento key={cliente.id} cliente={cliente}/>
     })

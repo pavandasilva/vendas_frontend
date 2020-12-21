@@ -1,0 +1,22 @@
+export interface Produto {
+  id?: number,
+  classificacao_fiscal: string,
+  origem: string,
+  peso_liquido: number,
+  peso_bruto: number,
+  volume: number,
+  qtde_volume: number,
+  unidade: string,
+  exibir_internet: 's' | 'n',
+  ipi_venda: number,
+  ipi_compra: number,
+  marca: string,
+  nome_popular: string,
+  nome_tecnico: string,
+  produto_pai: number,
+  codigo_fabrica: string,
+  status: 'ativo' | 'inativo',
+  tipo_preco: 'psd' | 'pp'
+  created_at: string,
+  updated_at: string,
+}
