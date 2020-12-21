@@ -1,4 +1,4 @@
-import React, { ReactNode, useCallback } from 'react'
+import React, { ReactNode, useCallback, useEffect } from 'react'
 import { FiX } from 'react-icons/fi'
 import { Button } from '..'
 
@@ -16,6 +16,12 @@ interface ModalProps {
 }
 
 export const Modal = ({ title, children, buttonSaveText, buttonCancelText, showButtonSave, mode = 'normal', close, onSave }: ModalProps) => {
+  useEffect(() => {
+    document.body.style.overflow = 'hidden'
+
+    return () => { document.body.style.overflow = 'unset' }
+  }, [])
+
   const handleSaveButtonClick = useCallback(() => {
     onSave && onSave()
     close()

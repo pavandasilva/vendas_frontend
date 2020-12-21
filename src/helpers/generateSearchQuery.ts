@@ -9,7 +9,7 @@ export function generateSearchQuery (words?: string | undefined, filterOptions?:
 
   if (filterOptions) {
     Object.keys(filterOptions).forEach(key => {
-      result += `${words ? '&' : '?'}${key}=${filterOptions[key as keyof FilterOptions]}`
+      result += `${result.length ? '&' : '?'}${key}=${filterOptions[key as keyof FilterOptions]}`
     })
   }
 

@@ -5,7 +5,6 @@ export const Container = styled.div`
   left: 0;
   position: fixed;
   z-index: 999;
-  border-radius: 4px;
   background-color: rgba(0,0,0,.4);
   height: 100vh;
   width: 100%;
