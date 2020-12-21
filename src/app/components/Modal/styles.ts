@@ -1,58 +1,54 @@
 import styled from 'styled-components'
 
 export const Container = styled.div`
-  background: rgba(0, 0, 0, 0);
   top: 0;
   left: 0;
-  right: 0;
-  bottom: 0;
   position: fixed;
-  z-index:999;
+  z-index: 999;
   border-radius: 4px;
   background-color: rgba(0,0,0,.4);
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `
-export const BoxModal = styled.div`
-  border-radius: 4px;
-  top: 50%;
-  width: 500px;
-  height: auto;
-  margin: -16px auto 0;
-  position: relative;
-  transform: translateY(-50%);
-  background-color: rgba(0, 0, 0, 0.07) ;
-  background-color: ${props => props.theme.colors.backgroundLight} ;
-  position: relative;
-  padding-bottom: 70px;
 
-  & > div {
-    padding: 0px 15px;
+interface BoxModalProps {
+  mode?: 'fullscreen' | 'normal'
+}
+
+export const BoxModal = styled.div<BoxModalProps>`
+  border-radius: 4px;
+  width: ${props => props.mode === 'fullscreen' ? '98%' : '500px'} ;
+  height: ${props => props.mode === 'fullscreen' ? 'calc(100% - 15px)' : 'auto'};
+  position: relative;
+  background-color: ${props => props.theme.colors.backgroundLight};
+  position: relative;
+  padding: 0px 30px;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+
+  & > div:nth-of-type(3) {
+    overflow: hidden;
   }
 `
 
 export const Header = styled.div`
-  padding: 30px 15px;
-  display: flex;
-  align-items: center;
-  height: 80px;
-  border-bottom: 1px solid ${props => props.theme.colors.borderLight};
-  position: relative;
-  border-top-left-radius: 4px;
-  border-top-right-radius: 4px;
-
   h1 {
     font-size: 18px;
   }
 
   & > div {
+    z-index: 999;
     position: absolute;
-    top: 15px;
-    right: 15px;
+    top: 30px;
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
     align-items: flex-start;
-    height: 50px;
-    width: 50px;
+    width: calc(100% - 60px);
     cursor: pointer;
+    border-bottom: 1px solid ${props => props.theme.colors.borderLight};
+    padding-bottom: 15px;
 
     & > svg {
       width: 24px;
@@ -68,16 +64,52 @@ export const Header = styled.div`
     }
   }
 `
+
+export const Content = styled.div`
+  margin-top: 45px;
+  height: calc(100% - 60px);
+  width: 100%;
+  overflow: auto;
+  scroll-behavior: smooth;
+  display: flex;
+  flex-direction: column;
+  border-top: 40px solid transparent;
+  border-bottom: 30px solid transparent;
+  padding: 0px 7px 0px 0px;
+
+
+   /* width */
+   ::-webkit-scrollbar {
+    width: 10px;
+  }
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: ${props => props.theme.colors.backgroundLight};
+    border-radius: 4px;
+    margin-top: 3px;
+    margin-bottom: 50px;
+  }
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: ${props => props.theme.colors.borderLight};
+    border-radius: 4px;
+  }
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: ${props => props.theme.colors.border};
+  }
+
+`
 export const ContainerFooter = styled.div`
   display: flex;
+  flex: 1;
   justify-content: flex-end;
-  bottom: 0px;
-  padding: 30px 15px;
+  align-items: flex-start;
+  height: 100%;
+  padding: 20px 0px 0px;
   display: flex;
-  align-items: center;
-  height: 70px;
+  margin-top: 15px;
   border-top: 1px solid ${props => props.theme.colors.borderLight};
-  position: absolute;
   width: 100%;
 
   > button + button {

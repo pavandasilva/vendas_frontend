@@ -1,10 +1,11 @@
 import capitalize from 'capitalize-pt-br'
-import React, { useMemo } from 'react'
-import { FaSearch, FaPlus } from 'react-icons/fa'
+import React, { useMemo, useState } from 'react'
+import { FaPlus, FaSearch } from 'react-icons/fa'
 import ReactTable, { Column } from 'react-table-6'
-import { Input, Button } from '..'
+import { Input, Button, Modal } from '..'
 import { Cliente } from '../../../domain/clientes/models'
 import { useAtendimentoCliente } from '../../hooks/useAtendimentoCliente'
+import { AdicionarProduto } from '../AdicionarProduto'
 import { Container, Header, Content } from './styles'
 
 interface ProdutosProps {
@@ -13,6 +14,7 @@ interface ProdutosProps {
 
 export const Produtos = ({ cliente }: ProdutosProps) => {
   const { pedidos } = useAtendimentoCliente()
+  const [showProdutoModal, setShowProdutoModal] = useState(false)
 
   const columns: Column[] = useMemo(() => [
     {
@@ -58,14 +60,6 @@ export const Produtos = ({ cliente }: ProdutosProps) => {
 
   }
 
-  const handleOnPageChange = () => {
-
-  }
-
-  const handleAdicionarProdutoOnClick = () => {
-
-  }
-
   return (
     <Container>
       <Header>
@@ -77,7 +71,7 @@ export const Produtos = ({ cliente }: ProdutosProps) => {
             mode="confirm"
             startIcon={FaPlus}
             type="button"
-            onClick={ handleAdicionarProdutoOnClick}>
+            onClick={ () => setShowProdutoModal(true)}>
             Adicionar produto
           </Button>
         </div>
@@ -96,6 +90,15 @@ export const Produtos = ({ cliente }: ProdutosProps) => {
           noDataText="Nenhum item no orçamento"
         />
       </Content>
+
+      {showProdutoModal && <Modal
+        title='Lista de produtos'
+        buttonSaveText='Adicionar produto'
+        mode='fullscreen'
+        close={() => setShowProdutoModal(false)}
+      >
+        <AdicionarProduto />
+      </Modal>}
     </Container>
   )
 }

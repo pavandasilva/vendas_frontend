@@ -1,7 +1,7 @@
 import { useHistory } from 'react-router-dom'
 import useSWR from 'swr'
-import { makeTrazerProdutos } from '../../domain/Produtos/factories/makeTrazerProdutos'
 import { useUsuario } from '.'
+import { makeTrazerProdutos } from '../../domain/produtos/factories/makeTrazerProdutos'
 
 const trazerProdutos = makeTrazerProdutos()
 

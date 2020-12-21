@@ -7,9 +7,14 @@ export class TrazerProdutos {
     this.produtoService = produtoService
   }
 
-  async execute (query: string): Promise<GetProdutosListResponse> {
+  async execute (token: string, limit: number, skip: number, search:string): Promise<GetProdutosListResponse> {
     return await this.produtoService.getlist({
-      filter: query
+      token,
+      filter: search,
+      filterOptions: {
+        limit,
+        skip
+      }
     })
   }
 }

@@ -1,6 +1,6 @@
 import { GetParams } from '../../_interfaces'
-import { GetProdutosResponse } from './getProdutosResponse'
+import { GetProdutosListResponse } from './getProdutosListResponse'
 
 export interface ProdutoService {
-  getlist: (params: GetParams) => Promise <GetProdutosResponse>
+  getlist: (params: GetParams) => Promise <GetProdutosListResponse>
 }
