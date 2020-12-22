@@ -1,8 +1,8 @@
 import React from 'react'
 import { FaList, FaShoppingCart, FaFunnelDollar, FaClipboardList } from 'react-icons/fa'
 import { Cliente } from '../../../domain/clientes/models'
-import { Pedido } from '../../../domain/clientes/models/pedido'
-import { useAtendimentoCliente } from '../../hooks/useAtendimentoCliente'
+import { useAtendimentoTabs } from '../../hooks/useAtendimentoTabs'
+import { useOrcamentos } from '../../hooks/useOrcamentos'
 import { useOrcamentoTabs } from '../../hooks/useOrcamentoTabs'
 import { Container, Button } from './styles'
 
@@ -11,15 +11,12 @@ interface MenuAtendimentoProps {
 }
 
 export const MenuAtendimento = ({ cliente }: MenuAtendimentoProps) => {
-  const { setCurrentTab, currentTabs, pedidos, setPedido } = useAtendimentoCliente()
+  const { setCurrentTab, currentTabs } = useAtendimentoTabs()
+  const { orcamentos, setOrcamento } = useOrcamentos()
   const { setCurrentTab: setCurrentOrcamentoTab } = useOrcamentoTabs()
 
   const handleNovoOrcamentoOnClick = () => {
-    const initialState: Pedido = {
-      itens: []
-    }
-
-    setPedido(cliente.id as number, initialState)
+    setOrcamento(cliente.id as number, [])
     setCurrentTab(cliente.id as number, 'pedidoEmAndamento')
     setCurrentOrcamentoTab(cliente.id as number, 'dadosGerais')
   }
@@ -45,7 +42,7 @@ export const MenuAtendimento = ({ cliente }: MenuAtendimentoProps) => {
         <FaFunnelDollar /><span>Financeiro</span>
       </Button>
 
-      { pedidos[cliente.id as number]
+      { orcamentos[cliente.id as number]
         ? (
           <Button
             selected={currentTabs[cliente.id as number] === 'pedidoEmAndamento'}

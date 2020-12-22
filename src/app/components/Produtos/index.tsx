@@ -1,10 +1,10 @@
 import capitalize from 'capitalize-pt-br'
-import React, { useMemo, useState } from 'react'
+import React, { ChangeEvent, useState } from 'react'
 import { FaPlus, FaSearch } from 'react-icons/fa'
 import ReactTable, { Column } from 'react-table-6'
 import { Input, Button, Modal } from '..'
 import { Cliente } from '../../../domain/clientes/models'
-import { useAtendimentoCliente } from '../../hooks/useAtendimentoCliente'
+import { useOrcamentos } from '../../hooks/useOrcamentos'
 import { AdicionarProduto } from '../AdicionarProduto'
 import { Container, Header, Content } from './styles'
 
@@ -13,51 +13,71 @@ interface ProdutosProps {
 }
 
 export const Produtos = ({ cliente }: ProdutosProps) => {
-  const { pedidos } = useAtendimentoCliente()
+  const { orcamentos } = useOrcamentos()
   const [showProdutoModal, setShowProdutoModal] = useState(false)
 
-  const columns: Column[] = useMemo(() => [
+  const columns: Column[] = [
     {
       Header: '#',
-      accessor: 'id',
-      minWidth: 10
+      minWidth: 15,
+      accessor: 'produto.id'
+    },
+    {
+      Header: 'Descrição',
+      accessor: 'produto.nome_popular',
+      Cell: ({ value }) => capitalize(value)
     },
     {
       Header: 'Qtde',
       accessor: 'quantidade',
-      minWidth: 14
+      minWidth: 20
     },
     {
-      Header: 'Unidade',
-      accessor: 'unidade',
-      minWidth: 18
+      Header: 'Falta',
+      minWidth: 20
     },
     {
-      Header: 'Nome popular',
-      accessor: 'nome_popular',
-      Cell: ({ value }) => capitalize(value)
+      Header: 'Preço',
+      minWidth: 20
     },
     {
-      Header: 'Nome técnico',
-      accessor: 'nome_tecnico',
-      Cell: ({ value }) => value.toString().toUpperCase()
+      Header: 'Valor unit.',
+      minWidth: 20
     },
     {
-      Header: 'Marca',
-      accessor: 'marca',
-      Cell: ({ value }) => value.toString().toUpperCase(),
-      minWidth: 30
+      Header: 'Acres',
+      minWidth: 20
     },
     {
-      Header: 'Status',
-      accessor: 'status',
-      Cell: ({ value }) => capitalize(value),
-      minWidth: 17
+      Header: 'Desc',
+      minWidth: 20
+    },
+    {
+      Header: 'ST',
+      minWidth: 20
+    },
+    {
+      Header: 'Total',
+      minWidth: 20
     }
-  ], [])
+  ]
 
-  const handleFilterOnChange = () => {
+  const handleFilterOnChange = (e: ChangeEvent<HTMLInputElement>) => {
+    /*  const filter = e.currentTarget.value
 
+    const filtered = orcamentos[cliente.id as number].filter(item => {
+      if (item?.produto?.marca?.includes(filter)) {
+        return true
+      } else if (item?.produto?.nome_popular?.includes(filter)) {
+        return true
+      } else if (item?.produto?.nome_tecnico?.includes(filter)) {
+        return true
+      } else {
+        return false
+      }
+    })
+
+    setFiltered(filtered) */
   }
 
   return (
@@ -77,9 +97,12 @@ export const Produtos = ({ cliente }: ProdutosProps) => {
         </div>
       </Header>
       <Content>
+
         <ReactTable
           columns={columns}
-          data={pedidos[cliente.id as number]?.itens}
+          data={orcamentos[cliente.id as number]}
+          pageSize={30}
+          page={0}
           sortable={false}
           nextText="Próximo"
           previousText="Anterior"
@@ -87,7 +110,8 @@ export const Produtos = ({ cliente }: ProdutosProps) => {
           ofText= "de"
           showPageSizeOptions= { false }
           loadingText="carregando..."
-          noDataText="Nenhum item no orçamento"
+          noDataText="Nenhum cliente encontrado"
+
         />
       </Content>
 
@@ -97,7 +121,7 @@ export const Produtos = ({ cliente }: ProdutosProps) => {
         mode='fullscreen'
         close={() => setShowProdutoModal(false)}
       >
-        <AdicionarProduto />
+        <AdicionarProduto cliente={cliente} closeModal={() => setShowProdutoModal(false)}/>
       </Modal>}
     </Container>
   )

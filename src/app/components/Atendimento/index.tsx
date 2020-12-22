@@ -1,7 +1,7 @@
 import React from 'react'
 import { Geral, MenuAtendimento, PedidoEmAndamento } from '..'
 import { Cliente } from '../../../domain/clientes/models'
-import { useAtendimentoCliente } from '../../hooks/useAtendimentoCliente'
+import { useAtendimentoTabs } from '../../hooks/useAtendimentoTabs'
 import { Financeiro } from '../Financeiro'
 import { Pedidos } from '../Pedidos'
 
@@ -12,7 +12,7 @@ interface AtendimentoProps {
 }
 
 export const Atendimento = ({ cliente }: AtendimentoProps) => {
-  const { currentTabs } = useAtendimentoCliente()
+  const { currentTabs } = useAtendimentoTabs()
 
   return (
     <Container>

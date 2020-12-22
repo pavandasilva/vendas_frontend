@@ -1,6 +1,6 @@
 import React, { createContext, ReactNode, useCallback, useState } from 'react'
 
-export type OrcamentoTabsType = 'dadosGerais' | 'produtos'
+export type OrcamentoTabsType = 'dadosGerais' | 'produtos' | 'resumo'
 
 type CurrentTabs = {
   [clienteId: number]: OrcamentoTabsType

@@ -9,7 +9,7 @@ import { Cliente } from '../../../domain/clientes/models'
 import capitalize from 'capitalize-pt-br'
 import { useHistory } from 'react-router-dom'
 import { useCadastroCliente, useTabs } from '../../hooks'
-import { useAtendimentoCliente } from '../../hooks/useAtendimentoCliente'
+import { useAtendimentoTabs } from '../../hooks/useAtendimentoTabs'
 
 const perPage = 10
 
@@ -20,7 +20,7 @@ export const DashBoard = () => {
   const [currentPage, setCurrentPage] = useState(0)
   const { setCurrentTab, setDataMode: setClienteDataMode } = useCadastroCliente()
   const { addTab } = useTabs()
-  const { setCurrentTab: setCurrentTabAtendimento } = useAtendimentoCliente()
+  const { setCurrentTab: setCurrentTabAtendimento } = useAtendimentoTabs()
 
   const { data: clientesFidelizados } = useClientesFidelizados({
     funcionarioId: 1007,

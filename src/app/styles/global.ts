@@ -63,6 +63,7 @@ export const GlobalStyle = createGlobalStyle`
     text-align: center
   }
 
+
   .ReactTable .rt-thead .rt-th,
   .ReactTable .rt-thead .rt-td {
     padding: 5px 5px;
@@ -141,6 +142,8 @@ export const GlobalStyle = createGlobalStyle`
     display: flex;
     flex-direction: column;
     overflow: auto;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .ReactTable .rt-tbody .rt-tr-group {
@@ -952,6 +955,13 @@ export const GlobalStyle = createGlobalStyle`
     background: ${props => props.theme.colors.backgroundLight};
     font-family: inherit;
     font-size: 14px;
+  }
+
+  .swal2-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 1.8em;
   }
 
   .swal2-title {

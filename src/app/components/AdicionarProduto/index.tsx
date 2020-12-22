@@ -1,16 +1,26 @@
 import capitalize from 'capitalize-pt-br'
 import React, { useCallback, useMemo, useState } from 'react'
-import { FaSearch, FaPlus } from 'react-icons/fa'
+import { FaSearch } from 'react-icons/fa'
 import ReactTable, { Column, RowInfo } from 'react-table-6'
+import Swal from 'sweetalert2'
 import { Input } from '..'
+import { Cliente } from '../../../domain/clientes/models'
+import { ItemOrcamento } from '../../../domain/clientes/models/itemOrcamento'
 import { Produto } from '../../../domain/produtos/models/produto'
+import { useOrcamentos } from '../../hooks/useOrcamentos'
 import useProdutos from '../../hooks/useProdutos'
 import { Container, Header } from './styles'
 
-const perPage = 2
+const perPage = 30
 
-export const AdicionarProduto = () => {
+interface AdicionarProdutoProps {
+  closeModal: () => void
+  cliente: Cliente
+}
+
+export const AdicionarProduto = ({ closeModal, cliente }: AdicionarProdutoProps) => {
   const [selectedRowTableIndex, setSelectedRowTableIndex] = useState(-1)
+  const { orcamentos, setOrcamento } = useOrcamentos()
 
   const columns: Column[] = useMemo(() => [
     {
@@ -95,7 +105,34 @@ export const AdicionarProduto = () => {
   }
 
   const dbClickTableRowOnclick = (produto: Produto) => {
-    console.log(produto)
+    Swal.queue([{
+      title: `${produto?.id} - ${produto.nome_popular}`,
+      confirmButtonText: 'Adicionar ao orçamento',
+      cancelButtonText: 'Cancelar',
+      text: 'Quantidade:',
+      input: 'number',
+      inputAttributes: {
+        autocapitalize: 'off',
+        placeHolder: 'Quantidade',
+        min: '1'
+      },
+      showLoaderOnConfirm: true,
+      showCancelButton: true,
+
+      preConfirm: async (result) => {
+        const newItemOrcamento: ItemOrcamento = {
+          produto,
+          quantidade: result
+        }
+
+        console.log('newItemOrcamento', newItemOrcamento)
+
+        const oldItensOrcamento = orcamentos[cliente?.id as number]
+        oldItensOrcamento.push(newItemOrcamento)
+        setOrcamento(cliente?.id as number, oldItensOrcamento)
+        closeModal()
+      }
+    }])
   }
   return (
     <Container selectedRowTableIndex={selectedRowTableIndex}>

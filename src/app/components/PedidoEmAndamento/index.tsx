@@ -1,9 +1,9 @@
 import React, { useCallback } from 'react'
 import { FaShare } from 'react-icons/fa'
-import { Button, Produtos } from '..'
+import { Button, Produtos, Resumo } from '..'
 import { Cliente } from '../../../domain/clientes/models'
 import { OrcamentoTabsType } from '../../contexts'
-import { useAtendimentoCliente } from '../../hooks/useAtendimentoCliente'
+import { useOrcamentos } from '../../hooks/useOrcamentos'
 import { useOrcamentoTabs } from '../../hooks/useOrcamentoTabs'
 import { DadosGerais } from '../DadosGerais'
 import { Container, Content } from './styles'
@@ -13,7 +13,7 @@ interface PedidoEmAndamentoProps {
 }
 
 export const PedidoEmAndamento = ({ cliente }: PedidoEmAndamentoProps) => {
-  const { pedidos, setPedido } = useAtendimentoCliente()
+  const { orcamentos, setOrcamento } = useOrcamentos()
   const { currentTabs, setCurrentTab } = useOrcamentoTabs()
 
   const handleFilterOnChange = () => {
@@ -49,6 +49,12 @@ export const PedidoEmAndamento = ({ cliente }: PedidoEmAndamentoProps) => {
             active={currentTabs[cliente.id as number] === 'produtos'}
             onClick={handleMenuOnClick}>Produtos
           </Button>
+          <Button
+            name="resumo"
+            mode="secondary"
+            active={currentTabs[cliente.id as number] === 'resumo'}
+            onClick={handleMenuOnClick}>Resumo
+          </Button>
         </div>
         <div>
           <Button mode="primary" startIcon={FaShare} onClick={handleFinalizarOnClick}>Finalizar</Button>
@@ -57,6 +63,7 @@ export const PedidoEmAndamento = ({ cliente }: PedidoEmAndamentoProps) => {
 
       { currentTabs[cliente.id as number] === 'dadosGerais' && <DadosGerais /> }
       { currentTabs[cliente.id as number] === 'produtos' && <Produtos cliente={cliente} /> }
+      { currentTabs[cliente.id as number] === 'resumo' && <Resumo cliente={cliente} /> }
 
       {/* <header>
         <div>
