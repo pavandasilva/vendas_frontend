@@ -1,8 +1,9 @@
 import React from 'react'
-import { Geral, MenuAtendimento, PedidoEmAndamento } from '..'
+import { Geral, MenuAtendimento } from '..'
 import { Cliente } from '../../../domain/clientes/models'
 import { useAtendimentoTabs } from '../../hooks/useAtendimentoTabs'
 import { Financeiro } from '../Financeiro'
+import { OrcamentoEmAndamento } from '../OrcamentoEmAndamento'
 import { Pedidos } from '../Pedidos'
 
 import { Container, Main } from './styles'
@@ -20,7 +21,7 @@ export const Atendimento = ({ cliente }: AtendimentoProps) => {
         {currentTabs[cliente?.id as number] === 'geral' && <Geral /> }
         {currentTabs[cliente?.id as number] === 'pedidos' && <Pedidos cliente={cliente}/> }
         {currentTabs[cliente?.id as number] === 'financeiro' && <Financeiro /> }
-        {currentTabs[cliente?.id as number] === 'pedidoEmAndamento' && <PedidoEmAndamento cliente={cliente}/> }
+        {currentTabs[cliente?.id as number] === 'pedidoEmAndamento' && <OrcamentoEmAndamento cliente={cliente}/> }
       </Main>
       <MenuAtendimento cliente={cliente}/>
     </Container>
