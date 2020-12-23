@@ -1,7 +1,9 @@
 import capitalize from 'capitalize-pt-br'
-import React, { ChangeEvent, useState } from 'react'
+import React, { ChangeEvent, useCallback, useRef, useState } from 'react'
 import { FaPlus, FaSearch } from 'react-icons/fa'
-import ReactTable, { Column } from 'react-table-6'
+import ReactTable, { Column, RowInfo } from 'react-table-6'
+import { useTheme } from 'styled-components'
+import Swal from 'sweetalert2'
 import { Input, Button, Modal } from '..'
 import { Cliente } from '../../../domain/clientes/models'
 import { useOrcamentos } from '../../hooks/useOrcamentos'
@@ -13,8 +15,10 @@ interface ProdutosProps {
 }
 
 export const Produtos = ({ cliente }: ProdutosProps) => {
-  const { orcamentos } = useOrcamentos()
+  const { orcamentos, setItensOrcamento } = useOrcamentos()
   const [showProdutoModal, setShowProdutoModal] = useState(false)
+  const [selectedRowTableIndex, setSelectedRowTableIndex] = useState(-1)
+  const { colors } = useTheme()
 
   const columns: Column[] = [
     {
@@ -80,14 +84,45 @@ export const Produtos = ({ cliente }: ProdutosProps) => {
     setFiltered(filtered) */
   }
 
+  const element = useRef<HTMLDivElement>(null)
+
+  const clickTableRowOnclick = (rowIndex: number) => {
+    setSelectedRowTableIndex(rowIndex)
+    element.current?.focus()
+  }
+
+  const handleOnKeyPress = useCallback(async (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === 'Delete') {
+      if (selectedRowTableIndex >= 0) {
+        const result = await Swal.fire({
+          title: 'Você deseja remover o item do pedido?',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonText: 'Sim, remover o item do pedido!',
+          cancelButtonText: 'Cancelar',
+          toast: true
+        })
+
+        if (result.isConfirmed) {
+          const oldItensOrcamento = orcamentos[cliente.id as number].itens
+          const newItensOrcamento = oldItensOrcamento?.filter((state, index) => index !== selectedRowTableIndex)
+          setItensOrcamento(cliente?.id as number, newItensOrcamento)
+        }
+
+        setSelectedRowTableIndex(-1)
+      }
+    }
+  }, [cliente.id, orcamentos, selectedRowTableIndex, setItensOrcamento])
+
   return (
     <Container>
       <Header>
         <div>
-          <Input type='text' startIcon={FaSearch} onChange={handleFilterOnChange}/>
+          {/* <Input tabIndex={0} type='text' startIcon={FaSearch} onChange={handleFilterOnChange}/> */}
         </div>
         <div>
           <Button
+            tabIndex={1}
             mode="confirm"
             startIcon={FaPlus}
             type="button"
@@ -96,11 +131,10 @@ export const Produtos = ({ cliente }: ProdutosProps) => {
           </Button>
         </div>
       </Header>
-      <Content>
-
+      <Content selectedRowTableIndex={selectedRowTableIndex} tabIndex={2} onKeyPress={handleOnKeyPress}>
         <ReactTable
           columns={columns}
-          data={orcamentos[cliente.id as number]}
+          data={orcamentos[cliente.id as number]?.itens}
           pageSize={30}
           page={0}
           sortable={false}
@@ -111,11 +145,21 @@ export const Produtos = ({ cliente }: ProdutosProps) => {
           showPageSizeOptions= { false }
           loadingText="carregando..."
           noDataText="Nenhum cliente encontrado"
+          getTrProps={(finalState: any, rowInfo?: RowInfo, column?: undefined, instance?: any) => {
+            if (rowInfo) {
+              return {
+                onClick: () => {
+                  clickTableRowOnclick(rowInfo?.index)
+                }
+              }
+            }
 
+            return {}
+          }}
         />
       </Content>
 
-      {showProdutoModal && <Modal
+      { showProdutoModal && <Modal
         title='Lista de produtos'
         buttonSaveText='Adicionar produto'
         mode='fullscreen'

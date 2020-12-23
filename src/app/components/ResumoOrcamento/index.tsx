@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Card } from '..'
 import { Cliente } from '../../../domain/clientes/models'
 import { useOrcamentos } from '../../hooks/useOrcamentos'
@@ -9,12 +9,12 @@ interface ResumoOrcamentoProps {
 }
 
 export const ResumoOrcamento = ({ cliente }: ResumoOrcamentoProps) => {
-  const { orcamentos, setOrcamento } = useOrcamentos()
+  const { orcamentos } = useOrcamentos()
 
   return (
     <Container>
-      <Card mode="normal" title="Itens" text={orcamentos[cliente.id as number].length as unknown as string}/>
-      <Card mode="info" title="Sub total" text={orcamentos[cliente.id as number].length as unknown as string}/>
+      <Card mode="normal" title="Itens" text={orcamentos[cliente.id as number]?.itens?.length as unknown as string}/>
+      <Card mode="info" title="Sub total" text={orcamentos[cliente.id as number]?.itens?.length as unknown as string}/>
       <Card mode="danger" title="Acréscimos" text="415,99"/>
       <Card mode="success" title="Descontos" text="15,99"/>
       <Card mode="danger" title="IPI/ISS" text="0.00"/>

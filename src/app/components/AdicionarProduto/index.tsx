@@ -20,7 +20,7 @@ interface AdicionarProdutoProps {
 
 export const AdicionarProduto = ({ closeModal, cliente }: AdicionarProdutoProps) => {
   const [selectedRowTableIndex, setSelectedRowTableIndex] = useState(-1)
-  const { orcamentos, setOrcamento } = useOrcamentos()
+  const { orcamentos, setItensOrcamento } = useOrcamentos()
 
   const columns: Column[] = useMemo(() => [
     {
@@ -125,11 +125,8 @@ export const AdicionarProduto = ({ closeModal, cliente }: AdicionarProdutoProps)
           quantidade: result
         }
 
-        console.log('newItemOrcamento', newItemOrcamento)
-
-        const oldItensOrcamento = orcamentos[cliente?.id as number]
-        oldItensOrcamento.push(newItemOrcamento)
-        setOrcamento(cliente?.id as number, oldItensOrcamento)
+        const itensOrcamento = [...orcamentos[cliente?.id as number].itens, newItemOrcamento]
+        setItensOrcamento(cliente?.id as number, itensOrcamento)
         closeModal()
       }
     }])

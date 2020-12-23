@@ -52,7 +52,7 @@ export const OrcamentoEmAndamento = ({ cliente }: OrcamentoEmAndamentoProps) => 
         </div>
       </header>
       <ResumoOrcamento cliente={cliente}></ResumoOrcamento>
-      { currentTabs[cliente.id as number] === 'dadosGerais' && <DadosGerais /> }
+      { currentTabs[cliente.id as number] === 'dadosGerais' && <DadosGerais cliente={cliente} /> }
       { currentTabs[cliente.id as number] === 'produtos' && <Produtos cliente={cliente} /> }
     </Container>
 

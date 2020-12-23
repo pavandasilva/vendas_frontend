@@ -12,11 +12,11 @@ interface MenuAtendimentoProps {
 
 export const MenuAtendimento = ({ cliente }: MenuAtendimentoProps) => {
   const { setCurrentTab, currentTabs } = useAtendimentoTabs()
-  const { orcamentos, setOrcamento } = useOrcamentos()
+  const { orcamentos, startOrcamento } = useOrcamentos()
   const { setCurrentTab: setCurrentOrcamentoTab } = useOrcamentoTabs()
 
   const handleNovoOrcamentoOnClick = () => {
-    setOrcamento(cliente.id as number, [])
+    startOrcamento(cliente.id as number)
     setCurrentTab(cliente.id as number, 'pedidoEmAndamento')
     setCurrentOrcamentoTab(cliente.id as number, 'dadosGerais')
   }

@@ -1043,6 +1043,20 @@ export const GlobalStyle = createGlobalStyle`
     font-size: 1.125em;
     height: 36px !important;
   }
+
+  .swal2-popup.swal2-toast.swal2-show {
+    animation: swal2-show .3s;
+  }
+
+  .swal2-popup.swal2-toast {
+    flex-direction: row;
+    align-items: center;
+    width: auto;
+    padding: 15px !important;
+    overflow-y: hidden;
+    border: solid 1px ${props => props.theme.colors.border} !important;
+    box-shadow: 0px 0px 4px 4px rgba(0,0,0,0.05);
+  }
 `
 interface FormRowProps {
   width?: string
