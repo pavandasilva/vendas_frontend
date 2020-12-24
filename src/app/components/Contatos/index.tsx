@@ -82,7 +82,7 @@ export const Contatos = () => {
     setContatos(newContatos as Contato[])
   }, [searchValue, cliente])
 
-  const columns: Column[] = useMemo(() => [
+  const columns: Column[] = [
     {
       Header: 'Nome',
       accessor: 'nome',
@@ -193,10 +193,8 @@ export const Contatos = () => {
           )
         }
       }
-
     }
-
-  ], [contatosError, handleAdicionarContatoOnClick])
+  ]
 
   const handleModalCadastroOnSave = useCallback(() => {
     if (!contato) {

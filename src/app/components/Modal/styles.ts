@@ -19,7 +19,7 @@ interface BoxModalProps {
 
 export const BoxModal = styled.div<BoxModalProps>`
   border-radius: 4px;
-  width: ${props => props.mode === 'fullscreen' ? '98%' : '500px'} ;
+  width: ${props => props.mode === 'fullscreen' ? '98%' : '600px'} ;
   height: ${props => props.mode === 'fullscreen' ? 'calc(100% - 15px)' : 'auto'};
   position: relative;
   background-color: ${props => props.theme.colors.backgroundLight};

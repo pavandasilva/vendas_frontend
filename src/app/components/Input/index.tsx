@@ -1,6 +1,7 @@
 import React, {
   ChangeEvent,
   InputHTMLAttributes,
+  ReactElement,
   useCallback,
   useEffect,
   useRef,
@@ -12,19 +13,33 @@ import InputMask, { ReactInputMask } from 'react-input-mask'
 import { IconType } from 'react-icons'
 import { Wrapper, Container, IconPassword, Label, IconError, ToolTip, Icon } from './styles'
 import { getIEMask, IEType } from '../../../helpers/getIEMask'
-
+import { Modal } from '../Modal'
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
-  startIcon?: IconType;
-  title?: string;
-  error?: string;
-  onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
+  startIcon?: IconType
+  title?: string
+  error?: string
+  onChange?: (e: ChangeEvent<HTMLInputElement>) => void
   width?: string;
   type?: 'cnpj' | 'cpf' | 'text' | 'password' | 'email' | 'cep' | 'ddd' | 'telefone' | 'celular' | IEType
+  f2Title?: string
+  f2Content?: React.ReactNode
+  f2CallBack?: (value: any) => void
 }
 
 const isIeType = (type: string): boolean => type?.includes('ie-')
 
-export const Input = ({ startIcon: StartIcon, title, error, onChange, width, type: typeProp, ...rest }: InputProps) => {
+export const Input = ({
+  startIcon: StartIcon,
+  title, error,
+  onChange,
+  width,
+  disabled,
+  f2Title,
+  f2Content,
+  f2CallBack,
+  type: typeProp,
+  ...rest
+}: InputProps) => {
   const [isActive, setIsActive] = useState(false)
   const [hasContent, setHasContent] = useState(false)
   const [type, setType] = useState('text')
@@ -32,6 +47,7 @@ export const Input = ({ startIcon: StartIcon, title, error, onChange, width, typ
   const [inputError, setInputError] = useState('')
   const [showToolTip, setShowToolTip] = useState(false)
   const [mask, setMask] = useState('')
+  const [f2ModalIsvisible, setF2ModalIsvisible] = useState(false)
   const inputEl = useRef<ReactInputMask>({} as ReactInputMask)
 
   useEffect(() => {
@@ -92,30 +108,50 @@ export const Input = ({ startIcon: StartIcon, title, error, onChange, width, typ
     setShowToolTip(false)
   }, [])
 
+  const handleOnKeyDown = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'F2') {
+      setF2ModalIsvisible(true)
+    }
+  }, [])
+
+  const F2Content = useCallback(() => {
+    return React.cloneElement(f2Content as ReactElement, {
+      close: () => setF2ModalIsvisible(false),
+      callBack: f2CallBack
+    })
+  }, [f2CallBack, f2Content])
+
   return (
     <Wrapper className="wrapper-input" width={width}>
       {(!!title || (hasContent && !!title)) && <Label isActive={isActive || (!isActive && hasContent)}>{title}</Label> }
-      <Container isActive={isActive} error={inputError} /* onClick={handleContainerOnClick} */ hasStartIcon={!!StartIcon}>
-        {StartIcon && <Icon isActive={isActive} error={inputError} /* onClick={handleContainerOnClick} */ hasStartIcon={!!StartIcon}><StartIcon /></Icon>}
+      <Container
+        isActive={isActive}
+        error={inputError}
+        hasStartIcon={!!StartIcon}
+        disabled={disabled}
+        hasf2={!!f2Content}
+      >
+        {StartIcon && <Icon isActive={isActive} error={inputError} hasStartIcon={!!StartIcon}><StartIcon /></Icon>}
+
         <InputMask
           ref={inputEl}
           { ...rest}
+          disabled={disabled}
           onFocus={onFocus}
           onBlur={onBlur}
+          onKeyDown={handleOnKeyDown}
           onChange={onChange}
           type={type}
           mask={mask}
         />
 
         {typeProp === 'password' && (
-
           <IconPassword
             showPassword={showPassword}
             onClick={() => setShowPassword(sp => !sp)}
           >
             <FaEye />
           </IconPassword>
-
         )}
 
         { !!inputError && (
@@ -125,6 +161,9 @@ export const Input = ({ startIcon: StartIcon, title, error, onChange, width, typ
         )}
         {showToolTip && <ToolTip><span>{error}</span></ToolTip>}
       </Container>
+
+      {(!!f2Content && f2ModalIsvisible) &&
+      <Modal title={f2Title} close={() => setF2ModalIsvisible(false)} >{f2Content && <F2Content/>} </Modal>}
     </Wrapper>
   )
 }

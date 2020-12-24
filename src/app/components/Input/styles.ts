@@ -5,6 +5,8 @@ interface InputContainerProps {
   isActive: boolean;
   error?: string;
   hasStartIcon?: boolean;
+  disabled?: boolean;
+  hasf2?: boolean;
 }
 
 interface WrapperProps {
@@ -51,7 +53,17 @@ export const Container = styled.div<InputContainerProps>`
     flex: 1;
     height: 100%;
     border: none;
-    background: transparent;
+    background: ${props => {
+      let backgroundColor = 'transparent'
+
+      if (props.disabled) {
+        backgroundColor = transparentize(0.8, props.theme.colors.borderLight)
+      } else if (props.hasf2) {
+        backgroundColor = transparentize(0.97, 'yellow')
+      }
+      return backgroundColor
+    }};
+
     transition: all 0.4s;
     border-bottom-right-radius: 4px;
     border-top-right-radius: 4px;
@@ -82,9 +94,13 @@ export const Container = styled.div<InputContainerProps>`
     border-left: ${props => props.hasStartIcon && 'none'} ;
 
     color: ${props =>
-      props.isActive
-        ? props.theme.colors.secondary
-        : props.theme.colors.secondaryText};
+      props.isActive ? props.theme.colors.secondary
+      : props.theme.colors.secondaryText
+    };
+
+    ${props => !props.hasStartIcon && css`
+        border-radius: 4px;
+    `}
   }
 `
 

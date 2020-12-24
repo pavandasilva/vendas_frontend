@@ -38,7 +38,7 @@ export const DashBoard = () => {
     addTab({
       clienteId: cliente.id as number,
       title: `${cliente.id} - ${cliente.nome_fantasia}`,
-      content: <Atendimento key={cliente.id} cliente={cliente}/>
+      content: <Atendimento key={cliente.id} clienteId={cliente.id as number}/>
     })
 
     setCurrentTabAtendimento(cliente.id as number, 'geral')

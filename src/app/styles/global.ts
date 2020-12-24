@@ -1068,6 +1068,7 @@ export const FormRow = styled.div<FormRowProps>`
   width: ${props => props.width ? props.width : '100%'};
   height: 60px;
   flex-wrap: wrap;
+  align-items: flex-end;
 
   & > div {
     & + div {

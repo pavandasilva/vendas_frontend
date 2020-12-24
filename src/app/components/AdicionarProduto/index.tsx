@@ -131,6 +131,7 @@ export const AdicionarProduto = ({ closeModal, cliente }: AdicionarProdutoProps)
       }
     }])
   }
+
   return (
     <Container selectedRowTableIndex={selectedRowTableIndex}>
       <Header>

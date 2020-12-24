@@ -16,38 +16,38 @@ export const MenuAtendimento = ({ cliente }: MenuAtendimentoProps) => {
   const { setCurrentTab: setCurrentOrcamentoTab } = useOrcamentoTabs()
 
   const handleNovoOrcamentoOnClick = () => {
-    startOrcamento(cliente.id as number)
-    setCurrentTab(cliente.id as number, 'pedidoEmAndamento')
-    setCurrentOrcamentoTab(cliente.id as number, 'dadosGerais')
+    startOrcamento(cliente?.id as number)
+    setCurrentTab(cliente?.id as number, 'pedidoEmAndamento')
+    setCurrentOrcamentoTab(cliente?.id as number, 'dadosGerais')
   }
 
   return (
     <Container >
       <Button
-        selected={currentTabs[cliente.id as number] === 'geral'}
+        selected={currentTabs[cliente?.id as number] === 'geral'}
         type="button"
-        onClick={() => setCurrentTab(cliente.id as number, 'geral')}>
+        onClick={() => setCurrentTab(cliente?.id as number, 'geral')}>
         <FaList /><span>Geral</span>
       </Button>
       <Button
-        selected={currentTabs[cliente.id as number] === 'pedidos'}
+        selected={currentTabs[cliente?.id as number] === 'pedidos'}
         type="button"
-        onClick={() => setCurrentTab(cliente.id as number, 'pedidos')}>
+        onClick={() => setCurrentTab(cliente?.id as number, 'pedidos')}>
         <FaShoppingCart /><span>Pedidos</span>
       </Button>
       <Button
-        selected={currentTabs[cliente.id as number] === 'financeiro'}
+        selected={currentTabs[cliente?.id as number] === 'financeiro'}
         type="button"
-        onClick={() => setCurrentTab(cliente.id as number, 'financeiro')}>
+        onClick={() => setCurrentTab(cliente?.id as number, 'financeiro')}>
         <FaFunnelDollar /><span>Financeiro</span>
       </Button>
 
-      { orcamentos[cliente.id as number]
+      { orcamentos[cliente?.id as number]
         ? (
           <Button
-            selected={currentTabs[cliente.id as number] === 'pedidoEmAndamento'}
+            selected={currentTabs[cliente?.id as number] === 'pedidoEmAndamento'}
             type="button"
-            onClick={() => setCurrentTab(cliente.id as number, 'pedidoEmAndamento')}>
+            onClick={() => setCurrentTab(cliente?.id as number, 'pedidoEmAndamento')}>
             <FaClipboardList /><span>Orçamento em andamento</span>
           </Button>
         )
