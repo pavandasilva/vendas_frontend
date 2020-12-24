@@ -28,6 +28,11 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
 
 const isIeType = (type: string): boolean => type?.includes('ie-')
 
+export interface InputF2 {
+  close?: () => void
+  callBack?: (data: any) => void
+}
+
 export const Input = ({
   startIcon: StartIcon,
   title, error,

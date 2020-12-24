@@ -2,7 +2,7 @@ import capitalize from 'capitalize-pt-br'
 import React, { useCallback, useEffect, useState } from 'react'
 import { FaCheck, FaSearch } from 'react-icons/fa'
 import ReactTable, { Column, RowInfo } from 'react-table-6'
-import { Input } from '..'
+import { Input, InputF2 } from '..'
 import { Cliente, Contato } from '../../../domain/clientes/models'
 import { StatusText } from '../../styles/global'
 import { TableCenterContent } from '../Contatos/styles'
@@ -10,10 +10,8 @@ import { Container, Header, Content } from './styles'
 
 const rowsPerPage = 10
 
-interface ListaContatosProps {
+interface ListaContatosProps extends InputF2 {
   cliente: Cliente
-  close?: () => void
-  callBack?: (contato: Contato) => void
 }
 
 export const ListaContatos = ({ cliente, close, callBack }: ListaContatosProps) => {

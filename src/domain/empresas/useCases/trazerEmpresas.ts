@@ -1,4 +1,3 @@
-import { GetParams } from '../../_interfaces'
 import { EmpresaService, GetListEmpresaResponse } from '../interfaces'
 
 export class TrazerEmpresas {
@@ -8,8 +7,16 @@ export class TrazerEmpresas {
     this.empresaService = empresaService
   }
 
-  async execute (params: GetParams): Promise<GetListEmpresaResponse> {
-    const response = await this.empresaService.getlist(params)
+  async execute (token: string, limit: number, skip: number, search:string): Promise<GetListEmpresaResponse> {
+    const response = await this.empresaService.getlist({
+      token,
+      filter: search,
+      filterOptions: {
+        limit,
+        skip
+      }
+    })
+
     return response
   }
 }

@@ -1,11 +1,13 @@
 import capitalize from 'capitalize-pt-br'
-import React, { useCallback, useState } from 'react'
+import React, { useCallback } from 'react'
 import { Input, Select } from '..'
 import { Cliente, Contato } from '../../../domain/clientes/models'
+import { Empresa } from '../../../domain/empresas/models/empresa'
 import { ModoPagamentoType } from '../../contexts'
 import { useOrcamentos } from '../../hooks/useOrcamentos'
 import { FormRow } from '../../styles/global'
 import { ListaContatos } from '../ListaContatos'
+import { ListaEmpresas } from '../ListaEmpresas'
 import { Container } from './styles'
 
 interface DadosGeraisProps {
@@ -26,6 +28,12 @@ export const DadosGerais = ({ cliente }: DadosGeraisProps) => {
   const handleContatoF2CallBack = useCallback((value: any) => {
     const contato = value as Contato
     const orcamento = { ...orcamentos[cliente.id as number], contato }
+    setOrcamento(cliente.id as number, orcamento)
+  }, [cliente.id, orcamentos, setOrcamento])
+
+  const handleDepositosF2Callback = useCallback((value: any) => {
+    const empresa = value as Empresa
+    const orcamento = { ...orcamentos[cliente.id as number], deposito: empresa }
     setOrcamento(cliente.id as number, orcamento)
   }, [cliente.id, orcamentos, setOrcamento])
 
@@ -73,9 +81,12 @@ export const DadosGerais = ({ cliente }: DadosGeraisProps) => {
           error={clienteError?.cep} */
           type="text"
           /*     disabled= { dataMode === 'edit'} */
+          f2Title="Lista de depósitos"
           f2Content={
-            <div>ola</div>
+            <ListaEmpresas/>
           }
+
+          f2CallBack={handleDepositosF2Callback}
         />
 
         <Input

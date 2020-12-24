@@ -21,6 +21,8 @@ interface AdicionarProdutoProps {
 export const AdicionarProduto = ({ closeModal, cliente }: AdicionarProdutoProps) => {
   const [selectedRowTableIndex, setSelectedRowTableIndex] = useState(-1)
   const { orcamentos, setItensOrcamento } = useOrcamentos()
+  const [currentPage, setCurrentPage] = useState(0)
+  const [search, setSearch] = useState('')
 
   const columns: Column[] = useMemo(() => [
     {
@@ -75,9 +77,6 @@ export const AdicionarProduto = ({ closeModal, cliente }: AdicionarProdutoProps)
       Cell: ({ value }) => value.toString().toUpperCase()
     }
   ], [])
-
-  const [currentPage, setCurrentPage] = useState(0)
-  const [search, setSearch] = useState('')
 
   const { data: produtos } = useProdutos({
     perPage,
