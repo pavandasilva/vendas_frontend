@@ -39,6 +39,10 @@ export const ListaContatos = ({ cliente, close, callBack }: ListaContatosProps) 
 
   const columns: Column[] = [
     {
+      Header: '#',
+      accessor: 'id'
+    },
+    {
       Header: 'Nome',
       accessor: 'nome',
       Cell: ({ value }) => capitalize(value)

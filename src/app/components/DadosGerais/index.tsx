@@ -1,9 +1,10 @@
 import capitalize from 'capitalize-pt-br'
-import React, { useCallback } from 'react'
+import React, { ChangeEvent, useCallback, useEffect, useState } from 'react'
 import { Input, Select } from '..'
 import { Cliente, Contato } from '../../../domain/clientes/models'
 import { Empresa } from '../../../domain/empresas/models/empresa'
 import { ModoPagamentoType } from '../../contexts'
+import useEmpresa from '../../hooks/useEmpresa'
 import { useOrcamentos } from '../../hooks/useOrcamentos'
 import { FormRow } from '../../styles/global'
 import { ListaContatos } from '../ListaContatos'
@@ -23,7 +24,30 @@ const modosPagamento: ModoPagamentoType[] = [
 ]
 
 export const DadosGerais = ({ cliente }: DadosGeraisProps) => {
+  const [empresaId, setEmpresaId] = useState(0)
   const { orcamentos, setOrcamento } = useOrcamentos()
+  const { data: empresaData } = useEmpresa(empresaId)
+
+  console.log('useEmpresa', empresaData)
+
+  useEffect(() => {
+    console.log('useEffect')
+
+    let empresa:Empresa
+
+    if (!empresaData?.data?.id) {
+      empresa = {
+        nome: ''
+      }
+    } else {
+      empresa = empresaData?.data
+    }
+
+    const orcamento = { ...orcamentos[cliente.id as number], deposito: empresa }
+
+    setOrcamento(cliente.id as number, orcamento)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [empresaData?.data, cliente.id])
 
   const handleContatoF2CallBack = useCallback((value: any) => {
     const contato = value as Contato
@@ -37,6 +61,29 @@ export const DadosGerais = ({ cliente }: DadosGeraisProps) => {
     setOrcamento(cliente.id as number, orcamento)
   }, [cliente.id, orcamentos, setOrcamento])
 
+  const handleContatoIdOnChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+    let [contato] = cliente?.contatos?.filter(cont => cont.id === parseInt(e.target.value)) as Contato[]
+
+    if (!contato?.id) {
+      contato = {
+        nome: ''
+      } as Contato
+    }
+
+    const orcamento = { ...orcamentos[cliente.id as number], contato }
+    setOrcamento(cliente.id as number, orcamento)
+  }, [cliente.contatos, cliente.id, orcamentos, setOrcamento])
+
+  const handleEmpresaIdOnChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+    let id = 0
+
+    if (!!e.target.value && e.target.value as unknown as number > 0) {
+      id = e.target.value as unknown as number
+    }
+
+    setEmpresaId(id)
+  }, [])
+
   return (
     <Container>
       <FormRow>
@@ -46,24 +93,21 @@ export const DadosGerais = ({ cliente }: DadosGeraisProps) => {
           title="Código contato"
           value={orcamentos[cliente.id as number]?.contato?.id}
           placeholder='Cod. contato'
-
-          /* onChange={handleCepInputChange}
-          error={clienteError?.cep} */
           type="text"
-          /*     disabled= { dataMode === 'edit'} */
           f2Title="Lista de contatos"
           f2Content={
             <ListaContatos cliente={cliente}/>
           }
 
           f2CallBack={handleContatoF2CallBack}
+          onChange={handleContatoIdOnChange}
         />
 
         <Input
           width='5'
           name="contato.nome"
           title="Contato"
-          value={orcamentos[cliente.id as number]?.contato?.nome}
+          value={capitalize(orcamentos[cliente.id as number]?.contato?.nome as string)}
           placeholder='Nome do Contato'
           disabled
         />
@@ -76,24 +120,21 @@ export const DadosGerais = ({ cliente }: DadosGeraisProps) => {
           title="Código depósito"
           placeholder='Cod. depósito'
           value={orcamentos[cliente.id as number]?.deposito?.id}
-
-          /* onChange={handleCepInputChange}
-          error={clienteError?.cep} */
           type="text"
-          /*     disabled= { dataMode === 'edit'} */
           f2Title="Lista de depósitos"
           f2Content={
             <ListaEmpresas/>
           }
 
           f2CallBack={handleDepositosF2Callback}
+          onChange={handleEmpresaIdOnChange}
         />
 
         <Input
           width='5'
           name="empresa.nome"
           title="Depósito"
-          value={orcamentos[cliente.id as number]?.deposito?.nome}
+          value={capitalize(orcamentos[cliente.id as number]?.deposito?.nome as string)}
           placeholder='Depósito'
           disabled
         />
