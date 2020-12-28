@@ -4,13 +4,15 @@ import { Button } from '..'
 
 import { BoxModal, Container, Header, ContainerFooter, Content } from './styles'
 
+export type ModalMode = 'fullscreen' | 'normal'
+
 interface ModalProps {
   title?: string
   children?: ReactNode
   buttonSaveText?: string
   buttonCancelText?: string
   showButtonSave?: boolean
-  mode?: 'fullscreen' | 'normal'
+  mode?: ModalMode
   close: () => void
   onSave?: () => void
 }

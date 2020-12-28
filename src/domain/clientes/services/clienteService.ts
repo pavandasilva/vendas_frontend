@@ -15,8 +15,8 @@ export class ClienteServiceImpl implements ClienteService {
   }
 
   async getlist (params: GetParams): Promise<GetListClienteResponse> {
-    let { filter, filterOptions, token } = params
-    const query = generateSearchQuery(filter, filterOptions)
+    let { filter, filterOptions, filterObject, token } = params
+    const query = generateSearchQuery(filter, filterOptions, filterObject)
 
     const response = await this.httpRequest.get<GetListClienteResponse>({
       path: 'clientes',

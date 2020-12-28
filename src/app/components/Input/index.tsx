@@ -13,16 +13,17 @@ import InputMask, { ReactInputMask } from 'react-input-mask'
 import { IconType } from 'react-icons'
 import { Wrapper, Container, IconPassword, Label, IconError, ToolTip, Icon } from './styles'
 import { getIEMask, IEType } from '../../../helpers/getIEMask'
-import { Modal } from '../Modal'
+import { Modal, ModalMode } from '../Modal'
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   startIcon?: IconType
-  title?: string
+  label?: string
   error?: string
   onChange?: (e: ChangeEvent<HTMLInputElement>) => void
   width?: string;
   type?: 'cnpj' | 'cpf' | 'text' | 'password' | 'email' | 'cep' | 'ddd' | 'telefone' | 'celular' | IEType
   f2Title?: string
   f2Content?: React.ReactNode
+  f2ModalMode?: ModalMode
   f2CallBack?: (value: any) => void
 }
 
@@ -35,13 +36,15 @@ export interface InputF2 {
 
 export const Input = ({
   startIcon: StartIcon,
-  title, error,
+  label,
+  error,
   onChange,
   width,
   disabled,
   f2Title,
   f2Content,
   f2CallBack,
+  f2ModalMode,
   type: typeProp,
   ...rest
 }: InputProps) => {
@@ -128,7 +131,7 @@ export const Input = ({
 
   return (
     <Wrapper className="wrapper-input" width={width}>
-      {(!!title || (hasContent && !!title)) && <Label isActive={isActive || (!isActive && hasContent)}>{title}</Label> }
+      {(!!label || (hasContent && !!label)) && <Label isActive={isActive || (!isActive && hasContent)}>{label}</Label> }
       <Container
         isActive={isActive}
         error={inputError}
@@ -168,7 +171,7 @@ export const Input = ({
       </Container>
 
       {(!!f2Content && f2ModalIsvisible) &&
-      <Modal title={f2Title} close={() => setF2ModalIsvisible(false)} >{f2Content && <F2Content/>} </Modal>}
+      <Modal mode={f2ModalMode} title={f2Title} close={() => setF2ModalIsvisible(false)} >{f2Content && <F2Content/>} </Modal>}
     </Wrapper>
   )
 }

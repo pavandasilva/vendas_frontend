@@ -185,7 +185,7 @@ export const Dados = () => {
         <FormRow>
           <Input
             name="cnpj"
-            title="CNPJ"
+            label="CNPJ"
             value={cliente?.cnpj}
             placeholder={controlFormPessoa === 'pf' ? 'CPF' : 'CNPJ'}
             onChange={handleInputCNPJ}
@@ -197,7 +197,7 @@ export const Dados = () => {
           <Input
             disabled = {cliente?.ie === 'isento' || dataMode === 'edit'}
             name="ie"
-            title="Inscrição estadual"
+            label="Inscrição estadual"
             value={cliente?.ie}
             placeholder='Inscrição estadual'
             onChange={handleInputChange}
@@ -209,7 +209,7 @@ export const Dados = () => {
         <FormRow>
           <Input
             name="nome_fantasia"
-            title="Nome fantasia"
+            label="Nome fantasia"
             value={cliente?.nome_fantasia}
             placeholder='Nome fantasia'
             onChange={handleInputChange}
@@ -219,7 +219,7 @@ export const Dados = () => {
 
           <Input
             name="razao_social"
-            title="Razão social"
+            label="Razão social"
             value={cliente?.razao_social}
             placeholder='Razão social'
             onChange={handleInputChange}
@@ -230,7 +230,7 @@ export const Dados = () => {
         <FormRow>
           <Input
             name="email"
-            title="E-mail principal"
+            label="E-mail principal"
             value={cliente?.email}
             placeholder='E-mail principal'
             onChange={handleInputChange}
@@ -239,7 +239,7 @@ export const Dados = () => {
           />
           <Input
             name="email_nfe"
-            title="Email Nota Fiscal Eletrônica"
+            label="Email Nota Fiscal Eletrônica"
             value={cliente?.email_nfe}
             placeholder='E-mail nota fiscal eletrônica'
             onChange={handleInputChange}
@@ -248,7 +248,7 @@ export const Dados = () => {
           />
           <Input
             name="email_nfe2"
-            title="Email Nota Fiscal Eletrônica 2"
+            label="Email Nota Fiscal Eletrônica 2"
             value={cliente?.email_nfe2}
             placeholder='E-mail nota fiscal eletrônica'
             onChange={handleInputChange}

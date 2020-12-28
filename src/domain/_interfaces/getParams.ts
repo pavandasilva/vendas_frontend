@@ -4,4 +4,5 @@ export interface GetParams {
   token?: string
   filter?: string
   filterOptions?: FilterOptions
+  filterObject?: object
 }

@@ -9,6 +9,7 @@ import { useOrcamentos } from '../../hooks/useOrcamentos'
 import { FormRow } from '../../styles/global'
 import { ListaContatos } from '../ListaContatos'
 import { ListaEmpresas } from '../ListaEmpresas'
+import { ListaTransportadoras } from '../ListaTransportadoras'
 import { Container } from './styles'
 
 interface DadosGeraisProps {
@@ -56,6 +57,12 @@ export const DadosGerais = ({ cliente }: DadosGeraisProps) => {
     setOrcamento(cliente.id as number, orcamento)
   }, [cliente.id, orcamentos, setOrcamento])
 
+  const handleTransportadorasF2Callback = useCallback((value: any) => {
+    const transportadora = value as Cliente
+    const orcamento = { ...orcamentos[cliente.id as number], transportadora }
+    setOrcamento(cliente.id as number, orcamento)
+  }, [cliente.id, orcamentos, setOrcamento])
+
   const handleContatoIdOnChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     let [contato] = cliente?.contatos?.filter(cont => cont.id === parseInt(e.target.value)) as Contato[]
 
@@ -94,7 +101,8 @@ export const DadosGerais = ({ cliente }: DadosGeraisProps) => {
         <Input
           width='1'
           name="contato.id"
-          title="Código contato"
+          title="Digite o código do contato ou F2 para buscar"
+          label="Código contato"
           value={orcamentos[cliente.id as number]?.contato?.id}
           placeholder='Cod. contato'
           type="text"
@@ -110,6 +118,7 @@ export const DadosGerais = ({ cliente }: DadosGeraisProps) => {
         <Input
           width='5'
           name="contato.nome"
+          label="Contato"
           title="Contato"
           value={capitalize(orcamentos[cliente.id as number]?.contato?.nome as string)}
           placeholder='Nome do Contato'
@@ -121,7 +130,8 @@ export const DadosGerais = ({ cliente }: DadosGeraisProps) => {
         <Input
           width='1'
           name="empresa.id"
-          title="Código depósito"
+          title={!orcamentos[cliente.id as number].contato?.nome ? 'Primeiro selecione um contato' : 'Código depósito ou F2 para buscar'}
+          label='Código depósito'
           placeholder='Cod. depósito'
           value={orcamentos[cliente.id as number]?.deposito?.id}
           type="text"
@@ -129,16 +139,16 @@ export const DadosGerais = ({ cliente }: DadosGeraisProps) => {
           f2Content={
             <ListaEmpresas/>
           }
-
           f2CallBack={handleDepositosF2Callback}
           onChange={handleEmpresaIdOnChange}
           disabled={!orcamentos[cliente.id as number].contato?.nome}
+
         />
 
         <Input
           width='5'
           name="empresa.nome"
-          title="Depósito"
+          label="Depósito"
           value={capitalize(orcamentos[cliente.id as number]?.deposito?.nome as string)}
           placeholder='Depósito'
           disabled
@@ -149,7 +159,8 @@ export const DadosGerais = ({ cliente }: DadosGeraisProps) => {
         <Input
           width='1'
           name="cliente.id"
-          title="Código transportadora"
+          title={!orcamentos[cliente.id as number].contato?.nome ? 'Primeiro selecione um contato' : 'Código transportadora ou F2 para buscar'}
+          label="Código transportadora"
           placeholder='Cod. transportadora'
           value={orcamentos[cliente.id as number]?.transportadora?.id}
 
@@ -157,9 +168,12 @@ export const DadosGerais = ({ cliente }: DadosGeraisProps) => {
           error={clienteError?.cep} */
           type="text"
           /*     disabled= { dataMode === 'edit'} */
+          f2Title="Lista de transportadoras"
+          f2ModalMode="normal"
           f2Content={
-            <div>ola</div>
+            <ListaTransportadoras/>
           }
+          f2CallBack={handleTransportadorasF2Callback}
           disabled={!orcamentos[cliente.id as number].contato?.nome}
         />
 
@@ -167,7 +181,7 @@ export const DadosGerais = ({ cliente }: DadosGeraisProps) => {
           width='5'
           name="cliente.nome"
           title="Transportadora"
-          value={orcamentos[cliente.id as number]?.transportadora?.nome_fantasia}
+          value={capitalize(orcamentos[cliente.id as number]?.transportadora?.nome_fantasia as string)}
           placeholder='Transportadora'
           disabled
         />
@@ -176,7 +190,8 @@ export const DadosGerais = ({ cliente }: DadosGeraisProps) => {
         <Input
           width='1'
           name="funcionario.id"
-          title="Código funcionário"
+          title={!orcamentos[cliente.id as number].contato?.nome ? 'Primeiro selecione um contato' : 'Código funcionário ou F2 para buscar'}
+          label="Código funcionário"
           placeholder='Cod. funcionário'
           value={orcamentos[cliente.id as number]?.funcionario?.id}
 
@@ -204,7 +219,8 @@ export const DadosGerais = ({ cliente }: DadosGeraisProps) => {
         <Input
           width='1'
           name="funcionario2.id"
-          title="Código funcionário 2"
+          label="Código Funcionário 2"
+          title={!orcamentos[cliente.id as number].contato?.nome ? 'Primeiro selecione um contato' : 'Código funcionário ou F2 para buscar'}
           placeholder='Cod. funcionario 2'
           value={orcamentos[cliente.id as number]?.funcionario2?.id}
 
@@ -222,7 +238,7 @@ export const DadosGerais = ({ cliente }: DadosGeraisProps) => {
         <Input
           width='5'
           name="funcionario2.nome"
-          title="Funcionário 2"
+          label="Funcionário 2"
           value={orcamentos[cliente.id as number]?.funcionario2?.nome}
           placeholder='Funcionário 2'
           disabled
@@ -232,7 +248,8 @@ export const DadosGerais = ({ cliente }: DadosGeraisProps) => {
         <Input
           width='3'
           name="condicao"
-          title="Condição de pagamento"
+          label="Condição de pagamento"
+          title={!orcamentos[cliente.id as number].contato?.nome ? 'Primeiro selecione um contato' : 'Condição de pagamento'}
           placeholder='Condição de pagamento(ex: 0,30,60,90)'
           value={orcamentos[cliente.id as number]?.condicao}
 

@@ -95,7 +95,7 @@ export const Login = () => {
               value={email}
               onChange={handleInputOnChange}
               startIcon={FaEnvelope}
-              title="E-mail"
+              label="E-mail"
               placeholder="E-mail"
               error={error?.email}
               type="email"
@@ -106,7 +106,7 @@ export const Login = () => {
               value={password}
               onChange={handleInputOnChange}
               startIcon={FaLock}
-              title="Senha"
+              label="Senha"
               placeholder="Senha"
               error={error?.password}
             />

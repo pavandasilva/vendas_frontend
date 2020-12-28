@@ -31,7 +31,7 @@ export const CadastroContato = () => {
         <FormRow>
           <Input
             name="nome"
-            title="Nome"
+            label="Nome"
             startIcon={FaMarker}
             type="text"
             placeholder="Nome do contato"
@@ -43,7 +43,7 @@ export const CadastroContato = () => {
           <Input
             name="email"
             startIcon={FaEnvelope}
-            title="E-mail"
+            label="E-mail"
             type="email"
             placeholder="E-mail do contato"
             value={contato?.email}

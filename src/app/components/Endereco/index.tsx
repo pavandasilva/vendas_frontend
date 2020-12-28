@@ -91,7 +91,7 @@ export const Endereco = () => {
         <Input
           width='1'
           name="cep"
-          title="CEP"
+          label="CEP"
           value={cliente?.cep}
           placeholder='CEP'
           onChange={handleCepInputChange}
@@ -103,7 +103,7 @@ export const Endereco = () => {
         <Input
           width='4'
           name="endereco"
-          title="Endereço"
+          label="Endereço"
           value={cliente?.endereco}
           placeholder='Endereço'
           onChange={handleInputChange}
@@ -113,7 +113,7 @@ export const Endereco = () => {
         <Input
           width='1'
           name="numero"
-          title="Número"
+          label="Número"
           value={cliente?.numero}
           placeholder='Número'
           onChange={handleInputChange}
@@ -150,7 +150,7 @@ export const Endereco = () => {
         <Input
           width='7'
           name="bairro"
-          title="Bairro"
+          label="Bairro"
           value={cliente?.bairro}
           placeholder='Bairro'
           onChange={handleInputChange}
@@ -162,7 +162,7 @@ export const Endereco = () => {
         <Input
           width='4'
           name="complemento"
-          title="Complemento"
+          label="Complemento"
           value={cliente?.complemento}
           placeholder='Complemento do endereço'
           onChange={handleInputChange}
@@ -172,7 +172,7 @@ export const Endereco = () => {
         <Input
           width='3'
           name="regiao"
-          title="Região"
+          label="Região"
           value={cliente?.regiao}
           placeholder='Região'
           onChange={handleInputChange}

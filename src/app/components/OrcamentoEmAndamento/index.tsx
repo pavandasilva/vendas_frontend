@@ -45,6 +45,7 @@ export const OrcamentoEmAndamento = ({ cliente }: OrcamentoEmAndamentoProps) => 
           <Button
             name="produtos"
             mode="secondary"
+            title={orcamentos[cliente.id as number].contato?.nome ? 'Produtos do pedido' : 'Primeiro selecione um contato'}
             active={currentTabs[cliente.id as number] === 'produtos'}
             disabled={!orcamentos[cliente.id as number].contato?.nome}
             onClick={handleMenuOnClick}>Produtos
