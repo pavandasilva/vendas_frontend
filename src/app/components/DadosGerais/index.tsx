@@ -28,11 +28,7 @@ export const DadosGerais = ({ cliente }: DadosGeraisProps) => {
   const { orcamentos, setOrcamento } = useOrcamentos()
   const { data: empresaData } = useEmpresa(empresaId)
 
-  console.log('useEmpresa', empresaData)
-
   useEffect(() => {
-    console.log('useEffect')
-
     let empresa:Empresa
 
     if (!empresaData?.data?.id) {
@@ -44,7 +40,6 @@ export const DadosGerais = ({ cliente }: DadosGeraisProps) => {
     }
 
     const orcamento = { ...orcamentos[cliente.id as number], deposito: empresa }
-
     setOrcamento(cliente.id as number, orcamento)
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [empresaData?.data, cliente.id])
@@ -81,8 +76,17 @@ export const DadosGerais = ({ cliente }: DadosGeraisProps) => {
       id = e.target.value as unknown as number
     }
 
+    if (!e.target.value) {
+      const empresa = {
+        id: '',
+        nome: ''
+      } as Empresa
+      const orcamento = { ...orcamentos[cliente.id as number], deposito: empresa }
+      setOrcamento(cliente.id as number, orcamento)
+    }
+
     setEmpresaId(id)
-  }, [])
+  }, [cliente.id, orcamentos, setOrcamento])
 
   return (
     <Container>
@@ -128,6 +132,7 @@ export const DadosGerais = ({ cliente }: DadosGeraisProps) => {
 
           f2CallBack={handleDepositosF2Callback}
           onChange={handleEmpresaIdOnChange}
+          disabled={!orcamentos[cliente.id as number].contato?.nome}
         />
 
         <Input
@@ -155,6 +160,7 @@ export const DadosGerais = ({ cliente }: DadosGeraisProps) => {
           f2Content={
             <div>ola</div>
           }
+          disabled={!orcamentos[cliente.id as number].contato?.nome}
         />
 
         <Input
@@ -181,6 +187,7 @@ export const DadosGerais = ({ cliente }: DadosGeraisProps) => {
           f2Content={
             <div>ola</div>
           }
+          disabled={!orcamentos[cliente.id as number].contato?.nome}
         />
 
         <Input
@@ -209,6 +216,7 @@ export const DadosGerais = ({ cliente }: DadosGeraisProps) => {
           f2Content={
             <div> ola </div>
           }
+          disabled={!orcamentos[cliente.id as number].contato?.nome}
         />
 
         <Input
@@ -232,6 +240,7 @@ export const DadosGerais = ({ cliente }: DadosGeraisProps) => {
           error={clienteError?.cep} */
           type="text"
           /*     disabled= { dataMode === 'edit'} */
+          disabled={!orcamentos[cliente.id as number].contato?.nome}
         />
 
         <Input
@@ -251,11 +260,13 @@ export const DadosGerais = ({ cliente }: DadosGeraisProps) => {
           title="Modo de pagamento"
           /*    disabled= { dataMode === 'edit'} */
           defaultValue=""
+          disabled={!orcamentos[cliente.id as number].contato?.nome}
         >
 
           { modosPagamento.map(modoPagamento =>
             <option key={modoPagamento} value={modoPagamento}>{capitalize(modoPagamento)}</option>
           )}
+
         </Select>
       </FormRow>
     </Container>

@@ -3,7 +3,8 @@ import styled, { css } from 'styled-components'
 
 interface ContainerProps {
   mode: 'primary' | 'secondary' | 'confirm' | 'cancel';
-  active?: boolean
+  active?: boolean,
+  showSpinner?: boolean
 }
 
 export const Container = styled.button<ContainerProps>`
@@ -74,6 +75,10 @@ export const Container = styled.button<ContainerProps>`
     border: 1px solid ${props => props.theme.colors.background};
     background-color: ${props => props.theme.colors.borderLight};
     color: ${props => props.theme.colors.primaryText};
-    cursor: wait;
+    cursor: not-allowed;
   }
+
+  ${props => props.showSpinner && css`
+    cursor: wait;
+  `}
 `

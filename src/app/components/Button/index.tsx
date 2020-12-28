@@ -11,9 +11,9 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   showSpinner?: boolean
 }
 
-export const Button = ({ startIcon: Icon, children, mode, active, showSpinner, ...rest }: ButtonProps) => {
+export const Button = ({ startIcon: Icon, children, mode, active, showSpinner, disabled, ...rest }: ButtonProps) => {
   return (
-    <Container {...rest} mode={mode} active={active} disabled={showSpinner}>
+    <Container {...rest} mode={mode} active={active} disabled={showSpinner || disabled} showSpinner={showSpinner}>
       {showSpinner ? <Spinner/> : (Icon && <Icon/>)}{!showSpinner && children}
     </Container>)
 }

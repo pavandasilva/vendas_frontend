@@ -40,7 +40,8 @@ export const ListaContatos = ({ cliente, close, callBack }: ListaContatosProps) 
   const columns: Column[] = [
     {
       Header: '#',
-      accessor: 'id'
+      accessor: 'id',
+      minWidth: 40
     },
     {
       Header: 'Nome',

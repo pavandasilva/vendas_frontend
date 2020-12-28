@@ -70,9 +70,9 @@ export const OrcamentosProvider = ({ children }: OrcamentoProviderProps) => {
     setOrcamentos(oldState => ({ ...oldState, [clienteId]: initialData }))
   }, [])
 
-  const setOrcamento = (clienteId: number, orcamento: Orcamento) => {
+  const setOrcamento = useCallback((clienteId: number, orcamento: Orcamento) => {
     setOrcamentos(oldState => ({ ...oldState, [clienteId]: orcamento }))
-  }
+  }, [])
 
   return (
     <OrcamentoContext.Provider value={{

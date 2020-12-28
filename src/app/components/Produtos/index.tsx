@@ -144,7 +144,7 @@ export const Produtos = ({ cliente }: ProdutosProps) => {
           ofText= "de"
           showPageSizeOptions= { false }
           loadingText="carregando..."
-          noDataText="Nenhum cliente encontrado"
+          noDataText="Nenhum produto encontrado"
           getTrProps={(finalState: any, rowInfo?: RowInfo, column?: undefined, instance?: any) => {
             if (rowInfo) {
               return {

@@ -3,6 +3,7 @@ import { FaShare } from 'react-icons/fa'
 import { ResumoOrcamento, Produtos, Button, DadosGerais } from '..'
 import { Cliente } from '../../../domain/clientes/models'
 import { OrcamentoTabsType } from '../../contexts'
+import { useOrcamentos } from '../../hooks/useOrcamentos'
 import { useOrcamentoTabs } from '../../hooks/useOrcamentoTabs'
 import { Container } from './styles'
 
@@ -12,6 +13,7 @@ interface OrcamentoEmAndamentoProps {
 
 export const OrcamentoEmAndamento = ({ cliente }: OrcamentoEmAndamentoProps) => {
   const { currentTabs, setCurrentTab } = useOrcamentoTabs()
+  const { orcamentos } = useOrcamentos()
 
   const handleFilterOnChange = () => {
 
@@ -44,6 +46,7 @@ export const OrcamentoEmAndamento = ({ cliente }: OrcamentoEmAndamentoProps) => 
             name="produtos"
             mode="secondary"
             active={currentTabs[cliente.id as number] === 'produtos'}
+            disabled={!orcamentos[cliente.id as number].contato?.nome}
             onClick={handleMenuOnClick}>Produtos
           </Button>
         </div>
