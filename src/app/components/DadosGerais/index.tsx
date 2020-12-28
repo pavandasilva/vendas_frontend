@@ -169,7 +169,7 @@ export const DadosGerais = ({ cliente }: DadosGeraisProps) => {
           type="text"
           /*     disabled= { dataMode === 'edit'} */
           f2Title="Lista de transportadoras"
-          f2ModalMode="normal"
+          f2ModalMode="fullscreen"
           f2Content={
             <ListaTransportadoras/>
           }

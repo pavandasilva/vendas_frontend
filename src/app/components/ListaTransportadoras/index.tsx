@@ -14,13 +14,15 @@ interface ListaTransportadorasProps extends InputF2 {
 
 export const ListaTransportadoras = ({ close, callBack }: ListaTransportadorasProps) => {
 /*   const [empresasFiltered, setTransportadorasFiltered] = useState<Contato[]>(cliente?.Transportadoras as Contato[]) */
-  const [searchValue, setSearchValue] = useState('')
+  const [search, setSearch] = useState('')
   const [selectedRowTableIndex, setSelectedRowTableIndex] = useState(-1)
-  const [currentPage, setCurrentPage] = useState(0)
+  const [currentPage, setCurrentPage] = useState(1)
 
-  const { data: transportadoras } = useTransportadoras()
-
-  console.log(transportadoras)
+  const { data: transportadoras } = useTransportadoras({
+    currentPage,
+    perPage: rowsPerPage,
+    search
+  })
 
   const columns: Column[] = [
     {
@@ -82,8 +84,8 @@ export const ListaTransportadoras = ({ close, callBack }: ListaTransportadorasPr
   }, [transportadoras])
 
   const handleFilterOnChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchValue(event.target.value)
-    setCurrentPage(0)
+    setSearch(event.target.value)
+    setCurrentPage(1)
     setSelectedRowTableIndex(-1)
   }, [])
 
@@ -96,7 +98,7 @@ export const ListaTransportadoras = ({ close, callBack }: ListaTransportadorasPr
     </Header>
     <Content selectedRowTableIndex={selectedRowTableIndex}>
       <ReactTable
-        page={currentPage}
+        page={currentPage - 1}
         pages={transportadoras?.metadata?.count && Math.ceil(transportadoras?.metadata?.count / rowsPerPage)}
         onPageChange={handleOnPageChange}
         manual

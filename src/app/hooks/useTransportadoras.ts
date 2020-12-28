@@ -1,21 +1,34 @@
-import { useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import useSWR from 'swr'
 import { useUsuario } from '.'
 import { makeTrazerClientes } from '../../domain/clientes/factories'
 
+interface ExecTransportadoras{
+  perPage: number,
+  currentPage: number,
+  search?: string
+}
+
 const trazerClientes = makeTrazerClientes()
 
-export default function useTransportadoras () {
+export default function useTransportadoras ({ perPage, currentPage, search }: ExecTransportadoras) {
+  console.log('search', search)
+
   const { data: usuarioData } = useUsuario()
-  const [filter, setFilter] = useState('')
   const history = useHistory()
 
   const { data, error } = useSWR(JSON.stringify({
-    useCase: 'useTransportadoras'
+    useCase: 'useTransportadoras',
+    perPage,
+    currentPage,
+    search
   }), () => trazerClientes.execute(
     {
-      filter,
+      filter: search || '',
+      filterOptions: {
+        limit: perPage,
+        skip: (currentPage - 1) * perPage
+      },
       filterObject: { is_transportadora: 's' },
       token: usuarioData?.token
     }
