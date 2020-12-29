@@ -7,7 +7,7 @@ import { Funcionario } from '../../domain/funcionarios/models/funcionario'
 
 export type ModoPagamentoType = 'carteira' | 'cheque próprio' | 'cheque terceiro' | 'cobrança' | 'dinheiro'
 
-interface Orcamento {
+export interface Orcamento {
   itens: ItemOrcamento[]
   subtotal?: number
   total?: number

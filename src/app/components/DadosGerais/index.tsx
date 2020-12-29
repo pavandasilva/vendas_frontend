@@ -4,7 +4,7 @@ import { Input, Select } from '..'
 import { Cliente, Contato } from '../../../domain/clientes/models'
 import { Empresa } from '../../../domain/empresas/models/empresa'
 import { Funcionario } from '../../../domain/funcionarios/models/funcionario'
-import { ModoPagamentoType } from '../../contexts'
+import { ModoPagamentoType, Orcamento } from '../../contexts'
 import { useOrcamentos, useEmpresa, useCliente } from '../../hooks'
 import { FormRow } from '../../styles/global'
 import { ListaContatos } from '../ListaContatos'
@@ -155,9 +155,22 @@ export const DadosGerais = ({ cliente }: DadosGeraisProps) => {
   }
 
   const handleCondicaoPagamentoOnChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
-    const orcamento = { ...orcamentos[cliente.id as number], condicao: e.target.value }
+    console.log(e.currentTarget.value)
+
+    const condicaoPagamento = e.currentTarget.value.replace(/[^0-9,]/g, '')
+
+    const orcamento = { ...orcamentos[cliente.id as number], condicao: condicaoPagamento }
     setOrcamento(cliente.id as number, orcamento)
   }, [cliente.id, orcamentos, setOrcamento])
+
+  const handleModoPagamentoOnChange = (e: ChangeEvent<HTMLSelectElement>) => {
+    const orcamento: Orcamento = {
+      ...orcamentos[cliente.id as number],
+      modoPagamento: e.target.value as ModoPagamentoType
+    }
+
+    setOrcamento(cliente.id as number, orcamento)
+  }
 
   return (
     <Container>
@@ -329,8 +342,8 @@ export const DadosGerais = ({ cliente }: DadosGeraisProps) => {
 
         <Select
           width='5'
-          name="uf"
-          /*   onChange={handleSelectChange} */
+          name="modo_pagamento"
+          onChange={handleModoPagamentoOnChange}
           value={orcamentos[cliente.id as number]?.modoPagamento}
           title="Modo de pagamento"
           /*    disabled= { dataMode === 'edit'} */
