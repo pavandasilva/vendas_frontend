@@ -155,22 +155,20 @@ export const DadosGerais = ({ cliente }: DadosGeraisProps) => {
   }
 
   const handleCondicaoPagamentoOnChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
-    console.log(e.currentTarget.value)
-
     const condicaoPagamento = e.currentTarget.value.replace(/[^0-9,]/g, '')
-
     const orcamento = { ...orcamentos[cliente.id as number], condicao: condicaoPagamento }
+
     setOrcamento(cliente.id as number, orcamento)
   }, [cliente.id, orcamentos, setOrcamento])
 
-  const handleModoPagamentoOnChange = (e: ChangeEvent<HTMLSelectElement>) => {
+  const handleModoPagamentoOnChange = useCallback((e: ChangeEvent<HTMLSelectElement>) => {
     const orcamento: Orcamento = {
       ...orcamentos[cliente.id as number],
       modoPagamento: e.target.value as ModoPagamentoType
     }
 
     setOrcamento(cliente.id as number, orcamento)
-  }
+  }, [cliente.id, orcamentos, setOrcamento])
 
   return (
     <Container>

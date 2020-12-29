@@ -2,6 +2,7 @@ import { generateSearchQuery } from '../../../helpers'
 import { GetParams } from '../../_interfaces'
 import { HttpRequest } from '../../_interfaces/httpRequest'
 import { ProdutoService, GetProdutosListResponse } from '../interfaces'
+import { Preco } from '../models'
 
 export class ProdutoServiceImpl implements ProdutoService {
   private readonly httpRequest: HttpRequest
@@ -21,5 +22,15 @@ export class ProdutoServiceImpl implements ProdutoService {
     })
 
     return response?.data as GetProdutosListResponse
+  }
+
+  async getPreco (produtoId: number, clienteId: number, empresaId: number, token: string): Promise<Preco> {
+    const response = await this.httpRequest.get({
+      token,
+      path: `produtos/${produtoId}/preco`,
+      query: `?cliente_id=${clienteId}&empresa_id=${empresaId}`
+    })
+
+    return response as Preco
   }
 }

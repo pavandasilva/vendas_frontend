@@ -6,22 +6,27 @@ import Swal from 'sweetalert2'
 import { Input } from '..'
 import { Cliente } from '../../../domain/clientes/models'
 import { ItemOrcamento } from '../../../domain/clientes/models/itemOrcamento'
+import { Empresa } from '../../../domain/empresas/models/empresa'
+import { makeTrazerPrecoProduto } from '../../../domain/produtos/factories/makeTrazerPrecoProduto'
 import { Produto } from '../../../domain/produtos/models/produto'
-import { useOrcamentos, useProdutos } from '../../hooks'
+import { useOrcamentos, useProdutos, useUsuario } from '../../hooks'
 import { Container, Header } from './styles'
 
+const trazerPrecoProduto = makeTrazerPrecoProduto()
 const perPage = 30
 
-interface AdicionarProdutoProps {
+interface ListaProdutosProps {
   closeModal: () => void
   cliente: Cliente
+  empresa: Empresa
 }
 
-export const AdicionarProduto = ({ closeModal, cliente }: AdicionarProdutoProps) => {
+export const ListaProdutos = ({ closeModal, cliente, empresa }: ListaProdutosProps) => {
   const [selectedRowTableIndex, setSelectedRowTableIndex] = useState(-1)
   const { orcamentos, setItensOrcamento } = useOrcamentos()
   const [currentPage, setCurrentPage] = useState(0)
   const [search, setSearch] = useState('')
+  const { data: usuario } = useUsuario()
 
   const columns: Column[] = useMemo(() => [
     {
@@ -118,9 +123,17 @@ export const AdicionarProduto = ({ closeModal, cliente }: AdicionarProdutoProps)
       showCancelButton: true,
 
       preConfirm: async (result) => {
+        const preco = await trazerPrecoProduto.execute(
+          usuario?.token as string,
+          produto.id as number,
+          cliente.id as number,
+          empresa.id as number
+        )
+
         const newItemOrcamento: ItemOrcamento = {
           produto,
-          quantidade: result
+          quantidade: result,
+          preco
         }
 
         const itensOrcamento = [...orcamentos[cliente?.id as number].itens, newItemOrcamento]

@@ -1,7 +1,7 @@
 import { ModelBase } from '../../_interfaces'
 
 export interface Empresa extends ModelBase{
-  id?: string,
+  id?: number,
   nome?: string,
   cidade?: string,
   uf?: string,

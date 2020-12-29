@@ -7,7 +7,7 @@ import Swal from 'sweetalert2'
 import { Input, Button, Modal } from '..'
 import { Cliente } from '../../../domain/clientes/models'
 import { useOrcamentos } from '../../hooks/useOrcamentos'
-import { AdicionarProduto } from '../AdicionarProduto'
+import { AdicionarProduto } from '../ListaProdutos'
 import { Container, Header, Content } from './styles'
 
 interface ProdutosProps {
@@ -18,7 +18,6 @@ export const Produtos = ({ cliente }: ProdutosProps) => {
   const { orcamentos, setItensOrcamento } = useOrcamentos()
   const [showProdutoModal, setShowProdutoModal] = useState(false)
   const [selectedRowTableIndex, setSelectedRowTableIndex] = useState(-1)
-  const { colors } = useTheme()
 
   const columns: Column[] = [
     {
@@ -42,7 +41,8 @@ export const Produtos = ({ cliente }: ProdutosProps) => {
     },
     {
       Header: 'Preço',
-      minWidth: 20
+      minWidth: 20,
+      accessor: 'preco.valor'
     },
     {
       Header: 'Valor unit.',
@@ -86,10 +86,10 @@ export const Produtos = ({ cliente }: ProdutosProps) => {
 
   const element = useRef<HTMLDivElement>(null)
 
-  const clickTableRowOnclick = (rowIndex: number) => {
+  const clickTableRowOnclick = useCallback((rowIndex: number) => {
     setSelectedRowTableIndex(rowIndex)
     element.current?.focus()
-  }
+  }, [])
 
   const handleOnKeyPress = useCallback(async (e: React.KeyboardEvent<HTMLDivElement>) => {
     if (e.key === 'Delete') {
