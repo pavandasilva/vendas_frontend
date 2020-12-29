@@ -154,6 +154,11 @@ export const DadosGerais = ({ cliente }: DadosGeraisProps) => {
     /*  setFuncionarioId(id) */
   }
 
+  const handleCondicaoPagamentoOnChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+    const orcamento = { ...orcamentos[cliente.id as number], condicao: e.target.value }
+    setOrcamento(cliente.id as number, orcamento)
+  }, [cliente.id, orcamentos, setOrcamento])
+
   return (
     <Container>
       <FormRow>
@@ -308,11 +313,8 @@ export const DadosGerais = ({ cliente }: DadosGeraisProps) => {
           title={!orcamentos[cliente.id as number].contato?.nome ? 'Primeiro selecione um contato' : 'Condição de pagamento'}
           placeholder='Condição de pagamento(ex: 0,30,60,90)'
           value={orcamentos[cliente.id as number]?.condicao}
-
-          /* onChange={handleCepInputChange}
-          error={clienteError?.cep} */
+          onChange={handleCondicaoPagamentoOnChange}
           type="text"
-          /*     disabled= { dataMode === 'edit'} */
           disabled={!orcamentos[cliente.id as number].contato?.nome}
         />
 
