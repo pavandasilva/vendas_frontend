@@ -2,16 +2,17 @@
 import capitalize from 'capitalize-pt-br'
 import { FaWhatsapp, FaPhone, FaUser, FaCheck } from 'react-icons/fa'
 import { produce } from 'immer'
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import ReactTable, { Column } from 'react-table-6'
 import { Button, ButtonTable, CadastroContato, CadastroTelefone } from '..'
 import { Contato, Telefone } from '../../../domain/clientes/models'
-import { useCadastroCliente, useCadastroTelefone } from '../../hooks'
-import { useCadastroContato } from '../../hooks/useCadastroContato'
 import { StatusText } from '../../styles/global'
 import { Modal } from '../Modal'
 import { Container, Actions, Header, TableCenterContent, ListaTelefones, Content, ToolTip, Error, TableCollumn } from './styles'
 import { useTheme } from 'styled-components'
+import { useCadastroCliente } from '../../hooks/useCadastroCliente'
+import { useCadastroContato } from '../../hooks/useCadastroContato'
+import { useCadastroTelefone } from '../../hooks/useCadastroTelefone'
 
 const rowsPerPage = 10
 

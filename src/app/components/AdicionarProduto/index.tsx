@@ -7,8 +7,7 @@ import { Input } from '..'
 import { Cliente } from '../../../domain/clientes/models'
 import { ItemOrcamento } from '../../../domain/clientes/models/itemOrcamento'
 import { Produto } from '../../../domain/produtos/models/produto'
-import { useOrcamentos } from '../../hooks/useOrcamentos'
-import useProdutos from '../../hooks/useProdutos'
+import { useOrcamentos, useProdutos } from '../../hooks'
 import { Container, Header } from './styles'
 
 const perPage = 30

@@ -1,30 +1,33 @@
 import { useHistory } from 'react-router-dom'
 import useSWR from 'swr'
-import { makeTrazerProdutos } from '../../domain/produtos/factories/makeTrazerProdutos'
+import { makeTrazerFuncionarios } from '../../domain/funcionarios/factories'
 import { useUsuario } from './useUsuario'
 
-const trazerProdutos = makeTrazerProdutos()
+const trazerFuncionarios = makeTrazerFuncionarios()
 
-interface ExecProdutos {
+interface ExecFuncionarios {
   perPage: number,
   currentPage: number,
   search?: string
 }
 
-export function useProdutos ({ perPage, currentPage, search }: ExecProdutos) {
+export function useFuncionarios ({ perPage, currentPage, search }: ExecFuncionarios) {
   const { data: usuarioData } = useUsuario()
   const history = useHistory()
 
   const { data, error } = useSWR(JSON.stringify({
-    useCase: 'useProdutos',
+    useCase: 'useFuncionarios',
     perPage,
     currentPage,
     search
-  }), () => trazerProdutos.execute(
-    usuarioData?.token as string,
-    perPage,
-    (currentPage - 1) * perPage,
-    search || ''
+  }), () => trazerFuncionarios.execute({
+    token: usuarioData?.token as string,
+    filterOptions: {
+      limit: perPage,
+      skip: (currentPage - 1) * perPage
+    },
+    filter: search || ''
+  }
   ), {
     dedupingInterval: 60000
   })

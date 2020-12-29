@@ -3,26 +3,25 @@ import React, { useCallback, useState } from 'react'
 import { FaSearch } from 'react-icons/fa'
 import ReactTable, { Column, RowInfo } from 'react-table-6'
 import { Input, InputF2 } from '..'
-import { Empresa } from '../../../domain/empresas/models/empresa'
-import { useTransportadoras } from '../../hooks'
+import { Funcionario } from '../../../domain/funcionarios/models/funcionario'
+import { useFuncionarios } from '../../hooks'
 import { TextStatus } from '../../styles/global'
 import { Container, Header, Content } from './styles'
 
 const rowsPerPage = 10
 
-interface ListaTransportadorasProps extends InputF2 {
+interface ListaFuncionariosProps extends InputF2 {
 }
 
-export const ListaTransportadoras = ({ close, callBack }: ListaTransportadorasProps) => {
-/*   const [empresasFiltered, setTransportadorasFiltered] = useState<Contato[]>(cliente?.Transportadoras as Contato[]) */
-  const [search, setSearch] = useState('')
+export const ListaFuncionarios = ({ close, callBack }: ListaFuncionariosProps) => {
+  const [searchValue, setSearchValue] = useState('')
   const [selectedRowTableIndex, setSelectedRowTableIndex] = useState(-1)
-  const [currentPage, setCurrentPage] = useState(1)
+  const [currentPage, setCurrentPage] = useState(0)
 
-  const { data: transportadoras } = useTransportadoras({
-    currentPage,
+  const { data: funcionarios } = useFuncionarios({
     perPage: rowsPerPage,
-    search
+    currentPage: currentPage + 1,
+    search: searchValue
   })
 
   const columns: Column[] = [
@@ -32,13 +31,8 @@ export const ListaTransportadoras = ({ close, callBack }: ListaTransportadorasPr
       minWidth: 20
     },
     {
-      Header: 'Fantasia',
-      accessor: 'nome_fantasia',
-      Cell: ({ value }) => capitalize(value)
-    },
-    {
-      Header: 'CNPJ/CPF',
-      accessor: 'cnpj',
+      Header: 'Nome',
+      accessor: 'nome',
       Cell: ({ value }) => capitalize(value)
     },
     {
@@ -47,20 +41,9 @@ export const ListaTransportadoras = ({ close, callBack }: ListaTransportadorasPr
       Cell: ({ value }) => value.toString().toLowerCase()
     },
     {
-      Header: 'Cidade',
-      accessor: 'cidade',
-      Cell: ({ value }) => capitalize(value)
-    },
-    {
-      Header: 'UF',
-      accessor: 'uf',
-      minWidth: 20,
-      Cell: ({ value }) => value.toString().toUpperCase()
-    },
-    {
       Header: 'Status',
       accessor: 'status',
-      minWidth: 20,
+      minWidth: 25,
       // eslint-disable-next-line react/display-name
       Cell: ({ value }) => <TextStatus status={value}>{value.toString().toUpperCase()}</TextStatus>
     }
@@ -70,23 +53,23 @@ export const ListaTransportadoras = ({ close, callBack }: ListaTransportadorasPr
     setSelectedRowTableIndex(rowIndex)
   }, [])
 
-  const dbClickTableRowOnclick = (empresa: Empresa) => {
-    callBack && callBack(empresa)
+  const dbClickTableRowOnclick = (funcionario: Funcionario) => {
+    callBack && callBack(funcionario)
     close && close()
   }
 
   const handleOnPageChange = useCallback((page: number) => {
-    if (!transportadoras?.metadata?.count) {
+    if (!funcionarios?.metadata?.count) {
       return
     }
 
     setCurrentPage(page)
     setSelectedRowTableIndex(-1)
-  }, [transportadoras])
+  }, [funcionarios])
 
   const handleFilterOnChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearch(event.target.value)
-    setCurrentPage(1)
+    setSearchValue(event.target.value)
+    setCurrentPage(0)
     setSelectedRowTableIndex(-1)
   }, [])
 
@@ -99,22 +82,22 @@ export const ListaTransportadoras = ({ close, callBack }: ListaTransportadorasPr
     </Header>
     <Content selectedRowTableIndex={selectedRowTableIndex}>
       <ReactTable
-        page={currentPage - 1}
-        pages={transportadoras?.metadata?.count && Math.ceil(transportadoras?.metadata?.count / rowsPerPage)}
+        page={currentPage}
+        pages={funcionarios?.metadata?.count && Math.ceil(funcionarios?.metadata?.count / rowsPerPage)}
         onPageChange={handleOnPageChange}
         manual
-        loading={!transportadoras?.data}
+        loading={!funcionarios?.data}
         columns={columns}
-        data={transportadoras?.data}
+        data={funcionarios?.data}
         pageSize={rowsPerPage}
         sortable={true}
         showPageSizeOptions= { false }
         loadingText="carregando..."
-        noDataText="Nenhuma transportadora encontrada"
+        noDataText="Nenhum funcionário encontrado"
         nextText= 'Próximo'
         ofText='de'
         previousText='Anterior'
-        showPagination={!!transportadoras?.metadata?.count && transportadoras?.metadata?.count >= rowsPerPage}
+        showPagination={!!funcionarios?.metadata?.count && funcionarios?.metadata?.count >= rowsPerPage}
         pageText= 'Página'
         getTrProps={(finalState: any, rowInfo?: RowInfo, column?: undefined, instance?: any) => {
           if (rowInfo) {
@@ -123,7 +106,7 @@ export const ListaTransportadoras = ({ close, callBack }: ListaTransportadorasPr
                 clickTableRowOnclick(rowInfo?.index)
               },
               onDoubleClick: () => {
-                dbClickTableRowOnclick(rowInfo.row?._original as Empresa)
+                dbClickTableRowOnclick(rowInfo.row?._original as Funcionario)
               }
             }
           }

@@ -1,13 +1,13 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useCallback, useState } from 'react'
 import Swal from 'sweetalert2'
-import { useUsuario } from '.'
 import { makeLogar } from '../../domain/usuarios/factories/makeLogar'
 import { AppErrorData } from '../../helpers'
+import { useUsuario } from './useUsuario'
 
 const logar = makeLogar()
 
-export default function useUseCaseController () {
+export function useUseCaseController () {
   const { data: usuarioData, setData: setTokenUsuario } = useUsuario()
   const [error, setError] = useState<AppErrorData>({} as AppErrorData)
 

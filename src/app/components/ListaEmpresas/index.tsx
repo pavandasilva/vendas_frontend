@@ -4,7 +4,7 @@ import { FaSearch } from 'react-icons/fa'
 import ReactTable, { Column, RowInfo } from 'react-table-6'
 import { Input, InputF2 } from '..'
 import { Empresa } from '../../../domain/empresas/models/empresa'
-import useEmpresas from '../../hooks/useEmpresas'
+import { useEmpresas } from '../../hooks'
 import { Container, Header, Content } from './styles'
 
 const rowsPerPage = 10

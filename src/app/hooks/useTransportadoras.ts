@@ -1,7 +1,7 @@
 import { useHistory } from 'react-router-dom'
 import useSWR from 'swr'
-import { useUsuario } from '.'
 import { makeTrazerClientes } from '../../domain/clientes/factories'
+import { useUsuario } from './useUsuario'
 
 interface ExecTransportadoras{
   perPage: number,
@@ -11,7 +11,7 @@ interface ExecTransportadoras{
 
 const trazerClientes = makeTrazerClientes()
 
-export default function useTransportadoras ({ perPage, currentPage, search }: ExecTransportadoras) {
+export function useTransportadoras ({ perPage, currentPage, search }: ExecTransportadoras) {
   console.log('search', search)
 
   const { data: usuarioData } = useUsuario()

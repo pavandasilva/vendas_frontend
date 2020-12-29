@@ -1,20 +1,28 @@
+import { generateSearchQuery } from '../../../helpers'
 import { handleErrors } from '../../../helpers/handleErrors'
-import { GetParams, AlertController } from '../../_interfaces'
+import { GetParams } from '../../_interfaces'
 import { HttpRequest } from '../../_interfaces/httpRequest'
-import { FuncionarioService, GetClientesFuncionarioResponse, GetFuncionarioResponse } from '../interfaces'
+import { FuncionarioService, GetClientesFuncionarioResponse, GetListFuncionarioResponse } from '../interfaces'
 import { GetClientesSuggestionResponse } from '../interfaces/getClientesSuggestionResponse'
 
 export class FuncionarioServiceImpl implements FuncionarioService {
   private readonly httpRequest: HttpRequest
-  private readonly alertController: AlertController
 
-  constructor (httpRequest: HttpRequest, alertController: AlertController) {
+  constructor (httpRequest: HttpRequest) {
     this.httpRequest = httpRequest
-    this.alertController = alertController
   }
 
-  async getlist (params: GetParams): Promise<GetFuncionarioResponse> {
-    return {} as GetFuncionarioResponse
+  async getlist (params: GetParams): Promise<GetListFuncionarioResponse> {
+    let { filter, filterOptions, token } = params
+    const query = generateSearchQuery(filter, filterOptions)
+
+    const response = await this.httpRequest.get({
+      path: 'funcionarios',
+      token,
+      query
+    })
+
+    return response?.data as GetListFuncionarioResponse
   }
 
   async getClientes (

@@ -1,11 +1,11 @@
 import { useHistory } from 'react-router-dom'
 import useSWR from 'swr'
+import { useUsuario } from '.'
 import { makeTrazerClientePorId } from '../../domain/clientes/factories/makeTrazerClientePorId'
-import { useUsuario } from '../hooks'
 
 const trazerClientePorId = makeTrazerClientePorId()
 
-export default function useCliente (clienteId: number) {
+export function useCliente (clienteId: number) {
   const { data: usuarioData } = useUsuario()
   const history = useHistory()
 

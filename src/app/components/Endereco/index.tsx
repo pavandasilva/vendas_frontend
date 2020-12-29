@@ -1,12 +1,12 @@
 import React, { ChangeEvent, useCallback, useEffect, useState } from 'react'
 import { Input } from '..'
-import { useCadastroCliente } from '../../hooks'
 import { FormRow } from '../../styles/global'
 import { Select } from '../Select'
 import EstadosMunicipios from '../../assets/jsons/estados_municipios.json'
 import { Container } from './styles'
 import { makeTrazerEnderecoCep } from '../../../domain/clientes/factories/makeTrazerEnderecoCep'
 import { Cliente } from '../../../domain/clientes/models'
+import { useCadastroCliente } from '../../hooks/useCadastroCliente'
 
 const trazerEnderecoPorCep = makeTrazerEnderecoCep()
 

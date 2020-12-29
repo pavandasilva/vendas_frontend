@@ -5,12 +5,12 @@ import { makeTrazerDadosCNPJ } from '../../../domain/clientes/factories/makeTraz
 import { Cliente } from '../../../domain/clientes/models'
 import { IEType } from '../../../helpers/getIEMask'
 import { removerAcento } from '../../../helpers/removerAcentos'
-import { useCadastroCliente } from '../../hooks'
 import { FormRow } from '../../styles/global'
 import { CheckBox } from '../CheckBox'
 import { RadioButton } from '../RadioButton'
 import EstadosMunicipios from '../../assets/jsons/estados_municipios.json'
 import { Container, RadioButtons } from './styles'
+import { useCadastroCliente } from '../../hooks/useCadastroCliente'
 
 const trazerDadosCNPJ = makeTrazerDadosCNPJ()
 

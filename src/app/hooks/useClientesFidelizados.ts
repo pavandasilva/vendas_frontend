@@ -1,7 +1,7 @@
 import { useHistory } from 'react-router-dom'
 import useSWR from 'swr'
+import { useUsuario } from '.'
 import { makeTrazerClientesFidelizados } from '../../domain/clientes/factories/makeTrazerClientesFidelizados'
-import { useUsuario } from '../hooks'
 
 const trazerClientesFidelizados = makeTrazerClientesFidelizados()
 
@@ -12,7 +12,7 @@ interface ExecClientesFidelizados {
   search?: string
 }
 
-export default function useClientesFidelizados ({ funcionarioId, perPage, currentPage, search }: ExecClientesFidelizados) {
+export function useClientesFidelizados ({ funcionarioId, perPage, currentPage, search }: ExecClientesFidelizados) {
   const { data: usuarioData } = useUsuario()
   const history = useHistory()
 

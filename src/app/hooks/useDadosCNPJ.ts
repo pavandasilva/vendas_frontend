@@ -3,7 +3,7 @@ import { makeTrazerDadosCNPJ } from '../../domain/clientes/factories/makeTrazerD
 
 const trazerDadosCNPJ = makeTrazerDadosCNPJ()
 
-export default function useDadosCNPJ (cnpj: string) {
+export function useDadosCNPJ (cnpj: string) {
   let data = null
   let error = null
 

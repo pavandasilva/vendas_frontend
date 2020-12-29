@@ -2,7 +2,7 @@ import React, { ChangeEvent, useCallback } from 'react'
 import { FaPhone, FaSlackHash, FaNetworkWired } from 'react-icons/fa'
 import { Input, CheckBox } from '..'
 import { Telefone } from '../../../domain/clientes/models'
-import { useCadastroTelefone } from '../../hooks'
+import { useCadastroTelefone } from '../../hooks/useCadastroTelefone'
 import { FormRow } from '../../styles/global'
 import { Container } from './styles'
 

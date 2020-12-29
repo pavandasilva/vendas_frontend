@@ -4,12 +4,10 @@ import { MainLayout } from '../../layouts/MainLayout'
 import { Atendimento, Button, ButtonTable, Input } from '../../components'
 import ReactTable, { Column } from 'react-table-6'
 import { Container, Content, Actions } from './styles'
-import useClientesFidelizados from '../../hooks/useClientesFidelizados'
 import { Cliente } from '../../../domain/clientes/models'
 import capitalize from 'capitalize-pt-br'
 import { useHistory } from 'react-router-dom'
-import { useCadastroCliente, useTabs } from '../../hooks'
-import { useAtendimentoTabs } from '../../hooks/useAtendimentoTabs'
+import { useCadastroCliente, useTabs, useAtendimentoTabs, useClientesFidelizados } from '../../hooks'
 
 const perPage = 10
 

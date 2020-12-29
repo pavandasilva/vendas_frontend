@@ -1,7 +1,7 @@
 import { useHistory } from 'react-router-dom'
 import useSWR from 'swr'
-import { useUsuario } from '.'
 import { makeTrazerEmpresas } from '../../domain/empresas/factories'
+import { useUsuario } from './useUsuario'
 
 const trazerEmpresas = makeTrazerEmpresas()
 
@@ -11,7 +11,7 @@ interface ExecEmpresas {
   search?: string
 }
 
-export default function useEmpresas ({ perPage, currentPage, search }: ExecEmpresas) {
+export function useEmpresas ({ perPage, currentPage, search }: ExecEmpresas) {
   const { data: usuarioData } = useUsuario()
   const history = useHistory()
 
@@ -26,7 +26,7 @@ export default function useEmpresas ({ perPage, currentPage, search }: ExecEmpre
     (currentPage - 1) * perPage,
     search || ''
   ), {
-    /* dedupingInterval: 60000 */
+    dedupingInterval: 60000
   })
 
   if (error?.type === 'auth') {

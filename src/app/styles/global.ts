@@ -1086,3 +1086,14 @@ export const StatusText = styled.span<StatusTextProps>`
   color: ${props => props.status === 'ativo' ? props.theme.colors.info : props.theme.colors.danger};
   font-weight: 600;
 `
+
+interface TextStatusProps {
+  status?: 'ATIVO' | 'INATIVO'
+}
+
+export const TextStatus = styled.div<TextStatusProps>`
+  width: 100%;
+  text-align: center;
+  color: ${props => props.status?.toUpperCase() === 'INATIVO' ? props.theme.colors.danger : props.theme.colors.sucess};
+  font-weight: bold;
+`

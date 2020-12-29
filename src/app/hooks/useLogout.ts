@@ -5,7 +5,7 @@ interface UseLogar {
   error: any
 }
 
-export default function useLogout () {
+export function useLogout () {
   const { push } = useHistory()
   const [response, setResponse] = useState({ error: null } as UseLogar)
 

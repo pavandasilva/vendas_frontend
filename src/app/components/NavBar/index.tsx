@@ -1,8 +1,8 @@
 import React, { useMemo, useState } from 'react'
 import { useTheme } from 'styled-components'
 import Swal from 'sweetalert2'
-import { Avatar } from '../'
-import { useUsuario } from '../../hooks'
+import { Avatar } from '..'
+import { useUsuario } from '../../hooks/useUsuario'
 import { PopOver, ItemPopOver } from '../PopOver'
 import { Container, Hamburger, Content } from './styles'
 

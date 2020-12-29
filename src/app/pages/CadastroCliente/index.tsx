@@ -6,12 +6,10 @@ import { Cliente } from '../../../domain/clientes/models'
 import { getTabCadastroClienteToRedirect, deleteEmptyPropsFromObject } from '../../../helpers'
 import { Button, Contatos, Dados, Endereco } from '../../components'
 import { CadastroContatoProvider, CadastroTelefoneProvider, CurrentTab } from '../../contexts'
-import { useCadastroCliente } from '../../hooks'
 import { MainLayout } from '../../layouts/MainLayout'
 import { Container, Content } from './styles'
-import useCliente from '../../hooks/useCliente'
 import { PostParams } from '../../../domain/_interfaces'
-import useUseCaseController from '../../hooks/useUseCaseController'
+import { useCadastroCliente, useUseCaseController, useCliente } from '../../hooks'
 
 const cadastrarCliente = makeCadastrarCliente()
 
