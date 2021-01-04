@@ -62,7 +62,13 @@ export const OrcamentosProvider = ({ children }: OrcamentoProviderProps) => {
 
   const setItensOrcamento = useCallback((clienteId: number, itens: ItemOrcamento[]) => {
     setOrcamentos(oldState => produce(oldState, draftState => {
+      const totalOrcamento = itens.reduce((prevVal, elem) => prevVal + (elem.total || 0), 0)
+      const totalST = itens.reduce((prevVal, elem) => prevVal + (elem.stTotal || 0), 0)
+      const totalIcms = itens.reduce((prevVal, elem) => prevVal + (elem.icmsItem || 0), 0)
+      draftState[clienteId].total = totalOrcamento
       draftState[clienteId].itens = itens
+      draftState[clienteId].st = totalST
+      draftState[clienteId].icms = totalIcms
     }))
   }, [])
 

@@ -5,7 +5,7 @@ import { useUsuario } from './useUsuario'
 
 const trazerPrecoProduto = makeTrazerPrecoProduto()
 
-export function usePrecoProduto (produtoId: number, clienteId: number, empresaId: number) {
+export function usePrecoProduto (produtoId: number, clienteId: number, empresaId: number, valor?: number) {
   const { data: usuarioData } = useUsuario()
   const history = useHistory()
 
@@ -13,12 +13,14 @@ export function usePrecoProduto (produtoId: number, clienteId: number, empresaId
     useCase: 'usePrecoProduto',
     produtoId,
     clienteId,
-    empresaId
+    empresaId,
+    valor
   }), () => trazerPrecoProduto.execute(
     usuarioData?.token as string,
     produtoId,
     clienteId,
-    empresaId
+    empresaId,
+    valor
   ), {
     dedupingInterval: 60000
   })

@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect } from 'react'
-import { FaAmbulance, FaHome } from 'react-icons/fa'
+import { FaHome } from 'react-icons/fa'
 import { useHistory } from 'react-router-dom'
 import Logo from '../../assets/imgs/logo_brasao.png'
 import { useTabs } from '../../hooks'
@@ -22,11 +22,11 @@ export const SideMenu = () => {
       <img src={Logo} alt="route66" />
       <Nav>
         <li onClick={handleDashBoardOnClick}><FaHome size={28} /></li>
+        {/*  <li><FaAmbulance size={28}/></li>
         <li><FaAmbulance size={28}/></li>
         <li><FaAmbulance size={28}/></li>
         <li><FaAmbulance size={28}/></li>
-        <li><FaAmbulance size={28}/></li>
-        <li><FaAmbulance size={28}/></li>
+        <li><FaAmbulance size={28}/></li> */}
       </Nav>
     </Container >
   )

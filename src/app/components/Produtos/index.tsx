@@ -1,13 +1,13 @@
 import capitalize from 'capitalize-pt-br'
-import React, { ChangeEvent, useCallback, useRef, useState } from 'react'
-import { FaPlus, FaSearch } from 'react-icons/fa'
+import React, { useCallback, useRef, useState } from 'react'
+import { FaPlus } from 'react-icons/fa'
 import ReactTable, { Column, RowInfo } from 'react-table-6'
-import { useTheme } from 'styled-components'
 import Swal from 'sweetalert2'
-import { Input, Button, Modal } from '..'
+import { Button, Modal } from '..'
 import { Cliente } from '../../../domain/clientes/models'
+import { formatFloatToCurrency } from '../../../helpers'
 import { useOrcamentos } from '../../hooks/useOrcamentos'
-import { AdicionarProduto } from '../ListaProdutos'
+import { ListaProdutos } from '../ListaProdutos'
 import { Container, Header, Content } from './styles'
 
 interface ProdutosProps {
@@ -42,47 +42,40 @@ export const Produtos = ({ cliente }: ProdutosProps) => {
     {
       Header: 'Preço',
       minWidth: 20,
-      accessor: 'preco.valor'
+      accessor: 'preco.valor',
+      Cell: ({ value }) => formatFloatToCurrency(value)
     },
     {
       Header: 'Valor unit.',
-      minWidth: 20
+      minWidth: 20,
+      accessor: 'valorUnitario',
+      Cell: ({ value }) => formatFloatToCurrency(value)
     },
     {
       Header: 'Acres',
-      minWidth: 20
+      minWidth: 20,
+      accessor: 'acrescimo',
+      Cell: ({ value }) => formatFloatToCurrency(value)
     },
     {
       Header: 'Desc',
-      minWidth: 20
+      minWidth: 20,
+      accessor: 'desconto',
+      Cell: ({ value }) => formatFloatToCurrency(value)
     },
     {
       Header: 'ST',
-      minWidth: 20
+      minWidth: 20,
+      accessor: 'stTotal',
+      Cell: ({ value }) => formatFloatToCurrency(value)
     },
     {
       Header: 'Total',
-      minWidth: 20
+      minWidth: 20,
+      accessor: 'total',
+      Cell: ({ value }) => formatFloatToCurrency(value)
     }
   ]
-
-  const handleFilterOnChange = (e: ChangeEvent<HTMLInputElement>) => {
-    /*  const filter = e.currentTarget.value
-
-    const filtered = orcamentos[cliente.id as number].filter(item => {
-      if (item?.produto?.marca?.includes(filter)) {
-        return true
-      } else if (item?.produto?.nome_popular?.includes(filter)) {
-        return true
-      } else if (item?.produto?.nome_tecnico?.includes(filter)) {
-        return true
-      } else {
-        return false
-      }
-    })
-
-    setFiltered(filtered) */
-  }
 
   const element = useRef<HTMLDivElement>(null)
 
@@ -165,7 +158,11 @@ export const Produtos = ({ cliente }: ProdutosProps) => {
         mode='fullscreen'
         close={() => setShowProdutoModal(false)}
       >
-        <AdicionarProduto cliente={cliente} closeModal={() => setShowProdutoModal(false)}/>
+        <ListaProdutos
+          cliente={cliente}
+          closeModal={() => setShowProdutoModal(false)}
+          afterInsertItemOrcamento={() => setShowProdutoModal(false)}
+        />
       </Modal>}
     </Container>
   )

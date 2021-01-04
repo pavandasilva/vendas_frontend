@@ -20,11 +20,12 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   error?: string
   onChange?: (e: ChangeEvent<HTMLInputElement>) => void
   width?: string;
-  type?: 'cnpj' | 'cpf' | 'text' | 'password' | 'email' | 'cep' | 'ddd' | 'telefone' | 'celular' | IEType
+  type?: 'cnpj' | 'cpf' | 'text' | 'password' | 'email' | 'cep' | 'ddd' | 'telefone' | 'celular' | 'number' | 'currency'| IEType
   f2Title?: string
   f2Content?: React.ReactNode
   f2ModalMode?: ModalMode
   f2CallBack?: (value: any) => void
+  ref?: any
 }
 
 const isIeType = (type: string): boolean => type?.includes('ie-')
@@ -46,6 +47,7 @@ export const Input = ({
   f2CallBack,
   f2ModalMode,
   type: typeProp,
+  ref,
   ...rest
 }: InputProps) => {
   const [isActive, setIsActive] = useState(false)
@@ -76,6 +78,8 @@ export const Input = ({
         setMask('99999-9999')
       } else if (typeProp === 'password') {
         setType('password')
+      } else if (typeProp === 'currency') {
+        setType('999.999.999,99')
       }
     }
   }, [typeProp])
@@ -97,6 +101,8 @@ export const Input = ({
   useEffect(() => {
     if (typeProp === 'password') {
       setType(showPassword ? 'text' : 'password')
+    } else if (typeProp === 'number') {
+      setType('number')
     }
   }, [showPassword, typeProp])
 

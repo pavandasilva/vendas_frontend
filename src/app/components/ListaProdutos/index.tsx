@@ -2,31 +2,31 @@ import capitalize from 'capitalize-pt-br'
 import React, { useCallback, useMemo, useState } from 'react'
 import { FaSearch } from 'react-icons/fa'
 import ReactTable, { Column, RowInfo } from 'react-table-6'
-import Swal from 'sweetalert2'
-import { Input } from '..'
+import { DetalheProduto, Input } from '..'
 import { Cliente } from '../../../domain/clientes/models'
-import { ItemOrcamento } from '../../../domain/clientes/models/itemOrcamento'
-import { Empresa } from '../../../domain/empresas/models/empresa'
-import { makeTrazerPrecoProduto } from '../../../domain/produtos/factories/makeTrazerPrecoProduto'
 import { Produto } from '../../../domain/produtos/models/produto'
-import { useOrcamentos, useProdutos, useUsuario } from '../../hooks'
+import { useOrcamentos, useProdutos } from '../../hooks'
 import { Container, Header } from './styles'
+import { Modal } from '../Modal'
+import { ItemOrcamento } from '../../../domain/clientes/models/itemOrcamento'
+import { useModal } from '../../hooks/useModal'
 
-const trazerPrecoProduto = makeTrazerPrecoProduto()
 const perPage = 30
 
 interface ListaProdutosProps {
   closeModal: () => void
   cliente: Cliente
-  empresa: Empresa
+  afterInsertItemOrcamento: () => void
 }
 
-export const ListaProdutos = ({ closeModal, cliente, empresa }: ListaProdutosProps) => {
+export const ListaProdutos = ({ closeModal, cliente, afterInsertItemOrcamento }: ListaProdutosProps) => {
+  const { data: modalData } = useModal()
   const [selectedRowTableIndex, setSelectedRowTableIndex] = useState(-1)
   const { orcamentos, setItensOrcamento } = useOrcamentos()
   const [currentPage, setCurrentPage] = useState(0)
   const [search, setSearch] = useState('')
-  const { data: usuario } = useUsuario()
+  const [showModal, setShowModal] = useState(false)
+  const [produtoSelected, setProdutoSelected] = useState<Produto>({} as Produto)
 
   const columns: Column[] = useMemo(() => [
     {
@@ -107,41 +107,17 @@ export const ListaProdutos = ({ closeModal, cliente, empresa }: ListaProdutosPro
     setSelectedRowTableIndex(rowIndex)
   }
 
-  const dbClickTableRowOnclick = (produto: Produto) => {
-    Swal.queue([{
-      title: `${produto?.id} - ${produto.nome_popular}`,
-      confirmButtonText: 'Adicionar ao orçamento',
-      cancelButtonText: 'Cancelar',
-      text: 'Quantidade:',
-      input: 'number',
-      inputAttributes: {
-        autocapitalize: 'off',
-        placeHolder: 'Quantidade',
-        min: '1'
-      },
-      showLoaderOnConfirm: true,
-      showCancelButton: true,
-
-      preConfirm: async (result) => {
-        const preco = await trazerPrecoProduto.execute(
-          usuario?.token as string,
-          produto.id as number,
-          cliente.id as number,
-          empresa.id as number
-        )
-
-        const newItemOrcamento: ItemOrcamento = {
-          produto,
-          quantidade: result,
-          preco
-        }
-
-        const itensOrcamento = [...orcamentos[cliente?.id as number].itens, newItemOrcamento]
-        setItensOrcamento(cliente?.id as number, itensOrcamento)
-        closeModal()
-      }
-    }])
+  const dbClickTableRowOnclick = async (produto: Produto) => {
+    setProdutoSelected(produto)
+    setShowModal(true)
   }
+
+  const handleAddItemOrcamento = useCallback(() => {
+    const itensOrcamento = [...orcamentos[cliente?.id as number].itens, modalData as ItemOrcamento]
+    setItensOrcamento(cliente?.id as number, itensOrcamento)
+    setShowModal(false)
+    afterInsertItemOrcamento()
+  }, [afterInsertItemOrcamento, cliente.id, modalData, orcamentos, setItensOrcamento])
 
   return (
     <Container selectedRowTableIndex={selectedRowTableIndex}>
@@ -183,5 +159,18 @@ export const ListaProdutos = ({ closeModal, cliente, empresa }: ListaProdutosPro
           return {}
         }}
       />
-    </Container>)
+
+      { showModal && (
+        <Modal
+          title={produtoSelected?.nome_popular}
+          close={() => setShowModal(false)}
+          showButtonSave={true}
+          buttonSaveText='Adicionar ao orçamento'
+          onSave={handleAddItemOrcamento}
+        >
+          <DetalheProduto cliente={cliente} produto={produtoSelected}/>
+        </Modal>
+      )}
+    </Container>
+  )
 }

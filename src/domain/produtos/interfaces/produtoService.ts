@@ -1,8 +1,8 @@
 import { GetParams } from '../../_interfaces'
-import { Preco } from '../models'
+import { GetPrecoProdutoResponse } from './getPrecoProdutoResponse'
 import { GetProdutosListResponse } from './getProdutosListResponse'
 
 export interface ProdutoService {
   getlist: (params: GetParams) => Promise <GetProdutosListResponse>
-  getPreco: (produtoId: number, clienteId: number, empresaId: number, token: string) => Promise <Preco>
+  getPreco: (produtoId: number, clienteId: number, empresaId: number, token: string, valor?: number) => Promise <GetPrecoProdutoResponse>
 }

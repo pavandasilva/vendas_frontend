@@ -1044,6 +1044,14 @@ export const GlobalStyle = createGlobalStyle`
     height: 36px !important;
   }
 
+  .swal2-input.percentage {
+    width: 100px;
+  }
+
+  .swal2-input.danger {
+    color: ${props => props.theme.colors.danger};
+  }
+
   .swal2-popup.swal2-toast.swal2-show {
     animation: swal2-show .3s;
   }
