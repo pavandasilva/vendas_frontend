@@ -48,7 +48,8 @@ export const OrcamentoEmAndamento = ({ cliente }: OrcamentoEmAndamentoProps) => 
             <Button mode="primary" startIcon={FaShare} onClick={handleFinalizarOnClick}>Finalizar</Button>
           </div>
         </header>
-        <ResumoOrcamento cliente={cliente}></ResumoOrcamento>
+
+        <ResumoOrcamento cliente={cliente}/>
         { currentTabs[cliente?.id as number] === 'dadosGerais' && <DadosGerais cliente={cliente} /> }
         { currentTabs[cliente?.id as number] === 'produtos' && <Produtos cliente={cliente} /> }
       </Container>

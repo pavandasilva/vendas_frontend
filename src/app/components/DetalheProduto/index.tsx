@@ -32,7 +32,7 @@ export const DetalheProduto = ({ cliente, produto }: DetalheProdutoProps) => {
   const [total, setTotal] = useState(0)
   const [descAcres, setDescAcres] = useState(0)
   const [qtde, setQtde] = useState(1)
-  const [st, setSt] = useState<number>(0)
+  const [st, setSt] = useState(0)
   const [valorUnitario, setValorUnitario] = useState(0)
 
   useEffect(() => {
@@ -51,11 +51,17 @@ export const DetalheProduto = ({ cliente, produto }: DetalheProdutoProps) => {
   }, [descAcres, preco])
 
   useEffect(() => {
+    if (total > 0) {
+      setValorUnitario(total / qtde)
+    }
+  }, [qtde, total])
+
+  useEffect(() => {
     let desconto: number = 0
     let acrescimo: number = 0
 
-    if (preco?.data?.valor && valor) {
-      const diferenca = preco?.data?.valor - valor
+    if (preco?.data?.valorOriginal && valor) {
+      const diferenca = preco?.data?.valorOriginal - valor
 
       if (diferenca < 0) {
         acrescimo = diferenca * -1 * qtde
@@ -72,7 +78,7 @@ export const DetalheProduto = ({ cliente, produto }: DetalheProdutoProps) => {
     const itemOrcamento: ItemOrcamento = {
       acrescimo,
       desconto,
-      valorUnitario: valor || 0,
+      valorUnitario: total / qtde || 0,
       quantidade: qtde,
       stTotal: st || 0 * qtde,
       total: total || 0,
@@ -82,13 +88,6 @@ export const DetalheProduto = ({ cliente, produto }: DetalheProdutoProps) => {
 
     setModalData(itemOrcamento)
   }, [descAcres, preco, produto, qtde, setModalData, st, total, valor])
-
-  useEffect(() => {
-    if (total > 0) {
-      setValorUnitario(total / qtde)
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [total])
 
   const handleQtdeOnChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     if (parseInt(e.target.value) < 1) {
@@ -172,9 +171,11 @@ export const DetalheProduto = ({ cliente, produto }: DetalheProdutoProps) => {
             </FormRow>
           </Inputs>
         </>
-        : <Loading>
-          <Spinner/>
-        </Loading>
+        : (
+          <Loading>
+            <Spinner/>
+          </Loading>
+        )
       }
     </Container>
   )

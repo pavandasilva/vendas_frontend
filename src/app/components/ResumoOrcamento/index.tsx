@@ -16,8 +16,8 @@ export const ResumoOrcamento = ({ cliente }: ResumoOrcamentoProps) => {
     <Container>
       <Card mode="normal" title="Itens" text={orcamentos[cliente?.id as number]?.itens?.length as unknown as string}/>
       <Card mode="info" title="Sub total" text={orcamentos[cliente?.id as number]?.itens?.length as unknown as string}/>
-      <Card mode="danger" title="Acréscimos" text="415,99"/>
-      <Card mode="success" title="Descontos" text="15,99"/>
+      <Card mode="danger" title="Acréscimos" text={orcamentos[cliente?.id as number]?.acrescimos as unknown as string}/>
+      <Card mode="success" title="Descontos" text={orcamentos[cliente?.id as number]?.descontos as unknown as string}/>
       <Card mode="danger" title="Juros" text="0.00"/>
       <Card mode="danger" title="ST" text={formatFloatToCurrency(orcamentos[cliente?.id as number]?.st as number)}/>
       <Card mode="info" title="Valor total" text={formatFloatToCurrency(orcamentos[cliente?.id as number]?.total as number)}/>
