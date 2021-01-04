@@ -32,7 +32,6 @@ type Orcamentos = {
 
 const initialData: Orcamento = {
   itens: [] as ItemOrcamento[],
-  subtotal: 0,
   total: 0,
   st: 0,
   icms: 0,
@@ -71,6 +70,7 @@ export const OrcamentosProvider = ({ children }: OrcamentoProviderProps) => {
       const totalIcms = itens.reduce((prevVal, elem) => prevVal + (elem.icmsItem || 0), 0)
       const acrescimos = itens.reduce((prevVal, elem) => prevVal + (elem.acrescimo || 0), 0)
       const descontos = itens.reduce((prevVal, elem) => prevVal + (elem.desconto || 0), 0)
+      const subtotal = itens.reduce((prevVal, elem) => prevVal + ((elem.total || 0) - (elem.stTotal || 0)), 0)
 
       draftState[clienteId].total = totalOrcamento
       draftState[clienteId].itens = itens
@@ -78,6 +78,7 @@ export const OrcamentosProvider = ({ children }: OrcamentoProviderProps) => {
       draftState[clienteId].icms = totalIcms
       draftState[clienteId].acrescimos = acrescimos
       draftState[clienteId].descontos = descontos
+      draftState[clienteId].subtotal = subtotal
     }))
   }, [])
 

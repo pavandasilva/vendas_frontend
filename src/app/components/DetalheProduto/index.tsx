@@ -127,7 +127,7 @@ export const DetalheProduto = ({ cliente, produto }: DetalheProdutoProps) => {
 
   return (
     <Container>
-      { !!valor && !!total
+      { preco
         ? <>
           <ul>
             <li key={produto?.id}>{`Valor: ${formatFloatToCurrency(preco?.data?.valorOriginal || 0)}`}</li>
