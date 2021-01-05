@@ -1,5 +1,6 @@
 import React, { useCallback } from 'react'
 import { FaShare } from 'react-icons/fa'
+import { StringLiteralLike } from 'typescript'
 import { ResumoOrcamento, Produtos, Button, DadosGerais } from '..'
 import { Cliente } from '../../../domain/clientes/models'
 import { ItemOrcamentoProvider, OrcamentoTabsType } from '../../contexts'
@@ -22,6 +23,21 @@ export const OrcamentoEmAndamento = ({ cliente }: OrcamentoEmAndamentoProps) => 
   const handleMenuOnClick = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
     setCurrentTab(cliente?.id as number, e.currentTarget.name as OrcamentoTabsType)
   }, [cliente, setCurrentTab])
+
+  function getProdutosTabTitle (): string {
+    let title = 'Produtos do orçamento'
+
+    if (!orcamentos[cliente?.id as number].contato?.nome) {
+      title = 'Primeiro selecione um contato'
+    }
+
+    if (!orcamentos[cliente?.id as number].deposito?.nome) {
+      title = 'Primeiro selecione um depósito'
+    }
+
+    return title
+  }
+
   return (
     <ItemOrcamentoProvider>
       <Container>
@@ -38,9 +54,9 @@ export const OrcamentoEmAndamento = ({ cliente }: OrcamentoEmAndamentoProps) => 
             <Button
               name="produtos"
               mode="secondary"
-              title={orcamentos[cliente?.id as number].contato?.nome ? 'Produtos do pedido' : 'Primeiro selecione um contato'}
+              title={getProdutosTabTitle()}
               active={currentTabs[cliente?.id as number] === 'produtos'}
-              disabled={!orcamentos[cliente?.id as number].contato?.nome}
+              disabled={!orcamentos[cliente?.id as number].contato?.nome && !orcamentos[cliente?.id as number].deposito?.nome}
               onClick={handleMenuOnClick}>Produtos
             </Button>
           </div>

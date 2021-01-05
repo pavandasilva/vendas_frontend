@@ -51,12 +51,6 @@ export const DetalheProduto = ({ cliente, produto }: DetalheProdutoProps) => {
   }, [descAcres, preco])
 
   useEffect(() => {
-    if (total > 0) {
-      setValorUnitario(total / qtde)
-    }
-  }, [qtde, total])
-
-  useEffect(() => {
     let desconto: number = 0
     let acrescimo: number = 0
 
@@ -124,6 +118,12 @@ export const DetalheProduto = ({ cliente, produto }: DetalheProdutoProps) => {
       setDescAcres(e.target.value as unknown as number)
     }
   }, [])
+
+  useEffect(() => {
+    if (total > 0) {
+      setValorUnitario(total / qtde)
+    }
+  }, [qtde, total])
 
   return (
     <Container>
