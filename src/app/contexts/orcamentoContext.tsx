@@ -20,10 +20,11 @@ export interface Orcamento {
   condicao: string
   cliente: Cliente
   transportadora: Cliente
-  juros: number,
+  juros: number
   modoPagamento: ModoPagamentoType
   descontos: number
   acrescimos: number
+  qtdeItens: number
 }
 
 type Orcamentos = {
@@ -45,7 +46,9 @@ const initialData: Orcamento = {
   juros: 0,
   modoPagamento: 'carteira',
   descontos: 0,
-  acrescimos: 0
+  acrescimos: 0,
+  qtdeItens: 0,
+  subtotal: 0
 }
 
 export interface OrcamentoContextProps {
@@ -71,6 +74,7 @@ export const OrcamentosProvider = ({ children }: OrcamentoProviderProps) => {
       const acrescimos = itens.reduce((prevVal, elem) => prevVal + (elem.acrescimo || 0), 0)
       const descontos = itens.reduce((prevVal, elem) => prevVal + (elem.desconto || 0), 0)
       const subtotal = itens.reduce((prevVal, elem) => prevVal + ((elem.total || 0) - (elem.stTotal || 0)), 0)
+      const qtdeItens = itens.reduce((prevVal, elem) => prevVal + (elem.quantidade || 0), 0)
 
       draftState[clienteId].total = totalOrcamento
       draftState[clienteId].itens = itens
@@ -79,6 +83,7 @@ export const OrcamentosProvider = ({ children }: OrcamentoProviderProps) => {
       draftState[clienteId].acrescimos = acrescimos
       draftState[clienteId].descontos = descontos
       draftState[clienteId].subtotal = subtotal
+      draftState[clienteId].qtdeItens = qtdeItens
     }))
   }, [])
 
