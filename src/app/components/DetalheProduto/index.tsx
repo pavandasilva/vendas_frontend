@@ -1,6 +1,6 @@
 import React, { ChangeEvent, useCallback, useEffect, useState } from 'react'
 import { Cliente } from '../../../domain/clientes/models'
-import { ItemOrcamento } from '../../../domain/clientes/models/itemOrcamento'
+import { ItemOrcamento } from '../../../domain/pedidos/models/itemOrcamento'
 import { Preco, Produto } from '../../../domain/produtos/models'
 import { formatFloatToCurrency } from '../../../helpers'
 import { useOrcamentos } from '../../hooks'

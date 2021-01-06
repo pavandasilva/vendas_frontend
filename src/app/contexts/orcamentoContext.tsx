@@ -1,31 +1,12 @@
 import produce from 'immer'
 import React, { createContext, ReactNode, useCallback, useState } from 'react'
 import { Cliente, Contato } from '../../domain/clientes/models'
-import { ItemOrcamento } from '../../domain/clientes/models/itemOrcamento'
+import { ItemOrcamento } from '../../domain/pedidos/models/itemOrcamento'
 import { Empresa } from '../../domain/empresas/models/empresa'
 import { Funcionario } from '../../domain/funcionarios/models/funcionario'
+import { Orcamento } from '../../domain/pedidos/models'
 
 export type ModoPagamentoType = 'carteira' | 'cheque próprio' | 'cheque terceiro' | 'cobrança' | 'dinheiro'
-
-export interface Orcamento {
-  itens: ItemOrcamento[]
-  subtotal?: number
-  total?: number
-  st?: number
-  icms?: number
-  deposito?: Empresa
-  contato?: Contato
-  funcionario?: Funcionario
-  funcionario2?: Funcionario
-  condicao: string
-  cliente: Cliente
-  transportadora: Cliente
-  juros: number
-  modoPagamento: ModoPagamentoType
-  descontos: number
-  acrescimos: number
-  qtdeItens: number
-}
 
 type Orcamentos = {
   [clienteId: number]: Orcamento
@@ -56,6 +37,7 @@ export interface OrcamentoContextProps {
   setItensOrcamento: (clienteId: number, itens: ItemOrcamento[]) => void
   startOrcamento: (clienteId: number) => void
   setOrcamento: (clienteId: number, orcamento: Orcamento) => void
+  removeOrcamento: (clienteId: number) => void
 }
 interface OrcamentoProviderProps {
   children: ReactNode
@@ -95,12 +77,20 @@ export const OrcamentosProvider = ({ children }: OrcamentoProviderProps) => {
     setOrcamentos(oldState => ({ ...oldState, [clienteId]: orcamento }))
   }, [])
 
+  const removeOrcamento = (clienteId: number) => {
+    setOrcamentos(orcamentos => {
+      delete (orcamentos[clienteId])
+      return orcamentos
+    })
+  }
+
   return (
     <OrcamentoContext.Provider value={{
       orcamentos,
       setItensOrcamento,
       startOrcamento,
-      setOrcamento
+      setOrcamento,
+      removeOrcamento
     }}>
       { children }
     </OrcamentoContext.Provider>

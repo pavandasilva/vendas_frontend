@@ -26,11 +26,12 @@ export const Nav = styled.ul`
 
   li {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     margin-top: 10px;
     background-color: white;
-    height: 50px;
+    height: 60px;
     background-color: ${props => props.theme.colors.primary};
     cursor: pointer;
     transition: all 0.4s;
@@ -41,6 +42,13 @@ export const Nav = styled.ul`
 
     svg {
       fill: ${props => lighten(0.3, props.theme.colors.primary)};
+    }
+
+    span {
+      margin-top: 7px;
+      color: ${props => lighten(0.3, props.theme.colors.primary)};
+      font-size: 10px;
+      letter-spacing: 0.075em;
     }
 
   }

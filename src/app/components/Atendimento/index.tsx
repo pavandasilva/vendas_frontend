@@ -1,30 +1,32 @@
 import React from 'react'
 import { Geral, MenuAtendimento } from '..'
 import { Cliente } from '../../../domain/clientes/models'
-import { useCliente, useAtendimentoTabs } from '../../hooks'
+import { useAtendimentoTabs } from '../../hooks'
 import { Financeiro } from '../Financeiro'
 import { OrcamentoEmAndamento } from '../OrcamentoEmAndamento'
 import { Pedidos } from '../Pedidos'
-
 import { Container, Main } from './styles'
 
 interface AtendimentoProps {
-  clienteId: number
+  cliente: Cliente
 }
 
-export const Atendimento = ({ clienteId }: AtendimentoProps) => {
-  const { data: cliente } = useCliente(clienteId)
+export const Atendimento = ({ cliente }: AtendimentoProps) => {
+  // const { data: cliente } = useCliente(clienteId)
   const { currentTabs } = useAtendimentoTabs()
 
   return (
     <Container>
       <Main>
-        {currentTabs[cliente?.data.id as number] === 'geral' && <Geral /> }
-        {currentTabs[cliente?.data.id as number] === 'pedidos' && <Pedidos cliente={cliente?.data as Cliente}/> }
-        {currentTabs[cliente?.data.id as number] === 'financeiro' && <Financeiro /> }
-        {currentTabs[cliente?.data.id as number] === 'pedidoEmAndamento' && <OrcamentoEmAndamento cliente={cliente?.data as Cliente}/> }
+        {currentTabs[cliente?.id as number] === 'geral' && <Geral /> }
+        {currentTabs[cliente?.id as number] === 'pedidos' && <Pedidos cliente={cliente}/> }
+        {currentTabs[cliente?.id as number] === 'financeiro' && <Financeiro /> }
+        {
+          currentTabs[cliente?.id as number] === 'pedidoEmAndamento' &&
+          <OrcamentoEmAndamento cliente={cliente}/>
+        }
       </Main>
-      <MenuAtendimento cliente={cliente?.data as Cliente}/>
+      <MenuAtendimento cliente={cliente}/>
     </Container>
   )
 }

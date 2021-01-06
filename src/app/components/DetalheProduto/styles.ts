@@ -15,5 +15,5 @@ export const Loading = styled.div`
   justify-content: center;
   align-items: center;
   width: 100%;
-  height: 220px;
+  height: 218px;
 `

@@ -42,16 +42,14 @@ export function useUseCaseController () {
       try {
         const response = await useCase.execute({ ...paramsUseCase, token: usuarioData?.token as string })
 
-        if (response) {
-          Swal.fire({
-            title: 'Sucesso!',
-            text: sucessMessage,
-            icon: 'success',
-            timer: 2500,
-            timerProgressBar: true
-          })
-          afterAll && afterAll()
-        }
+        Swal.fire({
+          title: 'Sucesso!',
+          text: sucessMessage || response.message,
+          icon: 'success',
+          timer: 2500,
+          timerProgressBar: true
+        })
+        afterAll && afterAll()
       } catch (error) {
         if (error.type === 'auth') {
           Swal.queue([{

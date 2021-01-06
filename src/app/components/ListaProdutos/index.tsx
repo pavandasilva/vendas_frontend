@@ -8,7 +8,7 @@ import { Produto } from '../../../domain/produtos/models/produto'
 import { useOrcamentos, useProdutos } from '../../hooks'
 import { Container, Header } from './styles'
 import { Modal } from '../Modal'
-import { ItemOrcamento } from '../../../domain/clientes/models/itemOrcamento'
+import { ItemOrcamento } from '../../../domain/pedidos/models/itemOrcamento'
 import { useModal } from '../../hooks/useModal'
 
 const perPage = 30

@@ -1,7 +1,7 @@
 import capitalize from 'capitalize-pt-br'
 import React, { useCallback, useEffect, useState } from 'react'
 import { FiX } from 'react-icons/fi'
-import { useTabs } from '../../hooks'
+import { useOrcamentos, useTabs } from '../../hooks'
 import { Container, TabContent, Tab, Close } from './styles'
 
 interface TabsProps {
@@ -12,14 +12,16 @@ interface TabsProps {
 export const Tabs = ({ fixedContent, titleFixedContent }: TabsProps) => {
   const [tabFixedTitle, setTabFixedTitle] = useState('')
   const { activeTab, setActiveTab, tabs, removeTab } = useTabs()
+  const { removeOrcamento } = useOrcamentos()
 
   useEffect(() => {
     setTabFixedTitle(titleFixedContent)
   }, [setActiveTab, titleFixedContent])
 
-  const handleCloseOnClick = useCallback((index: number) => {
+  const handleCloseOnClick = useCallback((index: number, clienteId: number) => {
     removeTab(index)
-  }, [removeTab])
+    removeOrcamento(clienteId)
+  }, [removeOrcamento, removeTab])
 
   return (
     <Container>
@@ -32,7 +34,7 @@ export const Tabs = ({ fixedContent, titleFixedContent }: TabsProps) => {
 
         { tabs?.map((tab, index) => (
           <Tab key={index} selected={activeTab === index} onClick={() => setActiveTab(index)}>
-            <Close onClick={() => handleCloseOnClick(index)}>
+            <Close onClick={() => handleCloseOnClick(index, tab.clienteId)}>
               <FiX />
             </Close>
             <p>{capitalize(tab.title)}</p>

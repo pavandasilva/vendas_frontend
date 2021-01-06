@@ -34,7 +34,6 @@ export const Modal = ({ title, children, buttonSaveText, buttonCancelText, showB
       <BoxModal mode={mode}>
         <Content>
           <Header>
-
             <div onClick={close}> <h1>{title && title}</h1><FiX /></div>
           </Header>
           <div>
@@ -45,7 +44,6 @@ export const Modal = ({ title, children, buttonSaveText, buttonCancelText, showB
             { showButtonSave && <Button mode="confirm" onClick={handleSaveButtonClick}>{buttonSaveText || 'Salvar'}</Button>}
           </ContainerFooter>
         </Content>
-
       </BoxModal>
     </Container>
   )

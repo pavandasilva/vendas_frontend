@@ -1,3 +1,5 @@
+export * from './Clientes'
 export * from './DashBoard'
 export * from './CadastroCliente'
 export * from './Login'
+export * from './Pedidos'

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import { FaList, FaShoppingCart, FaFunnelDollar, FaClipboardList } from 'react-icons/fa'
 import { Cliente } from '../../../domain/clientes/models'
 import { useAtendimentoTabs } from '../../hooks/useAtendimentoTabs'
@@ -13,13 +13,16 @@ interface MenuAtendimentoProps {
 export const MenuAtendimento = ({ cliente }: MenuAtendimentoProps) => {
   const { setCurrentTab, currentTabs } = useAtendimentoTabs()
   const { orcamentos, startOrcamento } = useOrcamentos()
+
+  console.log(orcamentos)
+
   const { setCurrentTab: setCurrentOrcamentoTab } = useOrcamentoTabs()
 
-  const handleNovoOrcamentoOnClick = () => {
+  const handleNovoOrcamentoOnClick = useCallback(() => {
     startOrcamento(cliente?.id as number)
     setCurrentTab(cliente?.id as number, 'pedidoEmAndamento')
     setCurrentOrcamentoTab(cliente?.id as number, 'dadosGerais')
-  }
+  }, [cliente, setCurrentOrcamentoTab, setCurrentTab, startOrcamento])
 
   return (
     <Container >

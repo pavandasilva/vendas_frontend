@@ -1,5 +1,5 @@
 import React, { createContext, useCallback, useState } from 'react'
-import { ItemOrcamento } from '../../domain/clientes/models/itemOrcamento'
+import { ItemOrcamento } from '../../domain/pedidos/models/itemOrcamento'
 
 export interface ModalContextProps {
   data?: any

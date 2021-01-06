@@ -109,42 +109,44 @@ export const ListaContatos = ({ cliente, close, callBack }: ListaContatosProps) 
     close && close()
   }
 
-  return <Container>
-    <Header>
-      <div>
-        <Input type='text' startIcon={FaSearch} onChange={(e) => setSearchValue(e.currentTarget.value)}/>
-      </div>
+  return (
+    <Container>
+      <Header>
+        <div>
+          <Input type='text' startIcon={FaSearch} onChange={(e) => setSearchValue(e.currentTarget.value)}/>
+        </div>
 
-    </Header>
-    <Content selectedRowTableIndex={selectedRowTableIndex}>
-      <ReactTable
-        columns={columns}
-        data={searchValue !== '' ? contatosFiltered : cliente?.contatos}
-        pageSize={rowsPerPage}
-        sortable={true}
-        showPageSizeOptions= { false }
-        loadingText="carregando..."
-        noDataText="Nenhum contato cadastrado"
-        nextText= 'Próximo'
-        ofText='de'
-        previousText='Anterior'
-        showPagination={cliente && cliente.contatos && cliente.contatos?.length >= rowsPerPage}
-        pageText= 'Página'
-        getTrProps={(finalState: any, rowInfo?: RowInfo, column?: undefined, instance?: any) => {
-          if (rowInfo) {
-            return {
-              onClick: () => {
-                clickTableRowOnclick(rowInfo?.index)
-              },
-              onDoubleClick: () => {
-                dbClickTableRowOnclick(rowInfo.row?._original as Contato)
+      </Header>
+      <Content selectedRowTableIndex={selectedRowTableIndex}>
+        <ReactTable
+          columns={columns}
+          data={searchValue !== '' ? contatosFiltered : cliente?.contatos}
+          pageSize={rowsPerPage}
+          sortable={true}
+          showPageSizeOptions= { false }
+          loadingText="carregando..."
+          noDataText="Nenhum contato cadastrado"
+          nextText= 'Próximo'
+          ofText='de'
+          previousText='Anterior'
+          showPagination={cliente && cliente.contatos && cliente.contatos?.length >= rowsPerPage}
+          pageText= 'Página'
+          getTrProps={(finalState: any, rowInfo?: RowInfo, column?: undefined, instance?: any) => {
+            if (rowInfo) {
+              return {
+                onClick: () => {
+                  clickTableRowOnclick(rowInfo?.index)
+                },
+                onDoubleClick: () => {
+                  dbClickTableRowOnclick(rowInfo.row?._original as Contato)
+                }
               }
             }
-          }
 
-          return {}
-        }}
-      />
-    </Content>
-  </Container>
+            return {}
+          }}
+        />
+      </Content>
+    </Container>
+  )
 }

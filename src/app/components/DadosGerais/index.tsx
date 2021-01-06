@@ -4,7 +4,8 @@ import { Input, Select } from '..'
 import { Cliente, Contato } from '../../../domain/clientes/models'
 import { Empresa } from '../../../domain/empresas/models/empresa'
 import { Funcionario } from '../../../domain/funcionarios/models/funcionario'
-import { ModoPagamentoType, Orcamento } from '../../contexts'
+import { Orcamento } from '../../../domain/pedidos/models/orcamento'
+import { ModoPagamentoType } from '../../contexts'
 import { useOrcamentos, useEmpresa, useCliente } from '../../hooks'
 import { FormRow } from '../../styles/global'
 import { ListaContatos } from '../ListaContatos'
@@ -31,6 +32,8 @@ export const DadosGerais = ({ cliente }: DadosGeraisProps) => {
   const { orcamentos, setOrcamento } = useOrcamentos()
   const { data: empresaData } = useEmpresa(empresaId)
   const { data: transportadoraData } = useCliente(transportadoraId)
+
+  console.log(orcamentos[cliente?.id as number])
 
   useEffect(() => {
     const orcamento = { ...orcamentos[cliente?.id as number], deposito: empresaData?.data }
