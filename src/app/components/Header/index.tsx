@@ -6,7 +6,7 @@ import { useUsuario } from '../../hooks/useUsuario'
 import { PopOver, ItemPopOver } from '../PopOver'
 import { Container, Hamburger, Content } from './styles'
 
-export const NavBar = () => {
+export const Header = () => {
   const { logout } = useUsuario()
   const [showPopOver, setShowPopOver] = useState(false)
   const { colors } = useTheme()
