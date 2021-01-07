@@ -42,7 +42,7 @@ export const MenuAtendimento = ({ cliente }: MenuAtendimentoProps) => {
         <FaFunnelDollar /><span>Financeiro</span>
       </Button>
 
-      { atendimentos[cliente?.id as number]?.orcamento
+      { atendimentos[cliente?.id as number]?.orcamento?.contato
         ? (
           <Button
             selected={currentTabs[cliente?.id as number] === 'orcamentoEmAndamento'}

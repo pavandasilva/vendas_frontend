@@ -9,8 +9,8 @@ import { OrcamentoTabsProvider } from './tabsOrcamentoContext'
 export const Providers: React.FC = ({ children }) => {
   return (
     <ModalProvider>
-      <AtendimentoTabsProvider>
-        <AtendimentosProvider>
+      <AtendimentosProvider>
+        <AtendimentoTabsProvider>
           <OrcamentoTabsProvider>
             <TabCadastroClienteProvider>
               <SideBarProvider>
@@ -22,8 +22,8 @@ export const Providers: React.FC = ({ children }) => {
               </SideBarProvider>
             </TabCadastroClienteProvider>
           </OrcamentoTabsProvider>
-        </AtendimentosProvider>
-      </AtendimentoTabsProvider>
+        </AtendimentoTabsProvider>
+      </AtendimentosProvider>
     </ModalProvider>
   )
 }

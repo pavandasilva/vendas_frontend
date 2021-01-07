@@ -85,10 +85,16 @@ export const AtendimentosProvider = ({ children }: AtendimentoProviderProps) => 
   }, [])
 
   const removeAtendimento = useCallback((clienteId: number) => {
-    setAtendimentos(atendimentos => {
-      delete (atendimentos[clienteId])
-      return atendimentos
-    })
+    setAtendimentos(oldState => produce(oldState, draftState => {
+      let atendimentos = [] as Atendimento []
+
+      Object.keys(oldState).map(key => {
+        if (key !== clienteId.toString()) {
+          atendimentos.push(oldState[clienteId])
+        }
+      })
+      draftState = atendimentos
+    }))
   }, [])
 
   const setOrcamento = useCallback((clienteId: number, orcamento: Orcamento) => {

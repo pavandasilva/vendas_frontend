@@ -16,7 +16,7 @@ interface OrcamentoEmAndamentoProps {
 
 export const OrcamentoEmAndamento = ({ cliente }: OrcamentoEmAndamentoProps) => {
   const { currentTabs, setCurrentTab } = useOrcamentoTabs()
-  const { atendimentos, removeAtendimento } = useAtendimentos()
+  const { atendimentos, setOrcamento } = useAtendimentos()
   const { executeUseCase } = useUseCaseController()
   const { setCurrentTab: setAtendimentoTab } = useAtendimentoTabs()
 
@@ -28,7 +28,7 @@ export const OrcamentoEmAndamento = ({ cliente }: OrcamentoEmAndamentoProps) => 
 
   const handleFinalizarOnClick = useCallback(async () => {
     function afterSaved () {
-      removeAtendimento(cliente.id as number)
+      setOrcamento(cliente.id as number, {} as Orcamento)
       setAtendimentoTab(cliente.id as number, 'geral')
     }
 
@@ -38,12 +38,12 @@ export const OrcamentoEmAndamento = ({ cliente }: OrcamentoEmAndamentoProps) => 
     executeUseCase<Orcamento>(
       gravarOrcamento,
       orcamento as Orcamento,
-      'Orçamento salvo com sucesso!',
-      'Deseja salvar o orçamento?',
+      'Orçamento finalizado com sucesso!',
+      'Deseja finalizar o orçamento?',
       afterSaved,
       true
     )
-  }, [atendimentos, cliente.id, executeUseCase, removeAtendimento, setAtendimentoTab])
+  }, [atendimentos, cliente.id, executeUseCase, setAtendimentoTab, setOrcamento])
 
   const handleMenuOnClick = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
     setCurrentTab(cliente?.id as number, e.currentTarget.name as OrcamentoTabsType)

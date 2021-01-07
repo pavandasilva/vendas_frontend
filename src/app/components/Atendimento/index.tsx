@@ -3,17 +3,15 @@ import { Geral, MenuAtendimento } from '..'
 import { Cliente } from '../../../domain/clientes/models'
 import { useAtendimentoTabs } from '../../hooks'
 import { Financeiro } from '../Financeiro'
-import { HeaderAtendimento } from '../HeaderAtendimento'
 import { OrcamentoEmAndamento } from '../OrcamentoEmAndamento'
 import { Pedidos } from '../Pedidos'
-import { Container, Main, Contato } from './styles'
+import { Container, Main } from './styles'
 
 interface AtendimentoProps {
   cliente: Cliente
 }
 
 export const Atendimento = ({ cliente }: AtendimentoProps) => {
-  // const { data: cliente } = useCliente(clienteId)
   const { currentTabs } = useAtendimentoTabs()
 
   return (
