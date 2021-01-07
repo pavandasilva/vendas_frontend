@@ -1,5 +1,6 @@
 import React from 'react'
-import { SideBarProvider, UsuarioProvider, TabsProvider, OrcamentosProvider } from '.'
+import { SideBarProvider, UsuarioProvider, TabsProvider } from '.'
+import { AtendimentosProvider } from './atendimentoContext'
 import { ModalProvider } from './modalContext'
 import { TabCadastroClienteProvider } from './tabCadastroClienteContext'
 import { AtendimentoTabsProvider } from './tabsAtendimentoContext'
@@ -9,7 +10,7 @@ export const Providers: React.FC = ({ children }) => {
   return (
     <ModalProvider>
       <AtendimentoTabsProvider>
-        <OrcamentosProvider>
+        <AtendimentosProvider>
           <OrcamentoTabsProvider>
             <TabCadastroClienteProvider>
               <SideBarProvider>
@@ -21,7 +22,7 @@ export const Providers: React.FC = ({ children }) => {
               </SideBarProvider>
             </TabCadastroClienteProvider>
           </OrcamentoTabsProvider>
-        </OrcamentosProvider>
+        </AtendimentosProvider>
       </AtendimentoTabsProvider>
     </ModalProvider>
   )

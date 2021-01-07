@@ -2,7 +2,7 @@ import React from 'react'
 import { Card } from '..'
 import { Cliente } from '../../../domain/clientes/models'
 import { formatFloatToCurrency } from '../../../helpers'
-import { useOrcamentos } from '../../hooks/useOrcamentos'
+import { useAtendimentos } from '../../hooks'
 import { Container } from './styles'
 
 interface ResumoOrcamentoProps {
@@ -10,17 +10,21 @@ interface ResumoOrcamentoProps {
 }
 
 export const ResumoOrcamento = ({ cliente }: ResumoOrcamentoProps) => {
-  const { orcamentos } = useOrcamentos()
+  const { atendimentos } = useAtendimentos()
 
   return (
     <Container>
-      <Card mode="normal" title="Itens" text={orcamentos[cliente?.id as number]?.qtdeItens as unknown as string}/>
-      <Card mode="info" title="Sub total" text={formatFloatToCurrency(orcamentos[cliente?.id as number]?.subtotal as number)}/>
-      <Card mode="danger" title="Acréscimos" text={formatFloatToCurrency(orcamentos[cliente?.id as number]?.acrescimos)}/>
-      <Card mode="success" title="Descontos" text={formatFloatToCurrency(orcamentos[cliente?.id as number]?.descontos)}/>
+      <Card
+        mode="normal"
+        title="Itens"
+        text={atendimentos[cliente?.id as number]?.orcamento?.qtdeItens as unknown as string}
+      />
+      <Card mode="info" title="Sub total" text={formatFloatToCurrency(atendimentos[cliente?.id as number]?.orcamento?.subtotal as number)}/>
+      <Card mode="danger" title="Acréscimos" text={formatFloatToCurrency(atendimentos[cliente?.id as number]?.orcamento?.acrescimos as number)}/>
+      <Card mode="success" title="Descontos" text={formatFloatToCurrency(atendimentos[cliente?.id as number]?.orcamento?.descontos as number)}/>
       <Card mode="danger" title="Juros" text="0.00"/>
-      <Card mode="danger" title="ST" text={formatFloatToCurrency(orcamentos[cliente?.id as number]?.st as number)}/>
-      <Card mode="info" title="Valor total" text={formatFloatToCurrency(orcamentos[cliente?.id as number]?.total as number)}/>
+      <Card mode="danger" title="ST" text={formatFloatToCurrency(atendimentos[cliente?.id as number]?.orcamento?.st as number)}/>
+      <Card mode="info" title="Valor total" text={formatFloatToCurrency(atendimentos[cliente?.id as number]?.orcamento?.total as number)}/>
     </Container>
   )
 }

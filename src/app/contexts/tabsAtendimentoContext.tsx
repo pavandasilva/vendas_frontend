@@ -1,6 +1,6 @@
 import React, { createContext, ReactNode, useCallback, useState } from 'react'
 
-type AtendimentoCurrentTab = 'geral' | 'pedidos' | 'financeiro' | 'pedidoEmAndamento'
+type AtendimentoCurrentTab = 'geral' | 'pedidos' | 'financeiro' | 'orcamentoEmAndamento'
 
 type CurrentTabsType = {
   [clienteId: number]: AtendimentoCurrentTab

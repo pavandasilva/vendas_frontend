@@ -8,5 +8,10 @@ export const Container = styled.div`
 export const Main = styled.div`
   display: flex;
   flex: 1;
-  padding: 1px;
+  padding: 1px 15px 0px 0px;
+  flex-direction: column;
+`
+export const Contato = styled.div`
+
+
 `

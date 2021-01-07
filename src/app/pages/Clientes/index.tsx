@@ -14,37 +14,14 @@ import {
   useAtendimentoTabs,
   useClientesFidelizados,
   useCliente,
-  useOrcamentos
+  useAtendimentos
 } from '../../hooks'
-import { Empresa } from '../../../domain/empresas/models/empresa'
-import { Funcionario } from '../../../domain/funcionarios/models/funcionario'
-import { Orcamento, ItemOrcamento } from '../../../domain/pedidos/models'
 
 const perPage = 30
 
-const initialOrcamentoData: Orcamento = {
-  itens: [] as ItemOrcamento[],
-  total: 0,
-  st: 0,
-  icms: 0,
-  deposito: {} as Empresa,
-  contato: {} as Contato,
-  funcionario: {} as Funcionario,
-  funcionario2: {} as Funcionario,
-  condicao: '',
-  cliente: { } as Cliente,
-  transportadora: {} as Cliente,
-  juros: 0,
-  modoPagamento: 'carteira',
-  descontos: 0,
-  acrescimos: 0,
-  qtdeItens: 0,
-  subtotal: 0
-}
-
 export const Clientes = () => {
   const history = useHistory()
-  const { orcamentos, setOrcamento } = useOrcamentos()
+  const { atendimentos, startAtendimento } = useAtendimentos()
   const [search, setSearch] = useState('')
   const [currentPage, setCurrentPage] = useState(0)
   const { setCurrentTab, setDataMode: setClienteDataMode } = useCadastroCliente()
@@ -70,7 +47,7 @@ export const Clientes = () => {
   const handleAtenderOnClick = useCallback((cliente: Cliente) => {
     setClienteSelected(cliente)
 
-    if (orcamentos[cliente?.id as number]?.contato) {
+    if (atendimentos[cliente?.id as number]?.contato) {
       addTab({
         clienteId: cliente?.id as number,
         title: ` :${cliente?.razao_social as string}`,
@@ -81,7 +58,7 @@ export const Clientes = () => {
     } else {
       setShowListaContatos(true)
     }
-  }, [addTab, orcamentos, setCurrentTabAtendimento])
+  }, [addTab, atendimentos, setCurrentTabAtendimento])
 
   const handleEditarClienteOnClick = useCallback((cliente: Cliente) => {
     setCurrentTab('contatos')
@@ -107,15 +84,15 @@ export const Clientes = () => {
 
   const handleCallbackListaContatos = useCallback((contato: Contato) => {
     setShowListaContatos(false)
-    const orcamento = { ...initialOrcamentoData, contato }
-    setOrcamento(clienteSelected?.id as number, orcamento)
+    startAtendimento(clienteSelected?.id as number, contato)
 
     addTab({
       clienteId: clienteSelected?.id as number,
       title: clienteSelected?.razao_social as string,
       content: <Atendimento cliente={clienteSelected as Cliente}/>
     })
-  }, [addTab, clienteSelected, setOrcamento])
+    setCurrentTabAtendimento(clienteSelected?.id as number, 'geral')
+  }, [addTab, clienteSelected, setCurrentTabAtendimento, startAtendimento])
 
   const columns: Column[] = useMemo(() => [
     {
@@ -201,10 +178,11 @@ export const Clientes = () => {
           />
         </Content>
       </Container>
-      { showListaContatos && cliente?.data && <Modal title="Selecione um contato para continuar" close={() => setShowListaContatos(false)}>
-        <ListaContatos cliente={cliente?.data} callBack={handleCallbackListaContatos}/>
-      </Modal>
-      }
+      { showListaContatos && cliente?.data && (
+        <Modal title="Selecione um contato para continuar" close={() => setShowListaContatos(false)}>
+          <ListaContatos cliente={cliente?.data} callBack={handleCallbackListaContatos}/>
+        </Modal>
+      )}
     </MainLayout>
   )
 }

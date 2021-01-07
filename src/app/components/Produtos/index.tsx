@@ -5,8 +5,9 @@ import ReactTable, { Column, RowInfo } from 'react-table-6'
 import Swal from 'sweetalert2'
 import { Button, Modal } from '..'
 import { Cliente } from '../../../domain/clientes/models'
+import { ItemOrcamento } from '../../../domain/pedidos/models'
 import { formatFloatToCurrency } from '../../../helpers'
-import { useOrcamentos } from '../../hooks/useOrcamentos'
+import { useAtendimentos } from '../../hooks'
 import { ListaProdutos } from '../ListaProdutos'
 import { Container, Header, Content } from './styles'
 
@@ -15,7 +16,7 @@ interface ProdutosProps {
 }
 
 export const Produtos = ({ cliente }: ProdutosProps) => {
-  const { orcamentos, setItensOrcamento } = useOrcamentos()
+  const { atendimentos, setItensOrcamento } = useAtendimentos()
   const [showProdutoModal, setShowProdutoModal] = useState(false)
   const [selectedRowTableIndex, setSelectedRowTableIndex] = useState(-1)
 
@@ -97,15 +98,15 @@ export const Produtos = ({ cliente }: ProdutosProps) => {
         })
 
         if (result.isConfirmed) {
-          const oldItensOrcamento = orcamentos[cliente.id as number].itens
+          const oldItensOrcamento = atendimentos[cliente.id as number]?.orcamento?.itens
           const newItensOrcamento = oldItensOrcamento?.filter((state, index) => index !== selectedRowTableIndex)
-          setItensOrcamento(cliente?.id as number, newItensOrcamento)
+          setItensOrcamento(cliente?.id as number, newItensOrcamento as ItemOrcamento[])
         }
 
         setSelectedRowTableIndex(-1)
       }
     }
-  }, [cliente.id, orcamentos, selectedRowTableIndex, setItensOrcamento])
+  }, [atendimentos, cliente.id, selectedRowTableIndex, setItensOrcamento])
 
   return (
     <Container>
@@ -127,7 +128,7 @@ export const Produtos = ({ cliente }: ProdutosProps) => {
       <Content selectedRowTableIndex={selectedRowTableIndex} tabIndex={2} onKeyPress={handleOnKeyPress}>
         <ReactTable
           columns={columns}
-          data={orcamentos[cliente.id as number]?.itens}
+          data={atendimentos[cliente.id as number]?.orcamento?.itens}
           pageSize={30}
           page={0}
           sortable={false}

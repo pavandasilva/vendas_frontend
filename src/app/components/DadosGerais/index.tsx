@@ -6,7 +6,7 @@ import { Empresa } from '../../../domain/empresas/models/empresa'
 import { Funcionario } from '../../../domain/funcionarios/models/funcionario'
 import { Orcamento } from '../../../domain/pedidos/models/orcamento'
 import { ModoPagamentoType } from '../../contexts'
-import { useOrcamentos, useEmpresa, useCliente } from '../../hooks'
+import { useAtendimentos, useEmpresa, useCliente } from '../../hooks'
 import { FormRow } from '../../styles/global'
 import { ListaContatos } from '../ListaContatos'
 import { ListaEmpresas } from '../ListaEmpresas'
@@ -29,14 +29,14 @@ const modosPagamento: ModoPagamentoType[] = [
 export const DadosGerais = ({ cliente }: DadosGeraisProps) => {
   const [empresaId, setEmpresaId] = useState(0)
   const [transportadoraId, setTransportadoraId] = useState(0)
-  const { orcamentos, setOrcamento } = useOrcamentos()
+  const { atendimentos, setOrcamento } = useAtendimentos()
   const { data: empresaData } = useEmpresa(empresaId)
   const { data: transportadoraData } = useCliente(transportadoraId)
 
-  console.log(orcamentos[cliente?.id as number])
+  console.log(atendimentos[cliente?.id as number])
 
   useEffect(() => {
-    const orcamento = { ...orcamentos[cliente?.id as number], deposito: empresaData?.data }
+    const orcamento = { ...atendimentos[cliente?.id as number].orcamento, deposito: empresaData?.data }
     setOrcamento(cliente?.id as number, orcamento)
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [empresaData?.data, cliente?.id])
@@ -50,28 +50,28 @@ export const DadosGerais = ({ cliente }: DadosGeraisProps) => {
       transportadora = transportadoraData.data
     }
 
-    const orcamento = { ...orcamentos[cliente?.id as number], transportadora }
+    const orcamento = { ...atendimentos[cliente?.id as number]?.orcamento, transportadora }
     setOrcamento(cliente?.id as number, orcamento)
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [transportadoraData, cliente])
 
   const handleContatoF2CallBack = useCallback((value: any) => {
     const contato = value as Contato
-    const orcamento = { ...orcamentos[cliente?.id as number], contato }
+    const orcamento = { ...atendimentos[cliente?.id as number]?.orcamento, contato }
     setOrcamento(cliente?.id as number, orcamento)
-  }, [cliente, orcamentos, setOrcamento])
+  }, [cliente, atendimentos, setOrcamento])
 
   const handleDepositosF2Callback = useCallback((value: any) => {
     const empresa = value as Empresa
-    const orcamento = { ...orcamentos[cliente?.id as number], deposito: empresa }
+    const orcamento = { ...atendimentos[cliente?.id as number]?.orcamento, deposito: empresa }
     setOrcamento(cliente?.id as number, orcamento)
-  }, [cliente, orcamentos, setOrcamento])
+  }, [cliente, atendimentos, setOrcamento])
 
   const handleTransportadorasF2Callback = useCallback((value: any) => {
     const transportadora = value as Cliente
-    const orcamento = { ...orcamentos[cliente?.id as number], transportadora }
+    const orcamento = { ...atendimentos[cliente?.id as number]?.orcamento, transportadora }
     setOrcamento(cliente?.id as number, orcamento)
-  }, [cliente, orcamentos, setOrcamento])
+  }, [cliente, atendimentos, setOrcamento])
 
   const handleContatoIdOnChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     let [contato] = cliente?.contatos?.filter(cont => cont.id === parseInt(e.target.value)) as Contato[]
@@ -82,9 +82,9 @@ export const DadosGerais = ({ cliente }: DadosGeraisProps) => {
       } as Contato
     }
 
-    const orcamento = { ...orcamentos[cliente.id as number], contato }
+    const orcamento = { ...atendimentos[cliente.id as number]?.orcamento, contato }
     setOrcamento(cliente?.id as number, orcamento)
-  }, [cliente, orcamentos, setOrcamento])
+  }, [cliente, atendimentos, setOrcamento])
 
   const handleEmpresaIdOnChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     let id = 0
@@ -98,12 +98,12 @@ export const DadosGerais = ({ cliente }: DadosGeraisProps) => {
         id: '',
         nome: ''
       } as unknown as Empresa
-      const orcamento = { ...orcamentos[cliente?.id as number], deposito: empresa }
+      const orcamento = { ...atendimentos[cliente?.id as number]?.orcamento, deposito: empresa }
       setOrcamento(cliente?.id as number, orcamento)
     }
 
     setEmpresaId(id)
-  }, [cliente, orcamentos, setOrcamento])
+  }, [cliente, atendimentos, setOrcamento])
 
   const handleTransportadoraIdOnChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     let id = 0
@@ -118,24 +118,24 @@ export const DadosGerais = ({ cliente }: DadosGeraisProps) => {
         nome_fantasia: ''
       } as Cliente
 
-      const orcamento = { ...orcamentos[cliente?.id as number], transportadora }
+      const orcamento = { ...atendimentos[cliente?.id as number]?.orcamento, transportadora }
       setOrcamento(cliente?.id as number, orcamento)
     }
 
     setTransportadoraId(id)
-  }, [cliente, orcamentos, setOrcamento])
+  }, [cliente, atendimentos, setOrcamento])
 
   const handleFuncionariosF2CallBack = useCallback((value: any) => {
     const funcionario = value as Funcionario
-    const orcamento = { ...orcamentos[cliente?.id as number], funcionario }
+    const orcamento = { ...atendimentos[cliente?.id as number]?.orcamento, funcionario }
     setOrcamento(cliente?.id as number, orcamento)
-  }, [cliente, orcamentos, setOrcamento])
+  }, [cliente, atendimentos, setOrcamento])
 
   const handleFuncionarios2F2CallBack = useCallback((value: any) => {
     const funcionario = value as Funcionario
-    const orcamento = { ...orcamentos[cliente?.id as number], funcionario2: funcionario }
+    const orcamento = { ...atendimentos[cliente?.id as number]?.orcamento, funcionario2: funcionario }
     setOrcamento(cliente?.id as number, orcamento)
-  }, [cliente, orcamentos, setOrcamento])
+  }, [cliente, atendimentos, setOrcamento])
 
   const handleFuncionarioIdOnChange = (e: ChangeEvent<HTMLInputElement>) => {
     let id = 0
@@ -150,7 +150,7 @@ export const DadosGerais = ({ cliente }: DadosGeraisProps) => {
         nome: ''
       } as Funcionario
 
-      const orcamento = { ...orcamentos[cliente?.id as number], funcionario }
+      const orcamento = { ...atendimentos[cliente?.id as number]?.orcamento, funcionario }
       setOrcamento(cliente as number, orcamento)
     }
 
@@ -159,19 +159,19 @@ export const DadosGerais = ({ cliente }: DadosGeraisProps) => {
 
   const handleCondicaoPagamentoOnChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     const condicaoPagamento = e.currentTarget.value.replace(/[^0-9,]/g, '')
-    const orcamento = { ...orcamentos[cliente?.id as number], condicao: condicaoPagamento }
+    const orcamento = { ...atendimentos[cliente?.id as number]?.orcamento, condicao: condicaoPagamento }
 
     setOrcamento(cliente?.id as number, orcamento)
-  }, [cliente, orcamentos, setOrcamento])
+  }, [cliente, atendimentos, setOrcamento])
 
   const handleModoPagamentoOnChange = useCallback((e: ChangeEvent<HTMLSelectElement>) => {
     const orcamento: Orcamento = {
-      ...orcamentos[cliente?.id as number],
+      ...atendimentos[cliente?.id as number]?.orcamento,
       modoPagamento: e.target.value as ModoPagamentoType
     }
 
     setOrcamento(cliente?.id as number, orcamento)
-  }, [cliente, orcamentos, setOrcamento])
+  }, [cliente, atendimentos, setOrcamento])
 
   return (
     <Container>
@@ -181,7 +181,7 @@ export const DadosGerais = ({ cliente }: DadosGeraisProps) => {
           name="contato.id"
           title="Digite o código do contato ou F2 para buscar"
           label="Código contato"
-          value={orcamentos[cliente?.id as number]?.contato?.id}
+          value={atendimentos[cliente?.id as number]?.orcamento?.contato?.id}
           placeholder='Cod. contato'
           type="text"
           f2Title="Lista de contatos"
@@ -191,6 +191,7 @@ export const DadosGerais = ({ cliente }: DadosGeraisProps) => {
 
           f2CallBack={handleContatoF2CallBack}
           onChange={handleContatoIdOnChange}
+          disabled
         />
 
         <Input
@@ -198,7 +199,7 @@ export const DadosGerais = ({ cliente }: DadosGeraisProps) => {
           name="contato.nome"
           label="Contato"
           title="Contato"
-          value={capitalize(orcamentos[cliente?.id as number]?.contato?.nome as string)}
+          value={capitalize(atendimentos[cliente?.id as number]?.orcamento?.contato?.nome as string)}
           placeholder='Nome do Contato'
           disabled
         />
@@ -208,10 +209,10 @@ export const DadosGerais = ({ cliente }: DadosGeraisProps) => {
         <Input
           width='1'
           name="empresa.id"
-          title={!orcamentos[cliente?.id as number].contato?.nome ? 'Primeiro selecione um contato' : 'Código depósito ou F2 para buscar'}
+          title={!atendimentos[cliente?.id as number].contato?.nome ? 'Primeiro selecione um contato' : 'Código depósito ou F2 para buscar'}
           label='Código depósito'
           placeholder='Cod. depósito'
-          value={empresaId || orcamentos[cliente?.id as number]?.deposito?.id}
+          value={empresaId || atendimentos[cliente?.id as number]?.orcamento?.deposito?.id}
           type="text"
           f2Title="Lista de depósitos"
           f2Content={
@@ -219,7 +220,7 @@ export const DadosGerais = ({ cliente }: DadosGeraisProps) => {
           }
           f2CallBack={handleDepositosF2Callback}
           onChange={handleEmpresaIdOnChange}
-          disabled={!orcamentos[cliente?.id as number].contato?.nome}
+          disabled={!atendimentos[cliente?.id as number]?.orcamento?.contato?.nome}
 
         />
 
@@ -227,7 +228,7 @@ export const DadosGerais = ({ cliente }: DadosGeraisProps) => {
           width='5'
           name="empresa.nome"
           label="Depósito"
-          value={capitalize(orcamentos[cliente?.id as number]?.deposito?.nome as string)}
+          value={capitalize(atendimentos[cliente?.id as number]?.orcamento?.deposito?.nome as string)}
           placeholder='Depósito'
           disabled
         />
@@ -237,10 +238,10 @@ export const DadosGerais = ({ cliente }: DadosGeraisProps) => {
         <Input
           width='1'
           name="transportadora.id"
-          title={!orcamentos[cliente?.id as number].transportadora?.nome_fantasia ? 'Primeiro selecione um contato' : 'Código transportadora ou F2 para buscar'}
+          title={!atendimentos[cliente?.id as number].orcamento?.transportadora?.nome_fantasia ? 'Primeiro selecione um contato' : 'Código transportadora ou F2 para buscar'}
           label="Código transportadora"
           placeholder='Cod. transportadora'
-          value={transportadoraId || orcamentos[cliente?.id as number]?.transportadora?.id}
+          value={transportadoraId || atendimentos[cliente?.id as number]?.orcamento?.transportadora?.id}
           onChange={handleTransportadoraIdOnChange}
           type="text"
           /*     disabled= { dataMode === 'edit'} */
@@ -250,14 +251,14 @@ export const DadosGerais = ({ cliente }: DadosGeraisProps) => {
             <ListaTransportadoras/>
           }
           f2CallBack={handleTransportadorasF2Callback}
-          disabled={!orcamentos[cliente?.id as number].contato?.nome}
+          disabled={!atendimentos[cliente?.id as number].orcamento?.contato?.nome}
         />
 
         <Input
           width='5'
           name="cliente.nome"
           label="Transportadora"
-          value={capitalize(orcamentos[cliente?.id as number]?.transportadora?.nome_fantasia as string)}
+          value={capitalize(atendimentos[cliente?.id as number]?.orcamento?.transportadora?.nome_fantasia as string)}
           placeholder='Transportadora'
           disabled
         />
@@ -266,10 +267,10 @@ export const DadosGerais = ({ cliente }: DadosGeraisProps) => {
         <Input
           width='1'
           name="funcionario.id"
-          title={!orcamentos[cliente?.id as number].contato?.nome ? 'Primeiro selecione um contato' : 'Código funcionário ou F2 para buscar'}
+          title={!atendimentos[cliente?.id as number].contato?.nome ? 'Primeiro selecione um contato' : 'Código funcionário ou F2 para buscar'}
           label="Código funcionário"
           placeholder='Cod. funcionário'
-          value={orcamentos[cliente?.id as number]?.funcionario?.id}
+          value={atendimentos[cliente?.id as number]?.orcamento?.funcionario?.id}
 
           onChange={handleFuncionarioIdOnChange}
           type="text"
@@ -279,14 +280,14 @@ export const DadosGerais = ({ cliente }: DadosGeraisProps) => {
           }
           f2ModalMode="normal"
           f2CallBack={handleFuncionariosF2CallBack}
-          disabled={!orcamentos[cliente?.id as number].contato?.nome}
+          disabled={!atendimentos[cliente?.id as number].orcamento?.contato?.nome}
         />
 
         <Input
           width='5'
           name="funcionario.nome"
           label="Funcionário"
-          value={capitalize(orcamentos[cliente?.id as number]?.funcionario?.nome as string)}
+          value={capitalize(atendimentos[cliente?.id as number]?.orcamento?.funcionario?.nome as string)}
           placeholder='Funcionário'
           disabled
         />
@@ -297,9 +298,9 @@ export const DadosGerais = ({ cliente }: DadosGeraisProps) => {
           width='1'
           name="funcionario2.id"
           label="Código Funcionário 2"
-          title={!orcamentos[cliente?.id as number].contato?.nome ? 'Primeiro selecione um contato' : 'Código funcionário ou F2 para buscar'}
+          title={!atendimentos[cliente?.id as number].contato?.nome ? 'Primeiro selecione um contato' : 'Código funcionário ou F2 para buscar'}
           placeholder='Cod. funcionario 2'
-          value={orcamentos[cliente?.id as number]?.funcionario2?.id}
+          value={atendimentos[cliente?.id as number]?.orcamento?.funcionario2?.id}
           type="text"
           f2Title="Lista de funcionários"
           f2Content={
@@ -307,14 +308,14 @@ export const DadosGerais = ({ cliente }: DadosGeraisProps) => {
           }
           f2ModalMode="normal"
           f2CallBack={handleFuncionarios2F2CallBack}
-          disabled={!orcamentos[cliente?.id as number].contato?.nome}
+          disabled={!atendimentos[cliente?.id as number]?.orcamento?.contato?.nome}
         />
 
         <Input
           width='5'
           name="funcionario2.nome"
           label="Funcionário 2"
-          value={capitalize(orcamentos[cliente?.id as number]?.funcionario2?.nome as string)}
+          value={capitalize(atendimentos[cliente?.id as number]?.orcamento?.funcionario2?.nome as string)}
           placeholder='Funcionário 2'
           disabled
         />
@@ -324,19 +325,19 @@ export const DadosGerais = ({ cliente }: DadosGeraisProps) => {
           width='3'
           name="condicao"
           label="Condição de pagamento"
-          title={!orcamentos[cliente?.id as number].contato?.nome ? 'Primeiro selecione um contato' : 'Condição de pagamento'}
+          title={!atendimentos[cliente?.id as number].contato?.nome ? 'Primeiro selecione um contato' : 'Condição de pagamento'}
           placeholder='Condição de pagamento(ex: 0,30,60,90)'
-          value={orcamentos[cliente?.id as number]?.condicao}
+          value={atendimentos[cliente?.id as number]?.orcamento?.condicao}
           onChange={handleCondicaoPagamentoOnChange}
           type="text"
-          disabled={!orcamentos[cliente?.id as number].contato?.nome}
+          disabled={!atendimentos[cliente?.id as number].contato?.nome}
         />
 
         <Input
           width='2'
           name="juros"
           label="Juros"
-          value={`${orcamentos[cliente?.id as number]?.juros}%`}
+          value={`${atendimentos[cliente?.id as number]?.orcamento?.juros}%`}
           placeholder='Juros'
           disabled
         />
@@ -345,11 +346,11 @@ export const DadosGerais = ({ cliente }: DadosGeraisProps) => {
           width='5'
           name="modo_pagamento"
           onChange={handleModoPagamentoOnChange}
-          value={orcamentos[cliente?.id as number]?.modoPagamento}
+          value={atendimentos[cliente?.id as number]?.orcamento?.modoPagamento}
           title="Modo de pagamento"
           /*    disabled= { dataMode === 'edit'} */
           defaultValue=""
-          disabled={!orcamentos[cliente?.id as number].contato?.nome}
+          disabled={!atendimentos[cliente?.id as number].orcamento?.contato?.nome}
         >
 
           { modosPagamento.map(modoPagamento =>

@@ -3,7 +3,7 @@ import { Cliente } from '../../../domain/clientes/models'
 import { ItemOrcamento } from '../../../domain/pedidos/models/itemOrcamento'
 import { Preco, Produto } from '../../../domain/produtos/models'
 import { formatFloatToCurrency } from '../../../helpers'
-import { useOrcamentos } from '../../hooks'
+import { useAtendimentos } from '../../hooks'
 import { useModal } from '../../hooks/useModal'
 import { usePrecoProduto } from '../../hooks/usePrecoProduto'
 import { FormRow } from '../../styles/global'
@@ -18,14 +18,14 @@ interface DetalheProdutoProps {
 }
 
 export const DetalheProduto = ({ cliente, produto }: DetalheProdutoProps) => {
-  const { orcamentos } = useOrcamentos()
+  const { atendimentos } = useAtendimentos()
   const { setData: setModalData } = useModal()
   const [valor, setValor] = useState<number>()
 
   const { data: preco } = usePrecoProduto(
     produto?.id as number,
     cliente?.id as number,
-    orcamentos[cliente?.id as number].deposito?.id as number,
+    atendimentos[cliente?.id as number]?.orcamento?.deposito?.id as number,
     valor
   )
 

@@ -1,8 +1,8 @@
 import React, { useCallback } from 'react'
 import { FaList, FaShoppingCart, FaFunnelDollar, FaClipboardList } from 'react-icons/fa'
 import { Cliente } from '../../../domain/clientes/models'
+import { useAtendimentos } from '../../hooks'
 import { useAtendimentoTabs } from '../../hooks/useAtendimentoTabs'
-import { useOrcamentos } from '../../hooks/useOrcamentos'
 import { useOrcamentoTabs } from '../../hooks/useOrcamentoTabs'
 import { Container, Button } from './styles'
 
@@ -12,15 +12,12 @@ interface MenuAtendimentoProps {
 
 export const MenuAtendimento = ({ cliente }: MenuAtendimentoProps) => {
   const { setCurrentTab, currentTabs } = useAtendimentoTabs()
-  const { orcamentos, startOrcamento } = useOrcamentos()
-
-  console.log(orcamentos)
-
+  const { atendimentos, startOrcamento } = useAtendimentos()
   const { setCurrentTab: setCurrentOrcamentoTab } = useOrcamentoTabs()
 
   const handleNovoOrcamentoOnClick = useCallback(() => {
     startOrcamento(cliente?.id as number)
-    setCurrentTab(cliente?.id as number, 'pedidoEmAndamento')
+    setCurrentTab(cliente?.id as number, 'orcamentoEmAndamento')
     setCurrentOrcamentoTab(cliente?.id as number, 'dadosGerais')
   }, [cliente, setCurrentOrcamentoTab, setCurrentTab, startOrcamento])
 
@@ -45,12 +42,12 @@ export const MenuAtendimento = ({ cliente }: MenuAtendimentoProps) => {
         <FaFunnelDollar /><span>Financeiro</span>
       </Button>
 
-      { orcamentos[cliente?.id as number]
+      { atendimentos[cliente?.id as number]?.orcamento
         ? (
           <Button
-            selected={currentTabs[cliente?.id as number] === 'pedidoEmAndamento'}
+            selected={currentTabs[cliente?.id as number] === 'orcamentoEmAndamento'}
             type="button"
-            onClick={() => setCurrentTab(cliente?.id as number, 'pedidoEmAndamento')}>
+            onClick={() => setCurrentTab(cliente?.id as number, 'orcamentoEmAndamento')}>
             <FaClipboardList /><span>Orçamento em andamento</span>
           </Button>
         )
@@ -61,9 +58,7 @@ export const MenuAtendimento = ({ cliente }: MenuAtendimentoProps) => {
             <FaClipboardList /><span>Novo orçamento</span>
           </Button>
         )
-
       }
-
     </Container>
   )
 }

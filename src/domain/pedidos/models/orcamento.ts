@@ -5,7 +5,7 @@ import { Empresa } from '../../empresas/models/empresa'
 import { Funcionario } from '../../funcionarios/models/funcionario'
 
 export interface Orcamento {
-  itens: ItemOrcamento[]
+  itens?: ItemOrcamento[]
   subtotal?: number
   total?: number
   st?: number
@@ -14,12 +14,12 @@ export interface Orcamento {
   contato?: Contato
   funcionario?: Funcionario
   funcionario2?: Funcionario
-  condicao: string
-  cliente: Cliente
-  transportadora: Cliente
-  juros: number
-  modoPagamento: ModoPagamentoType
-  descontos: number
-  acrescimos: number
-  qtdeItens: number
+  condicao?: string
+  cliente?: Cliente
+  transportadora?: Cliente
+  juros?: number
+  modoPagamento?: ModoPagamentoType
+  descontos?: number
+  acrescimos?: number
+  qtdeItens?: number
 }

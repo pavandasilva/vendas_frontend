@@ -5,11 +5,11 @@ import ReactTable, { Column, RowInfo } from 'react-table-6'
 import { DetalheProduto, Input } from '..'
 import { Cliente } from '../../../domain/clientes/models'
 import { Produto } from '../../../domain/produtos/models/produto'
-import { useOrcamentos, useProdutos } from '../../hooks'
 import { Container, Header } from './styles'
 import { Modal } from '../Modal'
 import { ItemOrcamento } from '../../../domain/pedidos/models/itemOrcamento'
 import { useModal } from '../../hooks/useModal'
+import { useAtendimentos, useProdutos } from '../../hooks'
 
 const perPage = 30
 
@@ -22,7 +22,7 @@ interface ListaProdutosProps {
 export const ListaProdutos = ({ closeModal, cliente, afterInsertItemOrcamento }: ListaProdutosProps) => {
   const { data: modalData } = useModal()
   const [selectedRowTableIndex, setSelectedRowTableIndex] = useState(-1)
-  const { orcamentos, setItensOrcamento } = useOrcamentos()
+  const { atendimentos, setItensOrcamento } = useAtendimentos()
   const [currentPage, setCurrentPage] = useState(0)
   const [search, setSearch] = useState('')
   const [showModal, setShowModal] = useState(false)
@@ -113,11 +113,11 @@ export const ListaProdutos = ({ closeModal, cliente, afterInsertItemOrcamento }:
   }
 
   const handleAddItemOrcamento = useCallback(() => {
-    const itensOrcamento = [...orcamentos[cliente?.id as number].itens, modalData as ItemOrcamento]
+    const itensOrcamento = [...atendimentos[cliente?.id as number]?.orcamento?.itens as ItemOrcamento[], modalData as ItemOrcamento]
     setItensOrcamento(cliente?.id as number, itensOrcamento)
     setShowModal(false)
     afterInsertItemOrcamento()
-  }, [afterInsertItemOrcamento, cliente.id, modalData, orcamentos, setItensOrcamento])
+  }, [afterInsertItemOrcamento, atendimentos, cliente.id, modalData, setItensOrcamento])
 
   return (
     <Container selectedRowTableIndex={selectedRowTableIndex}>

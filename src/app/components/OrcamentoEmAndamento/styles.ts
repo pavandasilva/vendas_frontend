@@ -1,5 +1,4 @@
 import styled from 'styled-components'
-import { transparentize } from 'polished'
 
 export const Container = styled.div`
   display: flex;
@@ -8,26 +7,14 @@ export const Container = styled.div`
   transition: all .3s ease;
   width: 100%;
   margin-right: 15px;
+`
+export const ContentHeaderAtendimento = styled.div`
+  width: 100%;
 
-  header {
-    border-top-left-radius: 4px;
-    border-top-right-radius: 4px;
-    border-bottom: 1px solid ${props => transparentize(0.9, props.theme.colors.primary)};
-    height: 65px;
-    background: ${props => transparentize(0.95, props.theme.colors.primary)};
-    align-items: center;
-    padding: 15px;
-
-    > div {
-      display: flex;
-      flex-direction: row;
-      flex: 1;
-
-      & + div {
-        width: 200px;
-        justify-content: flex-end;
-      }
-    }
+  > div {
+    display: flex;
+    flex: 1;
+    justify-content: flex-end;
   }
 `
 export const Content = styled.div`
