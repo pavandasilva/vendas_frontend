@@ -14,8 +14,11 @@ import {
   useAtendimentoTabs,
   useClientesFidelizados,
   useCliente,
-  useAtendimentos
+  useAtendimentos,
+  useFuncionario,
+  useUsuario
 } from '../../hooks'
+import { Funcionario } from '../../../domain/funcionarios/models/funcionario'
 
 const perPage = 30
 
@@ -31,6 +34,7 @@ export const Clientes = () => {
   const [clienteSelected, setClienteSelected] = useState<Cliente>()
 
   const { data: clientesFidelizados } = useClientesFidelizados({
+    // funcionarioId: usuario?.funcionario_id
     funcionarioId: 1007,
     currentPage: currentPage + 1,
     perPage,
@@ -38,6 +42,8 @@ export const Clientes = () => {
   })
 
   const { data: cliente } = useCliente(clienteSelected?.id as number)
+  const { data: usuario } = useUsuario()
+  const { data: funcionario } = useFuncionario(usuario?.funcionario_id as unknown as number)
 
   const handleFilterOnChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(event.target.value)
@@ -47,10 +53,10 @@ export const Clientes = () => {
   const handleAtenderOnClick = useCallback((cliente: Cliente) => {
     setClienteSelected(cliente)
 
-    if (atendimentos[cliente?.id as number]?.contato) {
+    if (atendimentos[cliente?.id as number] && Object.keys(atendimentos[cliente?.id as number]).length) {
       addTab({
         clienteId: cliente?.id as number,
-        title: ` :${cliente?.razao_social as string}`,
+        title: `${cliente?.id}-${cliente?.razao_social as string}`,
         content: <Atendimento cliente={cliente as Cliente}/>
       })
 
@@ -84,15 +90,15 @@ export const Clientes = () => {
 
   const handleCallbackListaContatos = useCallback((contato: Contato) => {
     setShowListaContatos(false)
-    startAtendimento(clienteSelected?.id as number, contato)
+    startAtendimento(clienteSelected?.id as number, contato, funcionario?.data as Funcionario)
 
     addTab({
       clienteId: clienteSelected?.id as number,
-      title: clienteSelected?.razao_social as string,
+      title: `${clienteSelected?.id} - ${clienteSelected?.razao_social as string} `,
       content: <Atendimento cliente={clienteSelected as Cliente}/>
     })
     setCurrentTabAtendimento(clienteSelected?.id as number, 'geral')
-  }, [addTab, clienteSelected, setCurrentTabAtendimento, startAtendimento])
+  }, [addTab, clienteSelected, funcionario, setCurrentTabAtendimento, startAtendimento])
 
   const columns: Column[] = useMemo(() => [
     {

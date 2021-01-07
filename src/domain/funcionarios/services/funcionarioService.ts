@@ -4,12 +4,24 @@ import { GetParams } from '../../_interfaces'
 import { HttpRequest } from '../../_interfaces/httpRequest'
 import { FuncionarioService, GetClientesFuncionarioResponse, GetListFuncionarioResponse } from '../interfaces'
 import { GetClientesSuggestionResponse } from '../interfaces/getClientesSuggestionResponse'
+import { GetFuncionario } from '../interfaces/getFuncionario'
 
 export class FuncionarioServiceImpl implements FuncionarioService {
   private readonly httpRequest: HttpRequest
 
   constructor (httpRequest: HttpRequest) {
     this.httpRequest = httpRequest
+  }
+
+  async getById (params: GetParams): Promise<GetFuncionario> {
+    let { filter: id, token } = params
+
+    const response = await this.httpRequest.get({
+      path: `funcionarios/${id}`,
+      token
+    })
+
+    return response?.data as GetFuncionario
   }
 
   async getlist (params: GetParams): Promise<GetListFuncionarioResponse> {

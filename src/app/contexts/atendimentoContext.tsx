@@ -10,6 +10,7 @@ export type ModoPagamentoType = 'carteira' | 'cheque próprio' | 'cheque terceir
 
 interface Atendimento {
   contato: Contato
+  funcionario?: Funcionario
   orcamento?: Orcamento
 }
 
@@ -40,7 +41,7 @@ export interface AtendimentoContextProps {
   atendimentos: Atendimentos
   removeAtendimento: (clienteId: number) => void
   setItensOrcamento: (clienteId: number, itens: ItemOrcamento[]) => void
-  startAtendimento: (clienteId: number, contato: Contato) => void
+  startAtendimento: (clienteId: number, contato: Contato, funcionario: Funcionario) => void
   setAtendimento: (clienteId: number, atendimento: Atendimento) => void
   setOrcamento: (clienteId: number, orcamento: Orcamento) => void
   startOrcamento: (clienteId: number) => void
@@ -80,12 +81,12 @@ export const AtendimentosProvider = ({ children }: AtendimentoProviderProps) => 
     }))
   }, [])
 
-  const startAtendimento = useCallback((clienteId: number, contato: Contato) => {
-    setAtendimentos(oldState => ({ ...oldState, [clienteId]: { contato } }))
+  const startAtendimento = useCallback((clienteId: number, contato: Contato, funcionario: Funcionario) => {
+    setAtendimentos(oldState => ({ ...oldState, [clienteId]: { contato, funcionario } }))
   }, [])
 
   const removeAtendimento = useCallback((clienteId: number) => {
-    setAtendimentos(oldState => produce(oldState, draftState => {
+    setAtendimentos(oldState => {
       let atendimentos = [] as Atendimento []
 
       Object.keys(oldState).map(key => {
@@ -93,8 +94,8 @@ export const AtendimentosProvider = ({ children }: AtendimentoProviderProps) => 
           atendimentos.push(oldState[clienteId])
         }
       })
-      draftState = atendimentos
-    }))
+      return atendimentos
+    })
   }, [])
 
   const setOrcamento = useCallback((clienteId: number, orcamento: Orcamento) => {
@@ -105,7 +106,11 @@ export const AtendimentosProvider = ({ children }: AtendimentoProviderProps) => 
 
   const startOrcamento = useCallback((clienteId: number) => {
     setAtendimentos(oldState => produce(oldState, draftState => {
-      draftState[clienteId].orcamento = { ...dataOrcamentoInitial, contato: draftState[clienteId].contato }
+      draftState[clienteId].orcamento = {
+        ...dataOrcamentoInitial,
+        contato: draftState[clienteId].contato,
+        funcionario: draftState[clienteId].funcionario
+      }
     }))
   }, [])
 

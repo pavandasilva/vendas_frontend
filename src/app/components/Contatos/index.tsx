@@ -17,7 +17,13 @@ import { useCadastroTelefone } from '../../hooks/useCadastroTelefone'
 const rowsPerPage = 10
 
 export const Contatos = () => {
-  const { data: cliente, setData: setCliente, dataError: clienteError, setDataError: setClienteError } = useCadastroCliente()
+  const {
+    data: cliente,
+    setData: setCliente,
+    dataError: clienteError,
+    setDataError: setClienteError
+  } = useCadastroCliente()
+
   const { data: contato, resetData: resetContato } = useCadastroContato()
   const { data: telefone, resetData: resetTelefone } = useCadastroTelefone()
   const theme = useTheme()
