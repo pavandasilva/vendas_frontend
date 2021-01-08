@@ -35,7 +35,7 @@ export const ListaContatos = ({ cliente, close, callBack }: ListaContatosProps) 
     })
 
     contatos?.length && setContatosFiltered(contatos)
-  }, [cliente.contatos, searchValue])
+  }, [cliente, searchValue])
 
   const columns: Column[] = [
     {

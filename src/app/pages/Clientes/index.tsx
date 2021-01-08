@@ -1,7 +1,7 @@
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { FaSearch, FaUser } from 'react-icons/fa'
 import { MainLayout } from '../../layouts/MainLayout'
-import { Atendimento, Button, ButtonTable, Input, ListaContatos, Modal } from '../../components'
+import { Atendimento, Button, ButtonTable, Input, ListaContatos, Modal, Loading } from '../../components'
 import ReactTable, { Column } from 'react-table-6'
 import { Container, Content, Actions } from './styles'
 import { Cliente, Contato } from '../../../domain/clientes/models'
@@ -31,7 +31,6 @@ export const Clientes = () => {
   const { addTab } = useTabs()
   const { setCurrentTab: setCurrentTabAtendimento } = useAtendimentoTabs()
   const [showListaContatos, setShowListaContatos] = useState(false)
-  const [clienteSelected, setClienteSelected] = useState<Cliente>()
 
   const { data: clientesFidelizados } = useClientesFidelizados({
     // funcionarioId: usuario?.funcionario_id
@@ -41,9 +40,17 @@ export const Clientes = () => {
     search
   })
 
-  const { data: cliente } = useCliente(clienteSelected?.id as number)
+  const [clienteSelected, setClienteSelected] = useState<Cliente>()
+  const { data: clienteData } = useCliente(clienteSelected?.id as number)
   const { data: usuario } = useUsuario()
   const { data: funcionario } = useFuncionario(usuario?.funcionario_id as unknown as number)
+  const [loadingAtendimento, setLoadingAtendimento] = useState(false)
+
+  useEffect(() => {
+    if (clienteData?.data?.contatos) {
+      setLoadingAtendimento(false)
+    }
+  }, [clienteData])
 
   const handleFilterOnChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(event.target.value)
@@ -51,8 +58,6 @@ export const Clientes = () => {
   }, [])
 
   const handleAtenderOnClick = useCallback((cliente: Cliente) => {
-    setClienteSelected(cliente)
-
     if (atendimentos[cliente?.id as number] && Object.keys(atendimentos[cliente?.id as number]).length) {
       addTab({
         clienteId: cliente?.id as number,
@@ -62,6 +67,8 @@ export const Clientes = () => {
 
       setCurrentTabAtendimento(cliente?.id as number, 'geral')
     } else {
+      setLoadingAtendimento(true)
+      setClienteSelected(cliente)
       setShowListaContatos(true)
     }
   }, [addTab, atendimentos, setCurrentTabAtendimento])
@@ -150,6 +157,9 @@ export const Clientes = () => {
     }
   ], [handleAtenderOnClick, handleEditarClienteOnClick])
 
+  console.log('clienteSelected', clienteSelected)
+  console.log('clienteData', clienteData)
+
   return (
     <MainLayout title="Clientes">
       <Container>
@@ -183,12 +193,15 @@ export const Clientes = () => {
             showPagination={clientesFidelizados && clientesFidelizados?.metadata?.count >= perPage}
           />
         </Content>
+
       </Container>
-      { showListaContatos && cliente?.data && (
+      { showListaContatos && clienteData?.data && (
         <Modal title="Selecione um contato para continuar" close={() => setShowListaContatos(false)}>
-          <ListaContatos cliente={cliente?.data} callBack={handleCallbackListaContatos}/>
+          <ListaContatos cliente={clienteData?.data as Cliente} callBack={handleCallbackListaContatos}/>
         </Modal>
       )}
+
+      { !clienteData && loadingAtendimento && <Loading/> }
     </MainLayout>
   )
 }
