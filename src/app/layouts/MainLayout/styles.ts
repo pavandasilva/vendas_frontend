@@ -7,11 +7,17 @@ export const Container = styled.div`
   height: 100%;
 
 `
-export const Content = styled.div`
+
+interface Content {
+  isVisible?: boolean
+}
+
+export const Content = styled.div<Content>`
   display: block;
   flex: 1;
-  margin-left: 70px;
+  margin-left: ${props => props.isVisible ? '70px' : '0px'};
   height: (100vh - 50px);
+  transition: all 300ms;
 
   > div {
     padding: 15px;

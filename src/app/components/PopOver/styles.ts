@@ -1,17 +1,21 @@
 import styled, { css } from 'styled-components'
 import { shade } from 'polished'
+import { CoordsPopover } from '.'
 
 interface ContainerProps {
   sepLastItem?: boolean
+  coords: CoordsPopover
 }
+/* top: ${props => props.coords.x};
+right: ${props => props.coords.y}; */
 
 export const Container = styled.div<ContainerProps>`
+  top: ${props => props.coords.x + 'px'};
+  right: ${props => props.coords.y + 'px'};
   position: absolute;
   background-color: ${props => props.theme.colors.backgroundLight};
-  z-index: 11;
-  top: calc(100% + 4px);
+  z-index: 599;
   width: 150px;
-  right: 0px;
   border-radius: 4px;
   border: solid 1px ${props => props.theme.colors.border};
   padding: 2px;

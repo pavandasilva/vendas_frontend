@@ -27,17 +27,28 @@ export const Container = styled.div`
     }
   }
 `
-
-export const Content = styled.div`
-
-
-`
-
 export const Actions = styled.div`
   display: flex;
   flex-direction: row;
+  width: 100%;
+  justify-content: center;
 
   & + button + button {
     background-color: red !important;
+  }
+`
+
+interface ContainerProps {
+  selectedRowTableIndex: number
+}
+
+export const Content = styled.div<ContainerProps>`
+  .ReactTable .rt-tbody .rt-tr-group {
+    cursor: pointer;
+
+    &:nth-of-type(${props => props.selectedRowTableIndex + 1}) {
+      background-color: ${props => props.theme.colors.primary};
+      color: white;
+    }
   }
 `

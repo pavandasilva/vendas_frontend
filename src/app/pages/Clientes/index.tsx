@@ -1,8 +1,8 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { FaSearch, FaUser } from 'react-icons/fa'
 import { MainLayout } from '../../layouts/MainLayout'
-import { Atendimento, Button, ButtonTable, Input, ListaContatos, Modal, Loading } from '../../components'
-import ReactTable, { Column } from 'react-table-6'
+import { Atendimento, Button, ButtonTable, Input, ListaContatos, Modal, Loading, PopOver } from '../../components'
+import ReactTable, { Column, RowInfo } from 'react-table-6'
 import { Container, Content, Actions } from './styles'
 import { Cliente, Contato } from '../../../domain/clientes/models'
 import capitalize from 'capitalize-pt-br'
@@ -19,6 +19,7 @@ import {
   useUsuario
 } from '../../hooks'
 import { Funcionario } from '../../../domain/funcionarios/models/funcionario'
+import { toCnpj } from '../../../helpers'
 
 const perPage = 30
 
@@ -107,6 +108,14 @@ export const Clientes = () => {
     setCurrentTabAtendimento(clienteSelected?.id as number, 'geral')
   }, [addTab, clienteSelected, funcionario, setCurrentTabAtendimento, startAtendimento])
 
+  const [selectedRowTableIndex, setSelectedRowTableIndex] = useState(-1)
+  const element = useRef<HTMLDivElement>(null)
+
+  const handleTableRowOnclick = useCallback((rowIndex: number) => {
+    setSelectedRowTableIndex(rowIndex)
+    element.current?.focus()
+  }, [])
+
   const columns: Column[] = useMemo(() => [
     {
       Header: '#',
@@ -119,15 +128,22 @@ export const Clientes = () => {
       Cell: ({ value }) => capitalize(value)
     },
     {
+      Header: 'CNPJ / CPF',
+      accessor: 'cnpj',
+      Cell: ({ value }) => toCnpj(value),
+      minWidth: 20
+    },
+    {
       Header: 'UF',
       accessor: 'uf',
-      minWidth: 15,
+      minWidth: 11,
       Cell: ({ value }) => value.toString().toUpperCase()
     },
     {
       Header: 'Cidade',
       accessor: 'cidade',
-      Cell: ({ value }) => capitalize(value)
+      Cell: ({ value }) => capitalize(value),
+      minWidth: 30
     },
     {
       Header: 'Ações',
@@ -171,7 +187,7 @@ export const Clientes = () => {
             <Button mode="primary"startIcon={FaUser} type="button" onClick={handleNovoClienteOnClick}>Novo cliente</Button>
           </div>
         </header>
-        <Content>
+        <Content selectedRowTableIndex={selectedRowTableIndex} tabIndex={2}>
           <ReactTable
             columns={columns}
             data={clientesFidelizados?.data}
@@ -191,6 +207,15 @@ export const Clientes = () => {
             loadingText="carregando..."
             noDataText="Nenhum cliente encontrado"
             showPagination={clientesFidelizados && clientesFidelizados?.metadata?.count >= perPage}
+            /*  getTrProps={(finalState: any, rowInfo?: RowInfo, column?: undefined, instance?: any) => {
+              if (rowInfo) {
+                return {
+                  onClick: () => {
+                    handleTableRowOnclick(rowInfo?.index)
+                  }
+                }
+              }
+            }} */
           />
         </Content>
 

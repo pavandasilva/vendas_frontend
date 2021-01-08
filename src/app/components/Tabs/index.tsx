@@ -27,7 +27,7 @@ export const Tabs = ({ fixedContent, titleFixedContent }: TabsProps) => {
     <Container>
       <header>
         {/* tab fixa */}
-        <Tab selected={activeTab === -1} onClick={() => setActiveTab(-1)}>
+        <Tab key='fixed' selected={activeTab === -1} onClick={() => setActiveTab(-1)}>
           <p>{tabFixedTitle}</p>
         </Tab>
         {/* tab fixa */}

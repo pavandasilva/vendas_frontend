@@ -85,7 +85,7 @@ export const Produtos = ({ cliente }: ProdutosProps) => {
     element.current?.focus()
   }, [])
 
-  const handleOnKeyPress = useCallback(async (e: React.KeyboardEvent<HTMLDivElement>) => {
+  const handleOnKeyDown = useCallback(async (e: React.KeyboardEvent<HTMLDivElement>) => {
     if (e.key === 'Delete') {
       if (selectedRowTableIndex >= 0) {
         const result = await Swal.fire({
@@ -125,7 +125,7 @@ export const Produtos = ({ cliente }: ProdutosProps) => {
           </Button>
         </div>
       </Header>
-      <Content selectedRowTableIndex={selectedRowTableIndex} tabIndex={2} onKeyPress={handleOnKeyPress}>
+      <Content selectedRowTableIndex={selectedRowTableIndex} tabIndex={2} onKeyDown={handleOnKeyDown}>
         <ReactTable
           columns={columns}
           data={atendimentos[cliente.id as number]?.orcamento?.itens}

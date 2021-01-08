@@ -1,7 +1,11 @@
 import styled from 'styled-components'
 import { lighten, darken } from 'polished'
 
-export const Container = styled.div`
+interface ContainerProps {
+  isVisible?: boolean
+}
+
+export const Container = styled.div<ContainerProps>`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -10,6 +14,8 @@ export const Container = styled.div`
   background-color: ${props => props.theme.colors.primary};
   width: 70px;
   z-index: 40;
+  margin-left: ${props => props.isVisible ? '0px' : '-70px'};
+  transition: all 300ms;
 
   img {
     margin-top: 15px;
@@ -18,7 +24,6 @@ export const Container = styled.div`
   }
 
 `
-
 export const Nav = styled.ul`
   list-style: none;
   padding: 0px;
