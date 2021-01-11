@@ -42,7 +42,7 @@ export class ClienteServiceImpl implements ClienteService {
 
   async create (params: PostParams): Promise<Cliente> {
     let { body, token } = params
-    // await this.validator?.validate(body)
+    await this.validator?.validate(body)
 
     const response = await this.httpRequest.post<Cliente>({
       path: 'clientes',

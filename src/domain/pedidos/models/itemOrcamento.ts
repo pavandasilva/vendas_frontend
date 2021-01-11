@@ -3,7 +3,7 @@ import { Produto } from '../../produtos/models/produto'
 
 export interface ItemOrcamento {
   produto?: Produto
-  quantidade?: number
+  quantidade: number
   preco?: Preco
   acrescimo?: number
   desconto?: number

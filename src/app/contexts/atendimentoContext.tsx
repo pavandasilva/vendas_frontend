@@ -12,6 +12,7 @@ interface Atendimento {
   contato: Contato
   funcionario?: Funcionario
   orcamento?: Orcamento
+  cliente: Cliente
 }
 
 type Atendimentos = {
@@ -41,7 +42,7 @@ export interface AtendimentoContextProps {
   atendimentos: Atendimentos
   removeAtendimento: (clienteId: number) => void
   setItensOrcamento: (clienteId: number, itens: ItemOrcamento[]) => void
-  startAtendimento: (clienteId: number, contato: Contato, funcionario: Funcionario) => void
+  startAtendimento: (cliente: Cliente, contato: Contato, funcionario: Funcionario) => void
   setAtendimento: (clienteId: number, atendimento: Atendimento) => void
   setOrcamento: (clienteId: number, orcamento: Orcamento) => void
   startOrcamento: (clienteId: number) => void
@@ -81,8 +82,8 @@ export const AtendimentosProvider = ({ children }: AtendimentoProviderProps) => 
     }))
   }, [])
 
-  const startAtendimento = useCallback((clienteId: number, contato: Contato, funcionario: Funcionario) => {
-    setAtendimentos(oldState => ({ ...oldState, [clienteId]: { contato, funcionario } }))
+  const startAtendimento = useCallback((cliente: Cliente, contato: Contato, funcionario: Funcionario) => {
+    setAtendimentos(oldState => ({ ...oldState, [cliente.id as number]: { contato, funcionario, cliente } }))
   }, [])
 
   const removeAtendimento = useCallback((clienteId: number) => {

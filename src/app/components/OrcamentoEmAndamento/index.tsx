@@ -1,9 +1,10 @@
 import React, { useCallback, useEffect } from 'react'
 import { FaShare } from 'react-icons/fa'
-import { ResumoOrcamento, Produtos, Button, DadosGerais } from '..'
+import { ResumoOrcamento, Produtos, Button, DadosGerais, Loading } from '..'
 import { Cliente } from '../../../domain/clientes/models'
 import { makeGravarOrcamento } from '../../../domain/pedidos/factories/makeGravarOrcamento'
 import { Orcamento } from '../../../domain/pedidos/models'
+import { PostParams } from '../../../domain/_interfaces'
 import { ItemOrcamentoProvider, OrcamentoTabsType } from '../../contexts'
 import { useAtendimentos, useAtendimentoTabs, useUseCaseController } from '../../hooks'
 import { useOrcamentoTabs } from '../../hooks/useOrcamentoTabs'
@@ -17,7 +18,7 @@ interface OrcamentoEmAndamentoProps {
 export const OrcamentoEmAndamento = ({ cliente }: OrcamentoEmAndamentoProps) => {
   const { currentTabs, setCurrentTab } = useOrcamentoTabs()
   const { atendimentos, setOrcamento } = useAtendimentos()
-  const { executeUseCase } = useUseCaseController()
+  const { executeUseCase, executing: executingGravarOrcamento } = useUseCaseController()
   const { setCurrentTab: setAtendimentoTab } = useAtendimentoTabs()
 
   useEffect(() => {
@@ -35,15 +36,17 @@ export const OrcamentoEmAndamento = ({ cliente }: OrcamentoEmAndamentoProps) => 
     const orcamento = atendimentos[cliente.id as number].orcamento
     const gravarOrcamento = makeGravarOrcamento()
 
-    executeUseCase<Orcamento>(
+    await executeUseCase<PostParams>(
       gravarOrcamento,
-      orcamento as Orcamento,
+      {
+        body: { ...orcamento, cliente } as Orcamento
+      },
       'Orçamento finalizado com sucesso!',
       'Deseja finalizar o orçamento?',
       afterSaved,
       true
     )
-  }, [atendimentos, cliente.id, executeUseCase, setAtendimentoTab, setOrcamento])
+  }, [atendimentos, cliente, executeUseCase, setAtendimentoTab, setOrcamento])
 
   const handleMenuOnClick = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
     setCurrentTab(cliente?.id as number, e.currentTarget.name as OrcamentoTabsType)
@@ -65,6 +68,7 @@ export const OrcamentoEmAndamento = ({ cliente }: OrcamentoEmAndamentoProps) => 
 
   return (
     <ItemOrcamentoProvider>
+      {executingGravarOrcamento && <Loading/>}
       <Container>
         <HeaderAtendimento>
           <ContentHeaderAtendimento>

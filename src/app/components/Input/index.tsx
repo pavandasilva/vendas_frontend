@@ -1,5 +1,6 @@
 import React, {
   ChangeEvent,
+  FocusEvent,
   InputHTMLAttributes,
   ReactElement,
   useCallback,
@@ -14,11 +15,13 @@ import { IconType } from 'react-icons'
 import { Wrapper, Container, IconPassword, Label, IconError, ToolTip, Icon } from './styles'
 import { getIEMask, IEType } from '../../../helpers/getIEMask'
 import { Modal, ModalMode } from '../Modal'
+
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   startIcon?: IconType
   label?: string
   error?: string
   onChange?: (e: ChangeEvent<HTMLInputElement>) => void
+  onBlur?: (e: FocusEvent<HTMLInputElement>) => void
   width?: string;
   type?: 'cnpj' | 'cpf' | 'text' | 'password' | 'email' | 'cep' | 'ddd' | 'telefone' | 'celular' | 'number' | 'currency'| IEType
   f2Title?: string
@@ -40,6 +43,7 @@ export const Input = ({
   label,
   error,
   onChange,
+  onBlur,
   width,
   disabled,
   f2Title,
@@ -110,9 +114,13 @@ export const Input = ({
     setIsActive(true)
   }, [])
 
-  const onBlur = useCallback(() => {
+  const inputOnBlur = useCallback((e: FocusEvent<HTMLInputElement>) => {
     setIsActive(false)
-  }, [])
+
+    if (onBlur) {
+      onBlur(e)
+    }
+  }, [onBlur])
 
   const handleOnMouseOver = useCallback(() => {
     setShowToolTip(true)
@@ -152,7 +160,7 @@ export const Input = ({
           { ...rest}
           disabled={disabled}
           onFocus={onFocus}
-          onBlur={onBlur}
+          onBlur={inputOnBlur}
           onKeyDown={handleOnKeyDown}
           onChange={onChange}
           type={type}

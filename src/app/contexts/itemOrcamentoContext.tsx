@@ -8,7 +8,7 @@ export interface ItemOrcamentoContextProps {
 }
 
 const initialValues: ItemOrcamento = {
-
+  quantidade: 1
 }
 
 export const ItemOrcamentoContext = createContext<ItemOrcamentoContextProps>({} as ItemOrcamentoContextProps)

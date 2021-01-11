@@ -98,7 +98,7 @@ export const Clientes = () => {
 
   const handleCallbackListaContatos = useCallback((contato: Contato) => {
     setShowListaContatos(false)
-    startAtendimento(clienteSelected?.id as number, contato, funcionario?.data as Funcionario)
+    startAtendimento(clienteSelected as Cliente, contato, funcionario?.data as Funcionario)
 
     addTab({
       clienteId: clienteSelected?.id as number,
@@ -107,14 +107,6 @@ export const Clientes = () => {
     })
     setCurrentTabAtendimento(clienteSelected?.id as number, 'geral')
   }, [addTab, clienteSelected, funcionario, setCurrentTabAtendimento, startAtendimento])
-
-  const [selectedRowTableIndex, setSelectedRowTableIndex] = useState(-1)
-  const element = useRef<HTMLDivElement>(null)
-
-  const handleTableRowOnclick = useCallback((rowIndex: number) => {
-    setSelectedRowTableIndex(rowIndex)
-    element.current?.focus()
-  }, [])
 
   const columns: Column[] = useMemo(() => [
     {
@@ -173,9 +165,6 @@ export const Clientes = () => {
     }
   ], [handleAtenderOnClick, handleEditarClienteOnClick])
 
-  console.log('clienteSelected', clienteSelected)
-  console.log('clienteData', clienteData)
-
   return (
     <MainLayout title="Clientes">
       <Container>
@@ -187,7 +176,7 @@ export const Clientes = () => {
             <Button mode="primary"startIcon={FaUser} type="button" onClick={handleNovoClienteOnClick}>Novo cliente</Button>
           </div>
         </header>
-        <Content selectedRowTableIndex={selectedRowTableIndex} tabIndex={2}>
+        <Content>
           <ReactTable
             columns={columns}
             data={clientesFidelizados?.data}

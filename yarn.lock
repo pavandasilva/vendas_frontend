@@ -2373,6 +2373,11 @@ alphanum-sort@^1.0.0:
   resolved "https://registry.yarnpkg.com/alphanum-sort/-/alphanum-sort-1.0.2.tgz#97a1119649b211ad33691d9f9f486a8ec9fbe0a3"
   integrity sha1-l6ERlkmyEa0zaR2fn0hqjsn74KM=
 
+animate-css-styled-components@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/animate-css-styled-components/-/animate-css-styled-components-1.0.2.tgz#0714fa22d9beac8fa09ab3d668851de6c01ad361"
+  integrity sha512-kIU1lNSJaz6kGQv5bdWGJeuBSdQsNhWV+54SXzf9CDF50lK7JwuvhrO0AJ5RjdOFwQC/rUV8oKlPznURs8xhOA==
+
 animate.css@^4.1.1:
   version "4.1.1"
   resolved "https://registry.yarnpkg.com/animate.css/-/animate.css-4.1.1.tgz#614ec5a81131d7e4dc362a58143f7406abd68075"
@@ -9928,6 +9933,11 @@ raw-body@2.4.0:
     http-errors "1.7.2"
     iconv-lite "0.4.24"
     unpipe "1.0.0"
+
+react-animations@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/react-animations/-/react-animations-1.0.0.tgz#d96222920dfeabec8984d9b2ef2c5a5aadb40f06"
+  integrity sha512-ePPpVgdKnNEXm+LP1ww5s3n0JzebBw9QdRfxRqogzeg1PDIn6kf0pmvgeTeVZQXXpGmHImkIeTiaQR1O6xjntA==
 
 react-app-polyfill@^1.0.6:
   version "1.0.6"

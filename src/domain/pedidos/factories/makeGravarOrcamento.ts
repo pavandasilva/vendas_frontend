@@ -1,6 +1,6 @@
 import { HttpRequestImpl } from '../../../infra/http'
-import { PedidoServiceHttpRequest } from '../models/services/pedidoService'
-import { GravarOrcamento } from '../models/useCases/gravarOrcamento'
+import { PedidoServiceHttpRequest } from '../services/pedidoService'
+import { GravarOrcamento } from '../useCases/gravarOrcamento'
 
 export function makeGravarOrcamento (): GravarOrcamento {
   const httpRequest = new HttpRequestImpl()

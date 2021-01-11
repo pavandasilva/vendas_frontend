@@ -1,7 +1,6 @@
 import React, { ReactNode, useCallback, useEffect } from 'react'
 import { FiX } from 'react-icons/fi'
 import { Button } from '..'
-
 import { BoxModal, Container, Header, ContainerFooter, Content } from './styles'
 
 export type ModalMode = 'fullscreen' | 'normal'

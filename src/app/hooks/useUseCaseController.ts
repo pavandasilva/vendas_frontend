@@ -10,6 +10,7 @@ const logar = makeLogar()
 export function useUseCaseController () {
   const { data: usuarioData, setData: setTokenUsuario } = useUsuario()
   const [error, setError] = useState<AppErrorData>({} as AppErrorData)
+  const [executing, setExecuting] = useState(false)
 
   const [autoLogin] = useState<boolean>(() => {
     const value = localStorage.getItem(`@${process.env.REACT_APP_NAME}:autologin`)
@@ -40,8 +41,9 @@ export function useUseCaseController () {
 
     if (questionResponse?.isConfirmed || !toAsk) {
       try {
+        setExecuting(true)
         const response = await useCase.execute({ ...paramsUseCase, token: usuarioData?.token as string })
-
+        setExecuting(false)
         Swal.fire({
           title: 'Sucesso!',
           text: sucessMessage || response.message,
@@ -50,7 +52,11 @@ export function useUseCaseController () {
           timerProgressBar: true
         })
         afterAll && afterAll()
+
+        return response
       } catch (error) {
+        setExecuting(false)
+
         if (error.type === 'auth') {
           Swal.queue([{
             title: usuarioData?.email,
@@ -66,10 +72,14 @@ export function useUseCaseController () {
 
             preConfirm: async (result) => {
               try {
+                setExecuting(true)
+
                 const token = await logar.execute({
                   email: usuarioData?.email as string,
                   password: result as string
                 })
+
+                setExecuting(false)
 
                 if (token) {
                   setTokenUsuario(token)
@@ -81,7 +91,9 @@ export function useUseCaseController () {
                     localStorage.removeItem(`@${process.env.REACT_APP_NAME}:token`)
                   }
 
-                  executeUseCase(
+                  setExecuting(true)
+
+                  const response = await executeUseCase(
                     useCase,
                     paramsUseCase,
                     sucessMessage,
@@ -89,8 +101,13 @@ export function useUseCaseController () {
                     afterAll,
                     false
                   )
+
+                  setExecuting(false)
+                  return response
                 }
               } catch (error) {
+                setExecuting(false)
+
                 Swal.insertQueueStep({
                   icon: 'error',
                   title: error.message || 'Erro desconhecido',
@@ -116,5 +133,5 @@ export function useUseCaseController () {
     }
   }, [autoLogin, error.type, setTokenUsuario, usuarioData])
 
-  return { executeUseCase, error }
+  return { executeUseCase, error, executing }
 }

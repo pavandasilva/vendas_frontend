@@ -11,6 +11,8 @@ export const Container = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  animation: animate__fadeIn;
+  animation-duration: 2s;
 `
 
 interface BoxModalProps {
@@ -18,6 +20,8 @@ interface BoxModalProps {
 }
 
 export const BoxModal = styled.div<BoxModalProps>`
+  animation: animate__fadeIn;
+  animation-duration: 10s;
   border-radius: 4px;
   width: ${props => props.mode === 'fullscreen' ? '98%' : '600px'} ;
   height: ${props => props.mode === 'fullscreen' ? 'calc(100% - 15px)' : 'auto'};

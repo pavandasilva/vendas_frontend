@@ -34,6 +34,7 @@ export const DetalheProduto = ({ cliente, produto }: DetalheProdutoProps) => {
   const [qtde, setQtde] = useState(1)
   const [st, setSt] = useState(0)
   const [valorUnitario, setValorUnitario] = useState(0)
+  const [editableValorUnitario, setEditableValorUnitario] = useState(0)
 
   useEffect(() => {
     setSt((preco?.data?.st || 0) * qtde)
@@ -100,18 +101,8 @@ export const DetalheProduto = ({ cliente, produto }: DetalheProdutoProps) => {
     }
 
     const valorUnitario = parseFloat(`${integer}.${decimals}`)
-
-    if (valorUnitario < 0) {
-      return
-    }
-
-    if (preco?.data?.valorOriginal) {
-      const valorOriginal = preco?.data?.valorOriginal
-      const diferenca = valorUnitario - valorOriginal
-      const porcentagem = diferenca / valorOriginal * 100
-      setDescAcres(porcentagem)
-    }
-  }, [preco])
+    setEditableValorUnitario(valorUnitario)
+  }, [])
 
   const handleDescAcresOnChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     if (parseInt(e.target.value) > -100) {
@@ -123,7 +114,23 @@ export const DetalheProduto = ({ cliente, produto }: DetalheProdutoProps) => {
     if (total > 0) {
       setValorUnitario(total / qtde)
     }
-  }, [qtde, total])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [total])
+
+  const handlePrecoUnitarioOnBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    if (editableValorUnitario < 0) {
+      return
+    }
+
+    if (preco?.data?.valorOriginal) {
+      const valorOriginal = preco?.data?.valorOriginal
+      const diferenca = editableValorUnitario - valorOriginal
+      const porcentagem = diferenca / valorOriginal * 100
+      setDescAcres(porcentagem)
+    }
+
+    setEditableValorUnitario(0)
+  }
 
   return (
     <Container>
@@ -149,10 +156,11 @@ export const DetalheProduto = ({ cliente, produto }: DetalheProdutoProps) => {
 
             <FormRow>
               <Input
-                value={formatFloatToCurrency(valorUnitario)}
+                value={formatFloatToCurrency(editableValorUnitario || valorUnitario)}
                 label="Valor unitário"
                 width="3"
                 onChange={handlePrecoUnitarioOnChange}
+                onBlur={handlePrecoUnitarioOnBlur}
                 type="currency"
               />
               <Input
